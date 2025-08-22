@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>關於SDS團隊 - 專業軟體開發與免費開發者工具提供商 | JSON格式化 Base64轉換 SQL美化</title>
+  <meta name="description" content="SDS團隊專精軟體開發、網站建置、行動應用開發，同時免費提供JSON格式化、Base64轉換、SQL美化、代碼比較等開發者工具。我們的使命是用技術改變世界，讓開發更簡單高效。" />
+  <meta name="keywords" content="SDS團隊, 軟體開發, 網站開發, 行動應用開發, 系統整合, JSON格式化工具, Base64轉換器, SQL美化工具, 代碼比較, 免費開發工具, 程式設計服務, 技術外包" />
+  <meta name="author" content="SDS Team - Stinky Duck Studio" />
+  <meta property="og:title" content="關於SDS團隊 - 專業軟體開發與免費開發者工具提供商" />
+  <meta property="og:description" content="專業軟體開發團隊，免費提供JSON格式化、Base64轉換、SQL美化等開發工具，服務全球開發者社群。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://sds-site.vercel.app/about" />
+  <meta property="og:image" content="https://sds-site.vercel.app/img/sds-team-cover.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="關於SDS團隊 - 專業軟體開發與免費開發者工具" />
+  <meta name="twitter:description" content="專業軟體開發服務，免費提供JSON、Base64、SQL等開發工具" />
+  <link rel="canonical" href="about.html" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#3b82f6" />
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles.css" />
+  
+  <style>
+    /* 頁面專用樣式 */
+    .about-section {
+      margin-bottom: 40px;
+    }
+    
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+      text-align: center;
+      position: relative;
+    }
+    
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+      border-radius: 2px;
+    }
+    
+    .content-card {
+      background: var(--bg-primary);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-color);
+    }
+    
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin: 24px 0;
+    }
+    
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin: 32px 0;
+    }
+    
+    .service-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    
+    .service-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary-color);
+    }
+    
+    .service-icon {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 16px;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: white;
+    }
+    
+    .contact-info {
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin: 24px 0;
+    }
+    
+    .contact-item {
+      display: flex;
+      align-items: center;
+      margin: 12px 0;
+      font-size: 1.1rem;
+    }
+    
+    .contact-item .icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--primary-color);
+    }
+    
+    .price-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      background: var(--bg-primary);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .price-table th,
+    .price-table td {
+      padding: 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .price-table th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    .price-table tr:hover {
+      background: var(--bg-secondary);
+    }
+    
+    .cta-section {
+      text-align: center;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+      color: white;
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      margin: 40px 0;
+    }
+    
+    .cta-section h3 {
+      font-size: 1.5rem;
+      margin-bottom: 16px;
+    }
+    
+    .cta-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+    
+    .cta-btn {
+      padding: 12px 24px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      font-weight: 500;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .cta-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    .timeline {
+      position: relative;
+      padding-left: 40px;
+      margin: 24px 0;
+      width: 100%;
+      overflow: hidden;
+    }
+    
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 20px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--primary-color);
+    }
+    
+    .timeline-item {
+      position: relative;
+      margin-bottom: 32px;
+      padding-left: 0;
+      padding-right: 20px;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -28px;
+      top: 8px;
+      width: 12px;
+      height: 12px;
+      background: var(--primary-color);
+      border-radius: 50%;
+      border: 3px solid white;
+      box-shadow: 0 0 0 3px var(--primary-color);
+      z-index: 2;
+      flex-shrink: 0;
+    }
+    
+    .timeline-item h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+      word-wrap: break-word;
+    }
+    
+    .timeline-item p {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 0;
+      word-wrap: break-word;
+    }
+    
+    /* 特殊狀態的時間線項目 */
+    .timeline-item.completed::before {
+      background: var(--success-color);
+      box-shadow: 0 0 0 3px var(--success-color);
+    }
+    
+    .timeline-item.in-progress::before {
+      background: var(--warning-color);
+      box-shadow: 0 0 0 3px var(--warning-color);
+      animation: pulse 2s infinite;
+    }
+    
+    .timeline-item.pending::before {
+      background: var(--text-secondary);
+      box-shadow: 0 0 0 3px var(--text-secondary);
+    }
+    
+    @media (max-width: 768px) {
+      .service-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .cta-btn {
+        width: 200px;
+      }
+      
+      /* 時間線響應式 */
+      .timeline {
+        padding-left: 30px;
+        margin: 16px 0;
+      }
+      
+      .timeline::before {
+        left: 15px;
+      }
+      
+      .timeline-item {
+        margin-bottom: 24px;
+        padding-right: 10px;
+      }
+      
+      .timeline-item::before {
+        left: -23px;
+        width: 10px;
+        height: 10px;
+        border: 2px solid white;
+        box-shadow: 0 0 0 2px var(--primary-color);
+      }
+      
+      .timeline-item.completed::before {
+        box-shadow: 0 0 0 2px var(--success-color);
+      }
+      
+      .timeline-item.in-progress::before {
+        box-shadow: 0 0 0 2px var(--warning-color);
+      }
+      
+      .timeline-item.pending::before {
+        box-shadow: 0 0 0 2px var(--text-secondary);
+      }
+      
+      .timeline-item h4 {
+        font-size: 1rem;
+        line-height: 1.4;
+      }
+      
+      .timeline-item p {
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+    }
+    
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 3px var(--warning-color);
+      }
+      50% {
+        box-shadow: 0 0 0 8px rgba(245, 158, 11, 0.3);
+      }
+      100% {
+        box-shadow: 0 0 0 3px var(--warning-color);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <h1>關於SDS團隊 - 專業軟體開發與免費工具提供商</h1>
+      <p>專業開發服務 • 免費JSON/Base64/SQL工具 • 技術創新驅動 • 服務全球開發者社群</p>
+    </header>
+
+    <!-- 團隊介紹 -->
+    <div class="home-card about-section">
+      <h2 class="section-title">我們是誰</h2>
+      <div class="content-card">
+        <h3 style="color: var(--primary-color); margin-bottom: 16px;">SDS (Stinky Duck Studio) 團隊</h3>
+        <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 20px;">
+          我們是一群充滿熱情的軟體開發者，致力於為客戶提供高品質的技術解決方案。
+          自成立以來，我們始終秉持著「技術服務人群，創新改變世界」的理念，
+          不僅為企業客戶打造優質的軟體產品，同時也免費提供JSON格式化工具、Base64轉換器、SQL美化工具、代碼比較工具等實用的線上開發工具，
+          服務全球的開發者社群。
+        </p>
+        
+        <div class="highlight-box">
+          <h4 style="color: var(--primary-color); margin-bottom: 12px;">💡 我們的初衷與使命</h4>
+          <p style="line-height: 1.7;">
+            我們深信技術應該讓每個人的工作更加高效。許多開發者在日常工作中都會遇到一些重複性的任務，
+            如 JSON 格式化、Base64 編碼轉換、SQL 美化、代碼比較等。這些看似簡單的工作，卻經常消耗大量時間。
+            <br><br>
+            <strong>因此，我們決定免費提供這些工具，讓全世界的開發者都能受益。</strong>
+            我們相信，當技術社群變得更強大時，每個人都能從中獲益，這正是開源精神的體現。
+            <br><br>
+            我們的免費工具已服務數千名開發者，包括JSON格式化與驗證、Base64編碼解碼、SQL語句美化、代碼差異比較等功能，
+            並持續改進和新增功能，致力於成為開發者最信賴的工具平台。
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 服務項目 -->
+    <div class="home-card about-section">
+      <h2 class="section-title">專業服務項目</h2>
+      
+      <div class="service-grid">
+        <div class="service-card">
+          <div class="service-icon">🌐</div>
+          <h3>網站開發</h3>
+          <p>響應式網站設計、電商平台、企業官網、個人部落格等全方位網站建置服務。採用現代化技術堆疊，確保網站效能與SEO優化。</p>
+        </div>
+        
+        <div class="service-card">
+          <div class="service-icon">📱</div>
+          <h3>行動應用開發</h3>
+          <p>iOS、Android 原生應用開發，以及 React Native、Flutter 等跨平台應用解決方案。提供完整的移動端體驗設計與開發。</p>
+        </div>
+        
+        <div class="service-card">
+          <div class="service-icon">⚙️</div>
+          <h3>系統整合</h3>
+          <p>RESTful API 開發、資料庫設計優化、第三方服務整合、企業系統客製化開發。專精微服務架構與雲端部署解決方案。</p>
+        </div>
+        
+        <!-- <div class="service-card">
+          <div class="service-icon">🎨</div>
+          <h3>UI/UX 設計</h3>
+          <p>使用者體驗設計、介面設計、品牌視覺設計、原型製作。</p>
+        </div> -->
+        
+        <!-- <div class="service-card">
+          <div class="service-icon">☁️</div>
+          <h3>雲端服務</h3>
+          <p>雲端架構設計、DevOps、CI/CD、雲端遷移服務。</p>
+        </div>
+        
+        <div class="service-card">
+          <div class="service-icon">🔧</div>
+          <h3>技術顧問</h3>
+          <p>技術架構規劃、程式碼審查、效能優化、技術選型建議。</p>
+        </div> -->
+      </div>
+      <div class="highlight-box">
+          <h4 style="color: var(--success-color); margin-bottom: 12px;">🐤 我們的專業優勢</h4>
+          <ul style="line-height: 1.8; margin-left: 20px;">
+            <li><strong>豐富經驗：</strong>團隊成員擁有多年軟體開發經驗，熟悉各種技術堆疊</li>
+            <li><strong>品質保證：</strong>嚴格的程式碼審查流程，確保交付高品質的軟體產品</li>
+            <li><strong>敏捷開發：</strong>採用 Agile 開發方法論，快速響應需求變更</li>
+            <li><strong>持續支援：</strong>提供專案完成後的技術支援與維護服務</li>
+          </ul>
+        </div>
+    </div>
+
+    <!-- 服務收費說明 -->
+    <!-- <div class="home-card about-section">
+      <h2 class="section-title">服務收費標準</h2>
+      
+      <div class="content-card">
+        <p style="margin-bottom: 24px; font-size: 1.1rem;">
+          我們提供透明、合理的收費標準，依照專案複雜度和工作時數計價：
+        </p>
+        
+        <table class="price-table">
+          <thead>
+            <tr>
+              <th>服務類型</th>
+              <th>收費方式</th>
+              <th>參考價格 (TWD)</th>
+              <th>說明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>基礎網站開發</td>
+              <td>專案計價</td>
+              <td>30,000 - 80,000</td>
+              <td>企業形象網站、個人作品集等</td>
+            </tr>
+            <tr>
+              <td>電商網站</td>
+              <td>專案計價</td>
+              <td>80,000 - 200,000</td>
+              <td>含購物車、金流、後台管理系統</td>
+            </tr>
+            <tr>
+              <td>客製化系統</td>
+              <td>時數計價</td>
+              <td>1,500 - 2,500 / 小時</td>
+              <td>依技術複雜度調整</td>
+            </tr>
+            <tr>
+              <td>行動應用開發</td>
+              <td>專案計價</td>
+              <td>100,000 - 300,000</td>
+              <td>iOS/Android 原生或跨平台應用</td>
+            </tr>
+            <tr>
+              <td>UI/UX 設計</td>
+              <td>時數計價</td>
+              <td>1,200 - 2,000 / 小時</td>
+              <td>包含使用者研究、設計、原型</td>
+            </tr>
+            <tr>
+              <td>技術顧問</td>
+              <td>時數計價</td>
+              <td>2,000 - 3,000 / 小時</td>
+              <td>技術架構、程式碼審查等</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <div class="highlight-box">
+          <h4 style="color: var(--success-color); margin-bottom: 12px;">💰 特殊優惠</h4>
+          <div class="timeline">
+            <div class="timeline-item">
+              <strong>學生專案：</strong>教育相關專案享有 7 折優惠
+            </div>
+            <div class="timeline-item">
+              <strong>非營利組織：</strong>公益專案可享特殊優惠價格
+            </div>
+            <div class="timeline-item">
+              <strong>長期合作：</strong>簽約年度維護可享優惠價格
+            </div>
+            <div class="timeline-item">
+              <strong>推薦獎勵：</strong>成功推薦客戶可獲得現金回饋
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+    <!-- 合作流程 -->
+    <div class="home-card about-section">
+      <h2 class="section-title">合作流程</h2>
+      
+      <div class="content-card">
+        <div class="timeline">
+          <div class="timeline-item">
+            <h4>1. 需求討論</h4>
+            <p>透過線上會議或面談，深入了解您的需求和目標</p>
+          </div>
+          <div class="timeline-item">
+            <h4>2. 方案規劃</h4>
+            <p>提供詳細的技術方案、時程規劃和費用估算</p>
+          </div>
+          <div class="timeline-item">
+            <h4>3. 合約簽署</h4>
+            <p>確認專案細節，簽署正式合作契約</p>
+          </div>
+          <div class="timeline-item">
+            <h4>4. 開發執行</h4>
+            <p>按照 Agile 方法論進行開發，定期回報進度</p>
+          </div>
+          <div class="timeline-item">
+            <h4>5. 測試驗收</h4>
+            <p>完整的測試流程，確保產品品質符合要求</p>
+          </div>
+          <div class="timeline-item">
+            <h4>6. 上線維護</h4>
+            <p>協助產品上線，提供後續技術支援和維護服務</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 廣告招商 -->
+    <div class="home-card about-section">
+      <h2 class="section-title">廣告合作機會</h2>
+      
+      <div class="content-card">
+        <h3 style="color: var(--primary-color); margin-bottom: 16px;">🎯 與我們合作推廣</h3>
+        <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 24px;">
+          我們的免費開發者工具網站每月服務數千名軟體開發者、前端工程師、後端工程師和技術人員，
+          提供JSON格式化、Base64轉換、SQL美化、代碼比較等實用工具。
+          這是您接觸專業技術社群和目標開發者客群的絕佳平台。
+          我們提供多種廣告合作方案，幫助您的技術產品或開發者服務有效觸及目標受眾。
+        </p>
+        
+        <div class="service-grid">
+          <div class="service-card">
+            <div class="service-icon">📊</div>
+            <h3>橫幅廣告</h3>
+            <p>在網站頁面放置您的廣告橫幅，獲得高曝光率和點擊量。針對開發者和技術人員的精準投放。</p>
+          </div>
+          
+          <div class="service-card">
+            <div class="service-icon">📝</div>
+            <h3>內容行銷</h3>
+            <p>透過技術文章、工具介紹、開發教學等方式，自然地推廣您的技術產品和開發者工具。</p>
+          </div>
+          
+          <div class="service-card">
+            <div class="service-icon">🤝</div>
+            <h3>品牌合作</h3>
+            <p>深度合作，共同開發免費工具、舉辦技術活動或建立開發者社群夥伴關係。</p>
+          </div>
+        </div>
+        
+        <div class="contact-info">
+          <h4 style="margin-bottom: 16px; color: var(--primary-color);">廣告合作洽詢</h4>
+          <div class="contact-item disabled">
+            <div class="icon">📧</div>
+            <span class="coming-soon">商務合作：聯絡窗口建置中</span>
+            <span class="status-badge">規劃中</span>
+          </div>
+          <div class="contact-item">
+            <div class="icon">📊</div>
+            <span>網站流量：每月 10+ 獨立訪客 (預估)</span>
+          </div>
+          <div class="contact-item">
+            <div class="icon">👥</div>
+            <span>目標族群：軟體開發者、技術人員、IT 從業人員</span>
+          </div>
+          <div class="contact-item">
+            <div class="icon">⏰</div>
+            <span style="color: var(--primary-color); font-weight: 500;">廣告合作方案將於聯絡管道建立後開放</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 聯絡資訊 -->
+    <div class="home-card about-section">
+      <h2 class="section-title">聯絡我們</h2>
+      
+      <div class="content-card">
+        <div class="info-card">
+          <div class="info-card-content">
+            <h4>聯絡方式建置中</h4>
+            <p>我們正在建立正式的聯絡管道，包含客服信箱、技術支援和商務合作窗口。預計將在近期內完成設置，敬請期待！</p>
+          </div>
+        </div>
+        
+        <div class="timeline">
+          <div class="timeline-item completed">
+            <h4>📋 第一階段：聯絡窗口規劃</h4>
+            <p style="color: var(--success-color); font-weight: 500;">✅ 已完成 - 服務項目與聯絡分類確定</p>
+          </div>
+          <div class="timeline-item in-progress">
+            <h4>🛠️ 第二階段：系統建置</h4>
+            <p style="color: var(--warning-color); font-weight: 500;">🚧 進行中 - 郵件系統與客服平台開發</p>
+          </div>
+          <div class="timeline-item pending">
+            <h4>🚀 第三階段：正式上線</h4>
+            <p style="color: var(--text-secondary);">⏳ 預計 2-3 週內完成所有聯絡管道設置</p>
+          </div>
+        </div>
+        
+        <div class="contact-info">
+          <div class="contact-item disabled">
+            <div class="icon">📧</div>
+            <span class="coming-soon">專案洽詢：聯絡信箱建置中</span>
+            <span class="status-badge">即將開放</span>
+          </div>
+          <div class="contact-item disabled">
+            <div class="icon">💼</div>
+            <span class="coming-soon">技術顧問：服務信箱規劃中</span>
+            <span class="status-badge">籌備中</span>
+          </div>
+          <div class="contact-item disabled">
+            <div class="icon">🎯</div>
+            <span class="coming-soon">廣告合作：商務窗口建置中</span>
+            <span class="status-badge">開發中</span>
+          </div>
+          <div class="contact-item disabled">
+            <div class="icon">🐛</div>
+            <span class="coming-soon">問題回報：支援系統開發中</span>
+            <span class="status-badge">設計中</span>
+          </div>
+          <div class="contact-item disabled">
+            <div class="icon">📱</div>
+            <span class="coming-soon">聯絡電話：專線申請中</span>
+            <span class="status-badge">申請中</span>
+          </div>
+          <div class="contact-item disabled">
+            <div class="icon">💬</div>
+            <span class="coming-soon">即時通訊：平台評估中</span>
+            <span class="status-badge">評估中</span>
+          </div>
+        </div>
+        
+        <!-- <div class="info-card" style="margin-top: 32px;">
+          <div class="info-card-content">
+            <h4>臨時聯絡方式</h4>
+            <p>在正式聯絡管道建立完成前，如有緊急事務需要聯繫，請透過 GitHub 項目頁面提出 Issue，我們會盡快回應。</p>
+          </div>
+        </div> -->
+      </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="cta-section">
+      <h3>準備開始您的軟體開發專案了嗎？</h3>
+      <p>聯絡管道正在建置中，我們將盡快提供完整的聯絡服務。同時歡迎體驗我們的免費JSON格式化、Base64轉換、SQL美化等開發工具！</p>
+      <div class="cta-buttons">
+        <a href="https://sds-site.vercel.app/" class="cta-btn">🏠 回到首頁</a>
+        <a href="JsonFormatter.html" class="cta-btn">🔧 體驗免費工具</a>
+      </div>
+    </div>
+
+    <!-- 頁面導航 -->
+    <div class="home-card" style="text-align: center; padding: 24px;">
+      <!-- Navigation -->
+      <div class="navigation">
+        <a href="https://sds-site.vercel.app/" class="nav-link">首頁</a>
+        <span class="nav-link">|</span>
+        <a href="about.html" class="nav-link" style="color: var(--primary-color); font-weight: 600;">關於團隊</a>
+        <span class="nav-link">|</span>
+        <a href="JsonFormatter.html" class="nav-link">JSON Formatter</a>
+        <span class="nav-link">|</span>
+        <a href="Base64Converter.html" class="nav-link">Base64 工具</a>
+        <span class="nav-link">|</span>
+        <a href="CodeCompare.html" class="nav-link">代碼比較</a>
+        <span class="nav-link">|</span>
+        <a href="SqlFormatter.html" class="nav-link">SQL Formatter</a>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>&copy; 2025 SDS Team. 用技術改變世界，讓開發更簡單。</p>
+      <p style="margin-top: 8px; font-size: 0.8rem; opacity: 0.8;">
+        所有免費工具將永久免費提供 • 我們承諾保護用戶隱私 • 開源貢獻者歡迎
+      </p>
+    </footer>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 首先注入結構化數據
+      injectStructuredData();
+      
+      // 服務卡片懸停效果
+      const serviceCards = document.querySelectorAll('.service-card');
+      serviceCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+          this.style.transform = 'translateY(-8px)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+          this.style.transform = 'translateY(0)';
+        });
+      });
+
+      // 滾動動畫
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      }, observerOptions);
+
+      // 為各個區段添加動畫
+      const sections = document.querySelectorAll('.about-section');
+      sections.forEach((section, index) => {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(30px)';
+        section.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+        observer.observe(section);
+      });
+
+      // 表格行懸停效果
+      const tableRows = document.querySelectorAll('.price-table tr');
+      tableRows.forEach(row => {
+        row.addEventListener('mouseenter', function() {
+          this.style.backgroundColor = 'var(--bg-secondary)';
+        });
+        
+        row.addEventListener('mouseleave', function() {
+          this.style.backgroundColor = '';
+        });
+      });
+    });
+
+    // 結構化數據
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "SDS Team",
+      "alternateName": "Stinky Duck Studio",
+      "description": "專業軟體開發團隊，提供網站開發、行動應用開發、系統整合等服務，同時免費提供JSON格式化、Base64轉換、SQL美化、代碼比較等開發者工具",
+      "url": "https://sds-site.vercel.app",
+      "logo": "https://sds-site.vercel.app/img/sds-logo.png",
+      "foundingDate": "2024",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer service",
+        "description": "聯絡管道建置中，預計近期開放"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "TW",
+        "addressRegion": "Taiwan"
+      },
+      "areaServed": "全球",
+      "serviceType": [
+        "軟體開發",
+        "網站開發", 
+        "行動應用開發",
+        "系統整合",
+        "免費開發者工具"
+      ],
+      "knowsAbout": [
+        "JSON格式化",
+        "Base64轉換",
+        "SQL美化",
+        "代碼比較",
+        "JavaScript",
+        "React",
+        "Node.js",
+        "Python",
+        "MySQL",
+        "PostgreSQL"
+      ],
+      "offers": [
+        {
+          "@type": "Service",
+          "name": "網站開發",
+          "description": "響應式網站設計、電商平台、企業官網等全方位網站建置服務"
+        },
+        {
+          "@type": "Service", 
+          "name": "行動應用開發",
+          "description": "iOS、Android原生應用開發，以及跨平台應用解決方案"
+        },
+        {
+          "@type": "Service",
+          "name": "系統整合",
+          "description": "API開發、資料庫設計、第三方服務整合、企業系統客製化開發"
+        },
+        {
+          "@type": "Product",
+          "name": "免費開發者工具",
+          "description": "JSON格式化、Base64轉換、SQL美化、代碼比較等線上工具",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "TWD"
+          }
+        }
+      ]
+    };
+
+    // FAQ 結構化數據
+    const faqData = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "SDS團隊提供哪些免費開發工具？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "我們免費提供JSON格式化工具、Base64轉換器、SQL美化工具、代碼比較工具等多種實用的線上開發工具，全部採用純前端技術，確保數據安全。"
+          }
+        },
+        {
+          "@type": "Question", 
+          "name": "免費工具是否真的完全免費？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "是的，我們所有的線上開發工具都完全免費使用，無隱藏費用或使用限制，且採用純前端技術確保數據安全，無需註冊即可使用。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "SDS團隊提供哪些專業開發服務？", 
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "我們提供網站開發、行動應用開發、系統整合等專業軟體開發服務，包括響應式網站設計、iOS/Android應用、API開發、資料庫設計等。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "如何聯絡SDS團隊？",
+          "acceptedAnswer": {
+            "@type": "Answer", 
+            "text": "我們正在建立正式的聯絡管道，包含客服信箱、技術支援和商務合作窗口，預計將在近期內完成設置。"
+          }
+        }
+      ]
+    };
+
+    // 注入結構化數據
+    function injectStructuredData() {
+      // Organization 數據
+      const orgScript = document.createElement('script');
+      orgScript.type = 'application/ld+json';
+      orgScript.textContent = JSON.stringify(structuredData);
+      document.head.appendChild(orgScript);
+
+      // FAQ 數據
+      const faqScript = document.createElement('script');
+      faqScript.type = 'application/ld+json';
+      faqScript.textContent = JSON.stringify(faqData);
+      document.head.appendChild(faqScript);
+    }
+  </script>
+</body>
+</html>

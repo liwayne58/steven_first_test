@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="zh-TW" itemscope itemtype="https://schema.org/WebApplication">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Performance Optimization -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="referrer" content="origin-when-cross-origin" />
+    
+    <!-- SEO Meta Tags -->
+    <title>SQL格式化工具 - 線上SQL美化驗證器 | 免費多數據庫SQL Formatter</title>
+    <meta name="description" content="專業的線上SQL格式化工具，支援MySQL、PostgreSQL、Oracle、SQL Server等多種數據庫語法。免費SQL美化、壓縮、驗證與語法高亮，提升SQL代碼可讀性和開發效率。" />
+    <meta name="keywords" content="SQL formatter, SQL格式化, SQL美化, SQL beautifier, SQL驗證, MySQL formatter, PostgreSQL formatter, Oracle SQL, SQL Server, 數據庫工具, 線上工具, 開發工具, SQL parser" />
+    <meta name="author" content="SDS Site Tools" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="theme-color" content="#6366f1" />
+    
+    <!-- Enhanced Open Graph Meta Tags -->
+    <meta property="og:title" content="SQL格式化工具 - 線上SQL美化驗證器 | 免費多數據庫SQL Formatter" />
+    <meta property="og:description" content="專業的線上SQL格式化工具，支援MySQL、PostgreSQL、Oracle、SQL Server等多種數據庫語法。免費SQL美化、壓縮、驗證與語法高亮。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://sds-site.vercel.app/SqlFormatter" />
+    <meta property="og:image" content="https://sds-site.vercel.app/img/sql-formatter-preview.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="SQL格式化工具介面截圖" />
+    <meta property="og:site_name" content="SDS Site - 開發者工具集" />
+    <meta property="og:locale" content="zh_TW" />
+    
+    <!-- Enhanced Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="SQL格式化工具 - 線上SQL美化驗證器" />
+    <meta name="twitter:description" content="專業的線上SQL格式化工具，支援MySQL、PostgreSQL、Oracle、SQL Server等多種數據庫語法。免費SQL美化、壓縮、驗證。" />
+    <meta name="twitter:image" content="https://sds-site.vercel.app/img/sql-formatter-preview.jpg" />
+    <meta name="twitter:image:alt" content="SQL格式化工具介面" />
+    <meta name="twitter:creator" content="@SDSSite" />
+    <meta name="twitter:site" content="@SDSSite" />
+    
+    <!-- Technical Meta Tags -->
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="SQL Formatter" />
+    
+    <!-- Performance and Preload -->
+    <link rel="preload" href="styles.css" as="style" />
+    <link rel="preload" href="util/sql-formatter.min.js" as="script" />
+    <link rel="preload" href="util/Toast.js" as="script" />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="SqlFormatter.html" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="https://sds-site.vercel.app/img/favicon.ico" />
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css" />
+    
+    <!-- SQL Formatter Library -->
+    <script src="util/sql-formatter.min.js"></script>
+
+    <!-- Toast JS -->
+    <script src="util/Toast.js"></script>
+
+    <style>
+        /* SQL Formatter 專用樣式 */
+        .sql-controls {
+            background: var(--bg-secondary);
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 0;
+        }
+
+        .sql-controls label {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 14px;
+            margin-right: 8px;
+        }
+
+        .sql-controls select {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: border-color 0.2s ease;
+            margin-right: 20px;
+        }
+
+        .sql-controls select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .sql-controls button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-right: 10px;
+        }
+
+        .sql-controls button:first-of-type {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .sql-controls button:first-of-type:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .sql-controls button:last-of-type {
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .sql-controls button:last-of-type:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .sql-editor-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: var(--border-color);
+            min-height: 500px;
+            height: 500px;
+        }
+
+        .sql-editor-panel {
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .sql-panel-header {
+            background: var(--bg-secondary);
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+            min-height: 32px; /* 確保空的 panel-actions 也有固定高度 */
+        }
+
+        .btn-icon {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            min-width: fit-content;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-icon:hover {
+            background: var(--surface-light);
+            color: var(--text-primary);
+            border-color: var(--primary-color);
+        }
+
+        .sql-output {
+            flex: 1;
+            padding: 16px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: none;
+            outline: none;
+            overflow: auto;
+            white-space: pre;
+            word-wrap: normal;
+            min-height: 0;
+            box-sizing: border-box;
+        }
+
+        .sql-textarea {
+            flex: 1;
+            padding: 20px;
+            border: none;
+            outline: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: none;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .sql-textarea:focus {
+            background: #fafbfc;
+        }
+
+        .status {
+            padding: 12px 20px;
+            margin: 20px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+        }
+
+        .status.success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: var(--success-color);
+        }
+
+        .status.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: var(--error-color);
+        }
+
+        .status.info {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            color: var(--primary-color);
+        }
+
+        /* SQL Syntax Highlighting - 優化配色方案 */
+        .sql-keyword { 
+            color: #569cd6; /* 藍色 - SQL關鍵字 */
+            font-weight: 600; 
+        }
+        .sql-function { 
+            color: #dcdcaa; /* 淡黃色 - 函數名稱 */
+            font-weight: 500; 
+        }
+        .sql-string { 
+            color: #ce9178; /* 橙褐色 - 字串 */
+        }
+        .sql-number { 
+            color: #b5cea8; /* 淡綠色 - 數字 */
+            font-weight: 500;
+        }
+        .sql-comment { 
+            color: #6a9955; /* 綠色 - 註解 */
+            font-style: italic; 
+        }
+        .sql-operator { 
+            color: #d4d4d4; /* 淺灰色 - 操作符 */
+            font-weight: 500; 
+        }
+
+        @media (max-width: 768px) {
+            .sql-controls {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 16px;
+            }
+
+            .sql-editor-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: 300px 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>SQL格式化工具 - 專業多數據庫SQL美化與驗證器</h1>
+            <p>強大的線上SQL格式化與驗證工具，支援MySQL、PostgreSQL、Oracle、SQL Server等多種數據庫語法</p>
+        </header>
+
+        <main role="main" aria-label="SQL格式化工具主要功能">
+            <!-- SQL Controls Section -->
+            <section class="sql-controls" aria-label="SQL格式化設定">
+                <label for="language">數據庫類型:</label>
+                <select id="language" aria-label="選擇數據庫類型">
+                    <option value="sql">Standard SQL</option>
+                    <option value="mysql">MySQL</option>
+                    <option value="postgresql">PostgreSQL</option>
+                    <option value="tsql">SQL Server</option>
+                    <option value="plsql">Oracle</option>
+                    <option value="sqlite">SQLite</option>
+                </select>
+                
+                <label for="keywordCase">關鍵字大小寫:</label>
+                <select id="keywordCase" aria-label="選擇關鍵字大小寫格式">
+                    <option value="preserve">保持原樣</option>
+                    <option value="upper">大寫</option>
+                    <option value="lower">小寫</option>
+                </select>
+                
+                <div class="checkbox-container">
+                    <input type="checkbox" id="autoCopy" class="custom-checkbox">
+                    <label for="autoCopy" class="checkbox-label" title="啟用後，當您貼上SQL或點擊格式化按鈕時，會自動複製格式化結果到剪貼板">自動複製結果 (貼上/格式化時)</label>
+                </div>
+                
+                <button onclick="formatSQL()" aria-label="格式化SQL">🎨 格式化</button>
+                <button onclick="clearAll()" aria-label="清空所有內容">🗑️ 清空</button>
+            </section>
+
+            <!-- SQL Editor Section -->
+            <section class="sql-editor-container" aria-label="SQL編輯器">
+                <div class="sql-editor-panel">
+                    <div class="sql-panel-header">
+                        📝 輸入 SQL 查詢
+                        <div class="panel-actions">
+                            <span style="visibility: hidden; padding: 6px 12px; font-size: 12px;">📋 複製</span>
+                        </div>
+                    </div>
+                    <textarea 
+                        id="sqlInput" 
+                        class="sql-textarea"
+                        placeholder="請在此處輸入您的SQL查詢語句...
+
+範例:
+SELECT u.name, u.email, p.title 
+FROM users u 
+JOIN posts p ON u.id = p.user_id 
+WHERE u.status = 'active' 
+ORDER BY p.created_at DESC;"
+                        oninput="autoFormat(false)"
+                        onpaste="handlePaste(event)"
+                        aria-label="SQL輸入區域"
+                        aria-describedby="sql-input-description"
+                    ></textarea>
+                    <div id="sql-input-description" class="sr-only">
+                        在此輸入SQL查詢語句，支援多種數據庫語法，包括MySQL、PostgreSQL、Oracle、SQL Server等
+                    </div>
+                </div>
+
+                <div class="sql-editor-panel">
+                    <div class="sql-panel-header">
+                        ✨ 格式化結果
+                        <div class="panel-actions">
+                            <button type="button" id="copyBtn" class="btn-icon" onclick="copyOutput()" title="複製格式化後的SQL" aria-label="複製結果">📋 複製</button>
+                        </div>
+                    </div>
+                    <div id="sqlOutput" class="sql-output" contenteditable="false" aria-label="格式化後的SQL結果" aria-live="polite"></div>
+                    <textarea 
+                        id="sqlEditArea" 
+                        class="sql-textarea"
+                        placeholder="在此編輯SQL..."
+                        style="display: none;"
+                        aria-label="SQL編輯區域"
+                    ></textarea>
+                </div>
+            </section>
+
+            <!-- How to Use Section -->
+            <section class="how-to-use" aria-label="使用說明">
+                <h2>如何使用SQL格式化工具</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3>選擇數據庫類型</h3>
+                        <p>從下拉選單中選擇您使用的數據庫類型，如MySQL、PostgreSQL等，確保格式化符合特定語法</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3>輸入SQL查詢</h3>
+                        <p>將您的SQL查詢語句複製並貼到左側輸入框中，支援複雜的JOIN、子查詢等各種SQL語法</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3>格式化與複製</h3>
+                        <p>點擊格式化按鈕美化SQL代碼，在右側查看結果，使用複製按鈕快速複製格式化後的SQL</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Database Support Section -->
+            <section class="database-support" aria-label="支援的數據庫">
+                <h2>支援的數據庫類型</h2>
+                <div class="database-grid">
+                    <div class="database-card">
+                        <div class="database-icon">🐬</div>
+                        <h3>MySQL</h3>
+                        <p>全球最流行的開源關聯式數據庫，支援MySQL特有語法如LIMIT、AUTO_INCREMENT等</p>
+                    </div>
+                    <div class="database-card">
+                        <div class="database-icon">🐘</div>
+                        <h3>PostgreSQL</h3>
+                        <p>強大的開源對象關聯數據庫系統，支援高級功能如陣列、JSON、視窗函數等</p>
+                    </div>
+                    <div class="database-card">
+                        <div class="database-icon">🏛️</div>
+                        <h3>Oracle</h3>
+                        <p>企業級關聯式數據庫，支援PL/SQL、分析函數、DUAL表等Oracle特色語法</p>
+                    </div>
+                    <div class="database-card">
+                        <div class="database-icon">🏢</div>
+                        <h3>SQL Server</h3>
+                        <p>Microsoft的關聯式數據庫管理系統，支援T-SQL語法、CTE、MERGE語句等</p>
+                    </div>
+                    <div class="database-card">
+                        <div class="database-icon">🪶</div>
+                        <h3>SQLite</h3>
+                        <p>輕量級的嵌入式數據庫，支援標準SQL語法，適合小型應用和原型開發</p>
+                    </div>
+                    <div class="database-card">
+                        <div class="database-icon">📊</div>
+                        <h3>Standard SQL</h3>
+                        <p>通用的SQL標準語法，適用於大多數關聯式數據庫系統的基本SQL操作</p>
+                    </div>
+                </div>
+            </section>
+
+                        <!-- Features Section -->
+            <section class="features" aria-label="SQL工具特色功能">
+                <h2 class="sr-only">SQL格式化工具特色功能</h2>
+                <div class="feature-card">
+                    <div class="feature-icon">🗄️</div>
+                    <h3>多數據庫支援</h3>
+                    <p>支援MySQL、PostgreSQL、Oracle、SQL Server、SQLite等主流數據庫的SQL語法格式化和驗證</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>智能SQL美化</h3>
+                    <p>自動檢測並美化SQL格式，支援語法高亮顯示，提供專業的SQL代碼閱讀體驗</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>實時語法驗證</h3>
+                    <p>即時檢查SQL語法錯誤，提供詳細錯誤信息，幫助快速修正SQL查詢問題</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔧</div>
+                    <h3>自定義格式選項</h3>
+                    <p>支援關鍵字大小寫控制、縮排設定等自定義格式選項，滿足不同編碼風格需求</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Navigation -->
+        <nav class="navigation" data-auto-navigation>
+            <!-- 導航內容會自動載入 -->
+        </nav>
+
+        <!-- 頁腳會由導航組件自動添加 -->
+        
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        let isAutoFormatEnabled = true;
+        let currentOptions = {};
+        
+        // Sample SQL queries
+        const sqlSamples = {
+            basic: `SELECT 
+    customer_id,
+    first_name,
+    last_name,
+    email
+FROM customers 
+WHERE status = 'active' 
+ORDER BY last_name;`,
+            
+            join: `SELECT 
+    c.customer_id,
+    c.first_name,
+    c.last_name,
+    o.order_id,
+    o.order_date,
+    p.product_name,
+    oi.quantity,
+    oi.price
+FROM customers c
+INNER JOIN orders o ON c.customer_id = o.customer_id
+INNER JOIN order_items oi ON o.order_id = oi.order_id
+INNER JOIN products p ON oi.product_id = p.product_id
+WHERE o.order_date >= '2024-01-01'
+ORDER BY o.order_date DESC, c.last_name;`,
+            
+            subquery: `SELECT 
+    product_name,
+    price,
+    category_id
+FROM products 
+WHERE price > (
+    SELECT AVG(price) 
+    FROM products
+)
+AND category_id IN (
+    SELECT category_id 
+    FROM categories 
+    WHERE status = 'active'
+)
+ORDER BY price DESC;`,
+            
+            aggregate: `SELECT 
+    c.category_name,
+    COUNT(p.product_id) as product_count,
+    AVG(p.price) as avg_price,
+    MIN(p.price) as min_price,
+    MAX(p.price) as max_price,
+    SUM(oi.quantity) as total_sold
+FROM categories c
+LEFT JOIN products p ON c.category_id = p.category_id
+LEFT JOIN order_items oi ON p.product_id = oi.product_id
+GROUP BY c.category_id, c.category_name
+HAVING COUNT(p.product_id) > 0
+ORDER BY total_sold DESC;`,
+            
+            window: `SELECT 
+    employee_id,
+    first_name,
+    last_name,
+    department,
+    salary,
+    ROW_NUMBER() OVER (PARTITION BY department ORDER BY salary DESC) as dept_rank,
+    RANK() OVER (ORDER BY salary DESC) as company_rank,
+    LAG(salary) OVER (PARTITION BY department ORDER BY salary) as prev_salary,
+    salary - LAG(salary) OVER (PARTITION BY department ORDER BY salary) as salary_diff
+FROM employees
+WHERE hire_date >= '2020-01-01';`,
+            
+            cte: `WITH monthly_sales AS (
+    SELECT 
+        DATE_TRUNC('month', order_date) as month,
+        SUM(total_amount) as monthly_total,
+        COUNT(*) as order_count
+    FROM orders 
+    WHERE order_date >= '2024-01-01'
+    GROUP BY DATE_TRUNC('month', order_date)
+),
+sales_growth AS (
+    SELECT 
+        month,
+        monthly_total,
+        order_count,
+        LAG(monthly_total) OVER (ORDER BY month) as prev_month_total,
+        ROUND(
+            (monthly_total - LAG(monthly_total) OVER (ORDER BY month)) / 
+            LAG(monthly_total) OVER (ORDER BY month) * 100, 2
+        ) as growth_percentage
+    FROM monthly_sales
+)
+SELECT * FROM sales_growth ORDER BY month;`,
+            
+            procedure: `CREATE PROCEDURE GetCustomerOrderSummary(
+    IN customer_id INT,
+    IN start_date DATE,
+    IN end_date DATE
+)
+BEGIN
+    DECLARE total_orders INT DEFAULT 0;
+    DECLARE total_amount DECIMAL(10,2) DEFAULT 0.00;
+    
+    SELECT 
+        COUNT(*),
+        COALESCE(SUM(total_amount), 0)
+    INTO total_orders, total_amount
+    FROM orders 
+    WHERE customer_id = customer_id
+    AND order_date BETWEEN start_date AND end_date;
+    
+    SELECT 
+        o.order_id,
+        o.order_date,
+        o.total_amount,
+        COUNT(oi.item_id) as item_count
+    FROM orders o
+    LEFT JOIN order_items oi ON o.order_id = oi.order_id
+    WHERE o.customer_id = customer_id
+    AND o.order_date BETWEEN start_date AND end_date
+    GROUP BY o.order_id, o.order_date, o.total_amount
+    ORDER BY o.order_date DESC;
+    
+    SELECT total_orders, total_amount;
+END;`,
+            
+            complex: `WITH RECURSIVE category_hierarchy AS (
+    SELECT 
+        category_id,
+        category_name,
+        parent_category_id,
+        0 as level,
+        CAST(category_name AS VARCHAR(1000)) as path
+    FROM categories 
+    WHERE parent_category_id IS NULL
+    
+    UNION ALL
+    
+    SELECT 
+        c.category_id,
+        c.category_name,
+        c.parent_category_id,
+        ch.level + 1,
+        CONCAT(ch.path, ' > ', c.category_name)
+    FROM categories c
+    INNER JOIN category_hierarchy ch ON c.parent_category_id = ch.category_id
+),
+product_stats AS (
+    SELECT 
+        p.category_id,
+        COUNT(*) as product_count,
+        AVG(p.price) as avg_price,
+        SUM(COALESCE(oi.quantity, 0)) as total_sold,
+        SUM(COALESCE(oi.quantity * oi.price, 0)) as total_revenue
+    FROM products p
+    LEFT JOIN order_items oi ON p.product_id = oi.product_id
+    LEFT JOIN orders o ON oi.order_id = o.order_id
+    WHERE o.order_date >= CURRENT_DATE - INTERVAL '1 year'
+    OR o.order_date IS NULL
+    GROUP BY p.category_id
+)
+SELECT 
+    ch.category_id,
+    ch.path as category_path,
+    ch.level,
+    ps.product_count,
+    ROUND(ps.avg_price, 2) as avg_price,
+    ps.total_sold,
+    ROUND(ps.total_revenue, 2) as total_revenue,
+    ROUND(ps.total_revenue / SUM(ps.total_revenue) OVER () * 100, 2) as revenue_percentage
+FROM category_hierarchy ch
+LEFT JOIN product_stats ps ON ch.category_id = ps.category_id
+ORDER BY ch.level, ps.total_revenue DESC NULLS LAST;`
+        };
+
+        // Database information
+        const databaseInfo = {
+            sql: "標準 SQL: 適用於大多數關聯式數據庫的通用SQL語法",
+            mysql: "MySQL: 支援MySQL特有語法，如 LIMIT、AUTO_INCREMENT 等",
+            postgresql: "PostgreSQL: 支援高級功能如陣列、JSON、視窗函數等",
+            tsql: "SQL Server: 支援T-SQL語法、CTE、MERGE語句等",
+            plsql: "Oracle: 支援PL/SQL、分析函數、DUAL表等Oracle特色",
+            sqlite: "SQLite: 輕量級數據庫，支援基本SQL功能",
+            mariadb: "MariaDB: MySQL的分支，支援額外的存儲引擎和功能"
+        };
+
+        // Auto format on input
+        function autoFormat(isPaste = false) {
+            const input = document.getElementById('sqlInput').value.trim();
+            
+            if (input === '') {
+                clearOutput();
+                return;
+            }
+            
+            // Use sql-formatter for auto-format with basic options
+            try {
+                const basicOptions = {
+                    language: 'sql',
+                    keywordCase: 'preserve',
+                    tabWidth: 2,
+                    useTabs: false
+                };
+                const formatted = formatSQLWithLibrary(input, basicOptions);
+                displayFormattedSQL(formatted, isPaste);
+            } catch (error) {
+                // Fallback to basic formatting
+                try {
+                    const formatted = basicSQLFormat(input);
+                    displayFormattedSQL(formatted, isPaste);
+                } catch (fallbackError) {
+                    // Silent fail for auto format
+                }
+            }
+        }
+        
+        // Handle paste events
+        function handlePaste(event) {
+            // Call autoFormat with isPaste=true after a short delay to allow paste to complete
+            setTimeout(() => {
+                autoFormat(true);
+            }, 10);
+        }
+
+        // Main format function
+        function formatSQL() {
+            const input = document.getElementById('sqlInput').value.trim();
+            
+            if (input === '') {
+                toast.showError('請先輸入SQL查詢');
+                return;
+            }
+            
+            try {
+                const options = getFormattingOptions();
+                const formatted = formatSQLWithLibrary(input, options);
+                // Manual formatting button click should always enable auto-copy if checked
+                displayFormattedSQL(formatted, true);
+            } catch (error) {
+                displayError('格式化錯誤: ' + error.message);
+            }
+        }
+
+        // Clear all content
+        function clearAll() {
+            document.getElementById('sqlInput').value = '';
+            clearOutput();
+        }
+
+        // Clear output only
+        function clearOutput() {
+            const output = document.getElementById('sqlOutput');
+            const editArea = document.getElementById('sqlEditArea');
+            
+            output.innerHTML = '';
+            if (editArea) {
+                editArea.value = '';
+            }
+            
+            // Ensure we're in display mode
+            output.style.display = 'block';
+            if (editArea) {
+                editArea.style.display = 'none';
+            }
+            
+            const toggleBtn = document.getElementById('editToggle');
+            if (toggleBtn) {
+                toggleBtn.textContent = '📝';
+                toggleBtn.title = '切換編輯模式';
+            }
+        }
+
+        // Get formatting options
+        function getFormattingOptions() {
+            // Map our database types to sql-formatter supported languages
+            const databaseTypeMap = {
+                'mysql': 'mysql',
+                'postgresql': 'postgresql', 
+                'tsql': 'tsql',
+                'plsql': 'plsql',
+                'sqlite': 'sqlite'
+            };
+            
+            const dbType = document.getElementById('language').value;
+            
+            return {
+                language: databaseTypeMap[dbType] || 'sql',
+                keywordCase: document.getElementById('keywordCase').value,
+                tabWidth: 2,
+                useTabs: false,
+                linesBetweenQueries: 2,
+                denseOperators: false,
+                newlineBeforeOpenParen: false,
+                newlineBeforeCloseParen: false
+            };
+        }
+
+        // Basic SQL formatting
+        function basicSQLFormat(sql) {
+            const keywords = ['SELECT', 'FROM', 'WHERE', 'GROUP BY', 'HAVING', 'ORDER BY', 'JOIN', 'INNER JOIN', 'LEFT JOIN', 'RIGHT JOIN', 'FULL JOIN', 'UNION', 'INSERT', 'UPDATE', 'DELETE', 'CREATE', 'ALTER', 'DROP'];
+            
+            let formatted = sql;
+            
+            // Add line breaks before major keywords (preserve original case)
+            keywords.forEach(keyword => {
+                const regex = new RegExp(`\\b${keyword.replace(/\s+/g, '\\s+')}\\b`, 'gi');
+                formatted = formatted.replace(regex, (match) => `\n${match}`);
+            });
+            
+            // Clean up multiple line breaks
+            formatted = formatted.replace(/\n+/g, '\n').trim();
+            
+            // Add basic indentation
+            const lines = formatted.split('\n');
+            const indented = lines.map((line, index) => {
+                const trimmed = line.trim();
+                if (trimmed === '') return '';
+                
+                if (keywords.some(kw => trimmed.match(new RegExp(`^${kw.replace(/\s+/g, '\\s+')}\\b`, 'i')))) {
+                    return trimmed;
+                } else {
+                    return '    ' + trimmed;
+                }
+            });
+            
+            return indented.join('\n');
+        }
+
+        // SQL formatting function using sql-formatter library
+        function formatSQLWithLibrary(sql, options) {
+            try {
+                // Check if sql-formatter is available
+                if (typeof sqlFormatter === 'undefined') {
+                    throw new Error('sql-formatter library not available');
+                }
+                
+                // Convert our options to sql-formatter options
+                const formatterConfig = {
+                    language: options.language || 'sql',
+                    tabWidth: options.tabWidth || 2,
+                    useTabs: false,
+                    keywordCase: options.keywordCase === 'preserve' ? 'preserve' : options.keywordCase,
+                    linesBetweenQueries: options.linesBetweenQueries || 2
+                };
+                
+                // Regular formatting
+                const formatted = sqlFormatter.format(sql, formatterConfig);
+                
+                // Apply additional custom formatting based on options
+                
+                return formatted;
+                
+            } catch (error) {
+                // Fallback to basic formatting if sql-formatter fails
+                console.warn('sql-formatter failed, using fallback:', error.message);
+                return basicSQLFormat(sql);
+            }
+        }
+        
+        // Carefully remove comments while preserving SQL structure
+        function removeCommentsCarefully(sql) {
+            let result = '';
+            let i = 0;
+            let inSingleQuote = false;
+            let inDoubleQuote = false;
+            let inSingleLineComment = false;
+            let inMultiLineComment = false;
+            
+            while (i < sql.length) {
+                const char = sql[i];
+                const nextChar = i + 1 < sql.length ? sql[i + 1] : '';
+                
+                // Handle string literals first (they have highest priority)
+                if (!inSingleLineComment && !inMultiLineComment) {
+                    if (char === "'" && !inDoubleQuote) {
+                        inSingleQuote = !inSingleQuote;
+                        result += char;
+                        i++;
+                        continue;
+                    }
+                    
+                    if (char === '"' && !inSingleQuote) {
+                        inDoubleQuote = !inDoubleQuote;
+                        result += char;
+                        i++;
+                        continue;
+                    }
+                }
+                
+                // If we're inside a string, just copy the character
+                if (inSingleQuote || inDoubleQuote) {
+                    result += char;
+                    i++;
+                    continue;
+                }
+                
+                // Handle comments (only when not in strings)
+                if (!inSingleLineComment && !inMultiLineComment) {
+                    // Start of single-line comment
+                    if (char === '-' && nextChar === '-') {
+                        inSingleLineComment = true;
+                        i += 2; // Skip both dashes
+                        continue;
+                    }
+                    
+                    // Start of multi-line comment
+                    if (char === '/' && nextChar === '*') {
+                        inMultiLineComment = true;
+                        i += 2; // Skip /*
+                        continue;
+                    }
+                }
+                
+                // Handle end of comments
+                if (inSingleLineComment) {
+                    if (char === '\n' || char === '\r') {
+                        inSingleLineComment = false;
+                        result += char;
+                    }
+                    i++;
+                    continue;
+                }
+                
+                if (inMultiLineComment) {
+                    if (char === '*' && nextChar === '/') {
+                        inMultiLineComment = false;
+                        i += 2; // Skip */
+                        continue;
+                    }
+                    i++;
+                    continue;
+                }
+                
+                // If we're not in any comment or string, copy the character
+                result += char;
+                i++;
+            }
+            
+            return result.trim();
+        }
+
+        // Compact SQL format
+        function compactSQLFormat(sql) {
+            return sql
+                .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
+                .replace(/\s*\(\s*/g, '(')  // Remove spaces around parentheses
+                .replace(/\s*\)\s*/g, ')')
+                .replace(/\s*,\s*/g, ',')  // Remove spaces around commas
+                .replace(/\s*;\s*/g, ';')  // Remove spaces around semicolons
+                .trim();
+        }
+
+        // Basic SQL validation
+        function validateSQLSyntax(sql) {
+            const errors = [];
+            
+            // Check for basic syntax issues
+            const openParens = (sql.match(/\(/g) || []).length;
+            const closeParens = (sql.match(/\)/g) || []).length;
+            
+            if (openParens !== closeParens) {
+                errors.push('括號不匹配');
+            }
+            
+            // Check for unterminated strings
+            const singleQuotes = (sql.match(/'/g) || []).length;
+            const doubleQuotes = (sql.match(/"/g) || []).length;
+            
+            if (singleQuotes % 2 !== 0) {
+                errors.push('單引號未正確閉合');
+            }
+            
+            if (doubleQuotes % 2 !== 0) {
+                errors.push('雙引號未正確閉合');
+            }
+            
+            // Check for basic SQL structure
+            if (!sql.match(/\b(SELECT|INSERT|UPDATE|DELETE|CREATE|ALTER|DROP)\b/i)) {
+                errors.push('未檢測到有效的SQL語句');
+            }
+            
+            return errors;
+        }
+
+        // Display formatted SQL
+        function displayFormattedSQL(sql, isPaste = false) {
+            const output = document.getElementById('sqlOutput');
+            const editArea = document.getElementById('sqlEditArea');
+            
+            // Display with syntax highlighting in div
+            output.innerHTML = sqlSyntaxHighlight(sql);
+            // Keep plain text in edit area
+            if (editArea) {
+                editArea.value = sql;
+            }
+            
+            // Ensure we're in display mode
+            output.style.display = 'block';
+            if (editArea) {
+                editArea.style.display = 'none';
+            }
+            
+            const toggleBtn = document.getElementById('editToggle');
+            if (toggleBtn) {
+                toggleBtn.textContent = '📝';
+                toggleBtn.title = '切換編輯模式';
+            }
+            
+            // Auto-copy functionality - only execute when it's a paste event
+            const autoCopyEnabled = document.getElementById('autoCopy').checked;
+            if (autoCopyEnabled && sql && isPaste) {
+                setTimeout(() => {
+                    copyOutput('auto');
+                }, 100);
+            }
+        }
+
+        // SQL syntax highlighting
+        function sqlSyntaxHighlight(sql) {
+            // Escape HTML first
+            let highlighted = sql.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            
+            // Replace with placeholders first to avoid conflicts
+            const placeholders = new Map();
+            let placeholderIndex = 0;
+            
+            // Helper function to create placeholder
+            function createPlaceholder(content, className) {
+                const placeholder = `__PLACEHOLDER_${placeholderIndex++}__`;
+                placeholders.set(placeholder, `<span class="${className}">${content}</span>`);
+                return placeholder;
+            }
+            
+            // 1. Comments first
+            highlighted = highlighted.replace(/--.*$/gm, (match) => {
+                return createPlaceholder(match, 'sql-comment');
+            });
+            highlighted = highlighted.replace(/\/\*[\s\S]*?\*\//g, (match) => {
+                return createPlaceholder(match, 'sql-comment');
+            });
+            
+            // 2. Strings
+            highlighted = highlighted.replace(/'([^']*(?:''[^']*)*)'/g, (match) => {
+                if (match.includes('__PLACEHOLDER_')) return match;
+                return createPlaceholder(match, 'sql-string');
+            });
+            highlighted = highlighted.replace(/"([^"]*(?:""[^"]*)*?)"/g, (match) => {
+                if (match.includes('__PLACEHOLDER_')) return match;
+                return createPlaceholder(match, 'sql-string');
+            });
+            
+            // 3. Numbers
+            highlighted = highlighted.replace(/\b\d+(?:\.\d+)?\b/g, (match) => {
+                if (match.includes('__PLACEHOLDER_')) return match;
+                return createPlaceholder(match, 'sql-number');
+            });
+            
+            // 4. Functions
+            const functions = [
+                'COUNT', 'SUM', 'AVG', 'MIN', 'MAX', 'UPPER', 'LOWER', 'SUBSTRING', 'LENGTH', 'ROUND',
+                'NOW', 'DATE', 'YEAR', 'MONTH', 'DAY', 'COALESCE', 'ISNULL', 'NULLIF',
+                'CAST', 'CONVERT', 'ROW_NUMBER', 'RANK', 'DENSE_RANK', 'LAG', 'LEAD'
+            ];
+            
+            functions.forEach(func => {
+                const regex = new RegExp(`\\b${func}\\b(?=\\s*\\()`, 'gi');
+                highlighted = highlighted.replace(regex, (match) => {
+                    if (match.includes('__PLACEHOLDER_')) return match;
+                    return createPlaceholder(match, 'sql-function');
+                });
+            });
+            
+            // 5. Keywords
+            const multiWordKeywords = [
+                'INNER JOIN', 'LEFT JOIN', 'RIGHT JOIN', 'FULL JOIN', 'OUTER JOIN',
+                'GROUP BY', 'ORDER BY', 'UNION ALL'
+            ];
+            
+            multiWordKeywords.forEach(keyword => {
+                const regex = new RegExp(`\\b${keyword.replace(/\s+/g, '\\s+')}\\b`, 'gi');
+                highlighted = highlighted.replace(regex, (match) => {
+                    if (match.includes('__PLACEHOLDER_')) return match;
+                    return createPlaceholder(match, 'sql-keyword');
+                });
+            });
+            
+            const singleWordKeywords = [
+                'SELECT', 'FROM', 'WHERE', 'HAVING', 'JOIN', 'UNION', 'INSERT', 'UPDATE', 'DELETE',
+                'CREATE', 'ALTER', 'DROP', 'TABLE', 'INDEX', 'VIEW', 'PROCEDURE', 'FUNCTION',
+                'AS', 'ON', 'AND', 'OR', 'NOT', 'NULL', 'IS', 'IN', 'EXISTS',
+                'BETWEEN', 'LIKE', 'DISTINCT', 'ALL', 'ANY', 'SOME',
+                'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'WITH', 'RECURSIVE'
+            ];
+            
+            singleWordKeywords.forEach(keyword => {
+                const regex = new RegExp(`\\b${keyword}\\b`, 'gi');
+                highlighted = highlighted.replace(regex, (match) => {
+                    if (match.includes('__PLACEHOLDER_')) return match;
+                    return createPlaceholder(match, 'sql-keyword');
+                });
+            });
+            
+            // 6. Operators
+            const operators = ['<=', '>=', '<>', '!=', '=', '<', '>', '+', '-', '*', '/', '%'];
+            operators.forEach(op => {
+                const escapedOp = op.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const regex = new RegExp(`(\\s|^)(${escapedOp})(\\s|$)`, 'g');
+                highlighted = highlighted.replace(regex, (match, before, operator, after) => {
+                    if (match.includes('__PLACEHOLDER_')) return match;
+                    return before + createPlaceholder(operator, 'sql-operator') + after;
+                });
+            });
+            
+            // Replace all placeholders with actual HTML
+            placeholders.forEach((html, placeholder) => {
+                highlighted = highlighted.replace(new RegExp(placeholder, 'g'), html);
+            });
+            
+            return highlighted;
+        }
+
+        // Display error message
+        function displayError(message) {
+            const output = document.getElementById('sqlOutput');
+            const editArea = document.getElementById('sqlEditArea');
+            
+            output.innerHTML = `<span style="color: #ff6b6b;">❌ ${message}</span>`;
+            if (editArea) {
+                editArea.value = `❌ ${message}`;
+            }
+            
+            // Ensure we're in display mode
+            output.style.display = 'block';
+            if (editArea) {
+                editArea.style.display = 'none';
+            }
+            
+            const toggleBtn = document.getElementById('editToggle');
+            if (toggleBtn) {
+                toggleBtn.textContent = '📝';
+                toggleBtn.title = '切換編輯模式';
+            }
+        }
+
+        // Update alignment preview
+        function updateAlignmentPreview() {
+            const listStyle = document.getElementById('listAlignStyle').value;
+            const stackedAlign = document.getElementById('stackedAlign').value;
+            const preview = document.getElementById('alignmentPreview');
+            
+            let previewText = '';
+            
+            if (listStyle === 'stacked') {
+                if (stackedAlign === 'left') {
+                    previewText = `SELECT   customer_id,
+         first_name,
+         last_name
+FROM     customers
+WHERE    status = 'active'
+ORDER BY last_name`;
+                } else {
+                    previewText = `  SELECT customer_id,
+         first_name,
+         last_name
+    FROM customers
+   WHERE status = 'active'
+ORDER BY last_name`;
+                }
+            } else {
+                previewText = `SELECT customer_id, first_name, last_name
+FROM customers
+WHERE status = 'active'
+ORDER BY last_name`;
+            }
+            
+            preview.textContent = previewText;
+        }
+
+        // Update database info
+        function updateDatabaseInfo() {
+            const dbType = document.getElementById('databaseType').value;
+            document.getElementById('databaseInfo').innerHTML = 
+                `<strong>${dbType.toUpperCase()}:</strong> ${databaseInfo[dbType]}`;
+        }
+
+        // Load sample SQL
+        function loadSample(type) {
+            if (sqlSamples[type]) {
+                document.getElementById('sqlInput').value = sqlSamples[type];
+                autoFormat();
+                updateStatus(`已載入${type}範例`, 'valid');
+            }
+        }
+
+        // Clear all content
+        function clearAll() {
+            document.getElementById('sqlInput').value = '';
+            clearOutput();
+            updateStatus('已清空所有內容', 'neutral');
+            updateCharCount('');
+            updateLineCount('');
+        }
+
+        // Copy output to clipboard
+        async function copyOutput(source = 'manual') {
+            const output = document.getElementById('sqlOutput');
+            const editArea = document.getElementById('sqlEditArea');
+            let text = '';
+            
+            // Get text from the currently visible element
+            if (editArea && editArea.style.display !== 'none') {
+                text = editArea.value;
+            } else {
+                text = output.textContent || output.innerText || '';
+            }
+            
+            if (!text.trim()) {
+                text = document.getElementById('sqlInput').value.trim();
+                if (text) {
+                    try {
+                        const options = getFormattingOptions();
+                        text = formatSQLWithLibrary(text, options);
+                    } catch (e) {
+                        text = basicSQLFormat(text);
+                    }
+                }
+            }
+            
+            if (!text.trim()) {
+                if (source === 'manual') {
+                    toast.showError('沒有可複製的內容');
+                }
+                return;
+            }
+            
+            try {
+                await navigator.clipboard.writeText(text);
+                
+                // Only show visual feedback if this is a manual copy
+                if (source === 'manual') {
+                    const button = event.target.closest('.btn');
+                    const originalHtml = button.innerHTML;
+                    button.classList.add('copy-success');
+                    button.innerHTML = '<span>✓</span> 已複製';
+                    
+                    setTimeout(() => {
+                        button.classList.remove('copy-success');
+                        button.innerHTML = originalHtml;
+                    }, 1500);
+                    
+                    updateStatus('已複製到剪貼板', 'valid');
+                    toast.showSuccess('已複製到剪貼板');
+                } else if (source === 'auto') {
+                    // For auto-copy, show a less intrusive notification
+                    const copyBtn = document.getElementById('copyBtn');
+                    if (copyBtn) {
+                        copyBtn.innerHTML = '<span>✓</span> 已自動複製';
+                        setTimeout(() => {
+                            copyBtn.innerHTML = '📋 複製';
+                        }, 1500);
+                    }
+                    
+                    updateStatus('已自動複製到剪貼板', 'valid');
+                    toast.showSuccess('已自動複製到剪貼板');
+                }
+            } catch (err) {
+                // Fallback for browsers that don't support clipboard API
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                if (source === 'manual') {
+                    toast.showSuccess('已複製到剪貼板');
+                    updateStatus('已複製到剪貼板', 'valid');
+                } else {
+                    toast.showSuccess('已自動複製到剪貼板');
+                    updateStatus('已自動複製到剪貼板', 'valid');
+                }
+            }
+        }
+
+        // Download SQL file
+        // function downloadSQL() {
+        //     const output = document.getElementById('sqlOutput');
+        //     let text = output.textContent || output.innerText;
+            
+        //     if (!text.trim()) {
+        //         text = document.getElementById('sqlInput').value.trim();
+        //         if (text) {
+        //             try {
+        //                 const options = getFormattingOptions();
+        //                 text = formatSQLWithLibrary(text, options);
+        //             } catch (e) {
+        //                 text = basicSQLFormat(text);
+        //             }
+        //         }
+        //     }
+            
+        //     if (!text.trim()) {
+        //         toast.info('沒有可下載的內容');
+        //         return;
+        //     }
+            
+        //     const blob = new Blob([text], { type: 'text/plain' });
+        //     const url = window.URL.createObjectURL(blob);
+        //     const a = document.createElement('a');
+        //     a.href = url;
+        //     a.download = 'formatted_query.sql';
+        //     document.body.appendChild(a);
+        //     a.click();
+        //     document.body.removeChild(a);
+        //     window.URL.revokeObjectURL(url);
+            
+        //     updateStatus('SQL文件已下載', 'valid');
+        // }
+
+        // Update status bar
+        function updateStatus(message, type) {
+            const indicator = document.getElementById('statusIndicator');
+            const text = document.getElementById('statusText');
+            
+            text.textContent = message;
+            
+            switch(type) {
+                case 'valid':
+                    indicator.textContent = '🟢';
+                    break;
+                case 'error':
+                    indicator.textContent = '🔴';
+                    break;
+                default:
+                    indicator.textContent = '🟡';
+            }
+        }
+
+        // Update character count
+        function updateCharCount(text) {
+            document.getElementById('charCount').textContent = text.length;
+        }
+
+        // Update line count
+        function updateLineCount(text) {
+            const lines = text ? text.split('\n').length : 0;
+            document.getElementById('lineCount').textContent = lines;
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'Enter':
+                        e.preventDefault();
+                        formatSQL();
+                        break;
+                    case 'l':
+                        e.preventDefault();
+                        clearAll();
+                        break;
+                    case 'c':
+                        if (e.shiftKey) {
+                            e.preventDefault();
+                            copyOutput();
+                        }
+                        break;
+                    case 's':
+                        e.preventDefault();
+                        downloadSQL();
+                        break;
+                }
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // 確保 Toast 已初始化
+            if (typeof toast === 'undefined' && typeof initializeToast === 'function') {
+                initializeToast();
+            }
+            
+            // Check if sql-formatter library is loaded
+            if (typeof sqlFormatter === 'undefined') {
+                console.warn('sql-formatter library not loaded, using fallback formatting');
+            } else {
+                console.log('sql-formatter library loaded successfully');
+            }
+        });
+
+        // Add comprehensive structured data for SEO
+        const structuredData = {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "SQL格式化工具",
+            "alternateName": "SQL Formatter & Beautifier",
+            "description": "專業的線上SQL格式化工具，支援MySQL、PostgreSQL、Oracle、SQL Server、SQLite等多種數據庫語法。免費SQL美化、壓縮、驗證與語法高亮。",
+            "url": "https://sds-site.vercel.app/SqlFormatter",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "Any",
+            "permissions": "browser",
+            "browserRequirements": "Chrome 60+, Firefox 55+, Safari 11+, Edge 79+",
+            "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "TWD",
+                "description": "完全免費使用"
+            },
+            "author": {
+                "@type": "Organization",
+                "name": "SDS Site Tools",
+                "url": "https://sds-site.vercel.app"
+            },
+            "publisher": {
+                "@type": "Organization", 
+                "name": "SDS Site",
+                "url": "https://sds-site.vercel.app"
+            },
+            "featureList": [
+                "多數據庫SQL格式化支援",
+                "MySQL SQL格式化", 
+                "PostgreSQL SQL格式化",
+                "Oracle SQL格式化",
+                "SQL Server格式化",
+                "SQLite格式化",
+                "SQL語法高亮顯示",
+                "SQL語法驗證",
+                "自定義格式選項",
+                "一鍵複製結果",
+                "響應式設計"
+            ],
+            "softwareVersion": "2.0",
+            "dateCreated": "2025-01-01",
+            "dateModified": "2025-08-21",
+            "inLanguage": "zh-TW",
+            "potentialAction": {
+                "@type": "UseAction",
+                "target": "https://sds-site.vercel.app/SqlFormatter",
+                "description": "格式化和美化SQL查詢語句"
+            }
+        };
+
+        // Add FAQ structured data
+        const faqData = {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": "什麼是SQL格式化工具？",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "SQL格式化工具是一個線上服務，可以將未格式化或格式混亂的SQL查詢語句轉換為易於閱讀的格式，同時支援不同數據庫的語法特色。"
+                    }
+                },
+                {
+                    "@type": "Question", 
+                    "name": "支援哪些數據庫類型？",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "我們的工具支援MySQL、PostgreSQL、Oracle、SQL Server、SQLite等主流數據庫的SQL語法格式化，以及標準SQL語法。"
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "如何使用SQL格式化工具？", 
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "選擇您的數據庫類型，將SQL查詢語句貼到輸入框中，點擊格式化按鈕即可。工具會自動美化您的SQL代碼並提供語法高亮。"
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "SQL格式化工具是否免費？",
+                    "acceptedAnswer": {
+                        "@type": "Answer", 
+                        "text": "是的，我們的SQL格式化工具完全免費使用，無需註冊，支援所有主流數據庫類型的SQL格式化。"
+                    }
+                }
+            ]
+        };
+
+        // Add HowTo structured data
+        const howToData = {
+            "@context": "https://schema.org",
+            "@type": "HowTo",
+            "name": "如何使用SQL格式化工具",
+            "description": "學習如何使用線上SQL格式化工具來美化、驗證和處理各種數據庫的SQL查詢語句",
+            "image": "https://sds-site.vercel.app/img/sql-formatter-howto.jpg",
+            "totalTime": "PT3M",
+            "estimatedCost": {
+                "@type": "MonetaryAmount",
+                "currency": "TWD",
+                "value": "0"
+            },
+            "step": [
+                {
+                    "@type": "HowToStep",
+                    "name": "選擇數據庫類型",
+                    "text": "從下拉選單中選擇您使用的數據庫類型，如MySQL、PostgreSQL、Oracle等",
+                    "image": "https://sds-site.vercel.app/img/sql-step1.jpg"
+                },
+                {
+                    "@type": "HowToStep", 
+                    "name": "輸入SQL查詢",
+                    "text": "將您的SQL查詢語句複製並貼到左側的輸入框中",
+                    "image": "https://sds-site.vercel.app/img/sql-step2.jpg"
+                },
+                {
+                    "@type": "HowToStep",
+                    "name": "格式化並複製",
+                    "text": "點擊格式化按鈕美化SQL代碼，在右側查看結果並複製",
+                    "image": "https://sds-site.vercel.app/img/sql-step3.jpg"
+                }
+            ]
+        };
+
+        // Add structured data to head
+        const webAppScript = document.createElement('script');
+        webAppScript.type = 'application/ld+json';
+        webAppScript.textContent = JSON.stringify(structuredData);
+        document.head.appendChild(webAppScript);
+
+        const faqScript = document.createElement('script');
+        faqScript.type = 'application/ld+json';
+        faqScript.textContent = JSON.stringify(faqData);
+        document.head.appendChild(faqScript);
+
+        const howToScript = document.createElement('script');
+        howToScript.type = 'application/ld+json';
+        howToScript.textContent = JSON.stringify(howToData);
+        document.head.appendChild(howToScript);
+    </script>
+
+    <!-- 統一導航組件 -->
+    <script src="components/navigation.js"></script>
+</body>
+</html>

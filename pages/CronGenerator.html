@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cron Expression Generator & Explainer - Quartz | SDS Site</title>
+    <meta name="description" content="強大的 Quartz Cron 表達式生成器與解析器，支援可視化設定、即時預覽執行時間、自動生成和詳細解釋，適用於 Java Quartz Scheduler。">
+    <meta name="keywords" content="Cron Generator, Quartz Cron, Cron Expression, 排程工具, Java Quartz, 任務調度, Cron Parser, 定時任務, SDS Site">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sds-site.vercel.app/CronGenerator">
+    <meta property="og:title" content="Cron Expression Generator & Explainer - Quartz | SDS Site">
+    <meta property="og:description" content="專業的 Quartz Cron 表達式生成器，支援可視化設定、即時預覽和詳細解釋，完美適配 Java Quartz Scheduler。">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://sds-site.vercel.app/CronGenerator">
+    <meta name="twitter:title" content="Cron Expression Generator & Explainer - Quartz">
+    <meta name="twitter:description" content="專業的 Quartz Cron 表達式生成器，支援可視化設定、即時預覽和詳細解釋。">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        /* Cron Generator 專用樣式 */
+        .cron-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .cron-panel {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+        
+        .panel-header {
+            background: var(--bg-secondary);
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .panel-content {
+            padding: 20px;
+        }
+        
+        .cron-expression {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            word-break: break-all;
+            transition: all 0.3s ease;
+        }
+        
+        .cron-expression.valid {
+            border-color: var(--success-color);
+            background: rgba(16, 185, 129, 0.05);
+            color: var(--success-color);
+        }
+        
+        .cron-expression.invalid {
+            border-color: var(--error-color);
+            background: rgba(239, 68, 68, 0.05);
+            color: var(--error-color);
+        }
+        
+        .field-group {
+            margin-bottom: 20px;
+        }
+        
+        .field-label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .field-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            transition: all 0.2s ease;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        
+        .field-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .field-description {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            line-height: 1.4;
+        }
+        
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .preset-btn {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+        
+        .preset-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .explanation-section {
+            margin-bottom: 20px;
+        }
+        
+        .explanation-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .explanation-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+        
+        .field-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .field-item {
+            text-align: center;
+            padding: 12px 8px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+        }
+        
+        .field-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+        }
+        
+        .field-name {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .next-runs {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .next-run-item {
+            padding: 8px 12px;
+            background: var(--bg-primary);
+            border-radius: var(--radius-sm);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .next-run-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .run-time {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+        
+        .run-relative {
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+        
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--error-color);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            color: var(--error-color);
+            font-size: 13px;
+            margin-top: 12px;
+            display: none;
+        }
+        
+        .syntax-help {
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-top: 20px;
+        }
+        
+        .syntax-help h4 {
+            color: var(--primary-color);
+            margin-bottom: 12px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .syntax-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        
+        .syntax-table th,
+        .syntax-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+        
+        .syntax-table th {
+            background: var(--bg-secondary);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .syntax-table td {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+        }
+        
+        .quick-actions {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .action-btn.primary {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .action-btn.primary:hover {
+            background: var(--primary-hover);
+        }
+        
+        .action-btn.secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        
+        .action-btn.secondary:hover {
+            background: var(--bg-tertiary);
+        }
+        
+        .manual-input {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .manual-cron-input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            background: var(--bg-primary);
+        }
+        
+        .manual-cron-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .cron-container {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .field-breakdown {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .preset-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .quick-actions {
+                flex-direction: column;
+            }
+            
+            .manual-input {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .field-breakdown {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            
+            .preset-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .cron-expression {
+                font-size: 14px;
+                padding: 12px;
+            }
+        }
+        
+        /* 爆米花特效樣式 */
+        .popcorn-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
+        
+        .popcorn {
+            position: absolute;
+            font-size: 24px;
+            user-select: none;
+            animation: popcorn-fall linear forwards;
+            opacity: 0;
+        }
+        
+        @keyframes popcorn-fall {
+            0% {
+                opacity: 1;
+                transform: translateY(-50px) translateX(0) rotate(0deg) scale(0.5);
+            }
+            10% {
+                transform: translateY(0) translateX(var(--drift-10, 0px)) rotate(180deg) scale(1);
+            }
+            30% {
+                transform: translateY(30vh) translateX(var(--drift-30, 0px)) rotate(360deg) scale(1.2);
+            }
+            60% {
+                transform: translateY(60vh) translateX(var(--drift-60, 0px)) rotate(540deg) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(100vh) translateX(var(--drift-100, 0px)) rotate(720deg) scale(0.8);
+            }
+        }
+        
+        .popcorn:nth-child(odd) {
+            animation-duration: 3s;
+        }
+        
+        .popcorn:nth-child(even) {
+            animation-duration: 3.5s;
+        }
+        
+        .popcorn:nth-child(3n) {
+            animation-duration: 2.5s;
+        }
+        
+        .popcorn:nth-child(4n) {
+            animation-duration: 4s;
+        }
+        
+        /* 複製按鈕特效 */
+        .copy-success-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .copy-success-effect::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: copy-ripple 0.6s ease-out;
+        }
+        
+        @keyframes copy-ripple {
+            to {
+                width: 300px;
+                height: 300px;
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>Cron Expression Generator & Explainer</h1>
+            <p>Quartz Scheduler 專用的 Cron 表達式生成器與解析工具</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-card">
+            <!-- Toolbar -->
+            <div class="toolbar">
+                <div class="quick-actions">
+                    <!-- <button class="action-btn primary" onclick="generateCron()">
+                        ⚡ 生成表達式
+                    </button> -->
+                    <button class="action-btn primary" onclick="copyCronExpression()">
+                        📋 複製表達式
+                    </button>
+                    <button class="action-btn secondary" onclick="resetForm()">
+                        🔄 重置設定
+                    </button>
+                </div>
+                
+                <div class="manual-input">
+                    <input type="text" id="manualCronInput" class="manual-cron-input" 
+                           placeholder="輸入 Cron 表達式進行解析..." 
+                           onkeyup="handleManualInput(event)">
+                    <button class="action-btn primary" onclick="parseCronExpression()">
+                        🔍 解析
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Container -->
+            <div class="cron-container">
+                <!-- Generator Panel -->
+                <div class="cron-panel">
+                    <div class="panel-header">
+                        <span>⚙️</span>
+                        Cron 表達式生成器
+                    </div>
+                    <div class="panel-content">
+                        <!-- Current Expression -->
+                        <div class="cron-expression" id="cronExpression">
+                            0 0 12 * * ?
+                        </div>
+                        
+                        <!-- Preset Buttons -->
+                        <div class="explanation-title">常用預設</div>
+                        <div class="preset-buttons">
+                            <button class="preset-btn" onclick="setPreset('0 */5 * * * ?')">每5分鐘</button>
+                            <button class="preset-btn" onclick="setPreset('0 0 */1 * * ?')">每小時</button>
+                            <button class="preset-btn" onclick="setPreset('0 0 12 * * ?')">每日中午</button>
+                            <button class="preset-btn" onclick="setPreset('0 0 0 ? * MON')">每週一</button>
+                            <button class="preset-btn" onclick="setPreset('0 0 0 1 * ?')">每月1號</button>
+                            <button class="preset-btn" onclick="setPreset('0 0 0 1 1 ?')">每年1月1日</button>
+                        </div>
+
+                        <!-- Field Controls -->
+                        <div class="field-group">
+                            <label class="field-label">秒 (0-59)</label>
+                            <input type="text" id="seconds" class="field-control" value="0" onchange="generateCron()">
+                            <div class="field-description">可使用 * , - / ? 特殊字符</div>
+                        </div>
+
+                        <div class="field-group">
+                            <label class="field-label">分 (0-59)</label>
+                            <input type="text" id="minutes" class="field-control" value="0" onchange="generateCron()">
+                            <div class="field-description">可使用 * , - / ? 特殊字符</div>
+                        </div>
+
+                        <div class="field-group">
+                            <label class="field-label">時 (0-23)</label>
+                            <input type="text" id="hours" class="field-control" value="12" onchange="generateCron()">
+                            <div class="field-description">24小時制，可使用 * , - / ? 特殊字符</div>
+                        </div>
+
+                        <div class="field-group">
+                            <label class="field-label">日 (1-31)</label>
+                            <input type="text" id="dayOfMonth" class="field-control" value="*" onchange="generateCron()">
+                            <div class="field-description">月份中的日期，與星期互斥使用 ?</div>
+                        </div>
+
+                        <div class="field-group">
+                            <label class="field-label">月 (1-12 或 JAN-DEC)</label>
+                            <input type="text" id="month" class="field-control" value="*" onchange="generateCron()">
+                            <div class="field-description">可使用數字或英文縮寫</div>
+                        </div>
+
+                        <div class="field-group">
+                            <label class="field-label">星期 (1-7 或 SUN-SAT)</label>
+                            <input type="text" id="dayOfWeek" class="field-control" value="?" onchange="generateCron()">
+                            <div class="field-description">1=週日，2=週一...7=週六，與日期互斥使用 ?</div>
+                        </div>
+
+                        <div class="field-group">
+                            <label class="field-label">年 (1970-2099, 可選)</label>
+                            <input type="text" id="year" class="field-control" value="" onchange="generateCron()">
+                            <div class="field-description">Quartz 專用，可留空</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Explainer Panel -->
+                <div class="cron-panel">
+                    <div class="panel-header">
+                        <span>📊</span>
+                        表達式解析與預覽
+                    </div>
+                    <div class="panel-content">
+                        <!-- Field Breakdown -->
+                        <div class="explanation-title">欄位分解</div>
+                        <div class="field-breakdown">
+                            <div class="field-item">
+                                <div class="field-value" id="displaySeconds">0</div>
+                                <div class="field-name">秒</div>
+                            </div>
+                            <div class="field-item">
+                                <div class="field-value" id="displayMinutes">0</div>
+                                <div class="field-name">分</div>
+                            </div>
+                            <div class="field-item">
+                                <div class="field-value" id="displayHours">12</div>
+                                <div class="field-name">時</div>
+                            </div>
+                            <div class="field-item">
+                                <div class="field-value" id="displayDayOfMonth">*</div>
+                                <div class="field-name">日</div>
+                            </div>
+                            <div class="field-item">
+                                <div class="field-value" id="displayMonth">*</div>
+                                <div class="field-name">月</div>
+                            </div>
+                            <div class="field-item">
+                                <div class="field-value" id="displayDayOfWeek">?</div>
+                                <div class="field-name">星期</div>
+                            </div>
+                            <div class="field-item">
+                                <div class="field-value" id="displayYear">-</div>
+                                <div class="field-name">年</div>
+                            </div>
+                        </div>
+
+                        <!-- Explanation -->
+                        <div class="explanation-section">
+                            <div class="explanation-title">
+                                <span>💭</span>
+                                表達式說明
+                            </div>
+                            <div class="explanation-content" id="cronExplanation">
+                                每日中午12點執行
+                            </div>
+                        </div>
+
+                        <!-- Next Runs -->
+                        <div class="explanation-section">
+                            <div class="explanation-title">
+                                <span>⏰</span>
+                                接下來的執行時間
+                            </div>
+                            <div class="next-runs" id="nextRuns">
+                                <div class="next-run-item">
+                                    <span class="run-time">計算中...</span>
+                                    <span class="run-relative"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Error Message -->
+                        <div class="error-message" id="errorMessage"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Syntax Help -->
+            <div class="syntax-help">
+                <h4>📚 Quartz Cron 語法說明</h4>
+                <table class="syntax-table">
+                    <thead>
+                        <tr>
+                            <th>特殊字符</th>
+                            <th>說明</th>
+                            <th>示例</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>*</td>
+                            <td>匹配任意值</td>
+                            <td>* 表示每分鐘/小時/日等</td>
+                        </tr>
+                        <tr>
+                            <td>?</td>
+                            <td>不指定值（僅用於日和星期）</td>
+                            <td>日和星期其中一個必須使用 ?</td>
+                        </tr>
+                        <tr>
+                            <td>-</td>
+                            <td>範圍</td>
+                            <td>10-12 表示 10,11,12</td>
+                        </tr>
+                        <tr>
+                            <td>,</td>
+                            <td>列舉值</td>
+                            <td>MON,WED,FRI 表示週一、三、五</td>
+                        </tr>
+                        <tr>
+                            <td>/</td>
+                            <td>間隔</td>
+                            <td>*/5 表示每5個單位</td>
+                        </tr>
+                        <tr>
+                            <td>L</td>
+                            <td>最後（日和星期）</td>
+                            <td>L 表示月末，6L 表示最後一個週五</td>
+                        </tr>
+                        <tr>
+                            <td>W</td>
+                            <td>工作日（僅日期）</td>
+                            <td>15W 表示離15號最近的工作日</td>
+                        </tr>
+                        <tr>
+                            <td>#</td>
+                            <td>第幾個星期（僅星期）</td>
+                            <td>6#3 表示第3個週五</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <!-- Navigation -->
+        <nav class="navigation" data-auto-navigation>
+            <!-- 導航內容會自動載入 -->
+        </nav>
+
+        <!-- Footer -->
+        <!-- 頁腳會由導航組件自動添加 -->
+    </div>
+
+    <!-- Toast System -->
+    <script src="util/Toast.js"></script>
+    
+    <!-- Cron Generator Script -->
+    <script>
+        /**
+         * Quartz Cron Expression Generator & Explainer
+         * 支援 Quartz Scheduler 的完整 Cron 語法
+         */
+        class QuartzCronGenerator {
+            constructor() {
+                this.initializeElements();
+                this.generateCron();
+            }
+
+            initializeElements() {
+                this.elements = {
+                    seconds: document.getElementById('seconds'),
+                    minutes: document.getElementById('minutes'),
+                    hours: document.getElementById('hours'),
+                    dayOfMonth: document.getElementById('dayOfMonth'),
+                    month: document.getElementById('month'),
+                    dayOfWeek: document.getElementById('dayOfWeek'),
+                    year: document.getElementById('year'),
+                    cronExpression: document.getElementById('cronExpression'),
+                    manualCronInput: document.getElementById('manualCronInput'),
+                    cronExplanation: document.getElementById('cronExplanation'),
+                    nextRuns: document.getElementById('nextRuns'),
+                    errorMessage: document.getElementById('errorMessage'),
+                    displaySeconds: document.getElementById('displaySeconds'),
+                    displayMinutes: document.getElementById('displayMinutes'),
+                    displayHours: document.getElementById('displayHours'),
+                    displayDayOfMonth: document.getElementById('displayDayOfMonth'),
+                    displayMonth: document.getElementById('displayMonth'),
+                    displayDayOfWeek: document.getElementById('displayDayOfWeek'),
+                    displayYear: document.getElementById('displayYear')
+                };
+            }
+
+            generateCron() {
+                try {
+                    // 獲取所有欄位值
+                    let dayOfMonth = this.elements.dayOfMonth.value || '*';
+                    let dayOfWeek = this.elements.dayOfWeek.value || '?';
+                    
+                    // 自動修正日期和星期的互斥關係
+                    if (dayOfMonth !== '*' && dayOfMonth !== '?' && dayOfWeek !== '?' && dayOfWeek !== '*') {
+                        // 如果兩者都有具體值，優先保留日期，星期改為 ?
+                        dayOfWeek = '?';
+                        this.elements.dayOfWeek.value = '?';
+                    } else if (dayOfMonth === '?' && dayOfWeek === '?') {
+                        // 如果兩者都是 ?，將日期改為 *
+                        dayOfMonth = '*';
+                        this.elements.dayOfMonth.value = '*';
+                    } else if (dayOfWeek !== '?' && dayOfWeek !== '*' && dayOfMonth !== '?') {
+                        // 如果指定了星期且日期不是 ?，將日期改為 ?
+                        dayOfMonth = '?';
+                        this.elements.dayOfMonth.value = '?';
+                    }
+
+                    const parts = [
+                        this.elements.seconds.value || '0',
+                        this.elements.minutes.value || '0',
+                        this.elements.hours.value || '*',
+                        dayOfMonth,
+                        this.elements.month.value || '*',
+                        dayOfWeek
+                    ];
+
+                    if (this.elements.year.value) {
+                        parts.push(this.elements.year.value);
+                    }
+
+                    const cronExpression = parts.join(' ');
+                    this.updateExpression(cronExpression);
+                    this.updateDisplay();
+                    this.explainCron(cronExpression);
+                    this.calculateNextRuns(cronExpression);
+                    this.validateExpression(cronExpression);
+                } catch (error) {
+                    this.showError('生成表達式時發生錯誤: ' + error.message);
+                }
+            }
+
+            updateExpression(expression) {
+                this.elements.cronExpression.textContent = expression;
+                this.elements.manualCronInput.value = expression;
+            }
+
+            updateDisplay() {
+                this.elements.displaySeconds.textContent = this.elements.seconds.value || '0';
+                this.elements.displayMinutes.textContent = this.elements.minutes.value || '0';
+                this.elements.displayHours.textContent = this.elements.hours.value || '*';
+                this.elements.displayDayOfMonth.textContent = this.elements.dayOfMonth.value || '*';
+                this.elements.displayMonth.textContent = this.elements.month.value || '*';
+                this.elements.displayDayOfWeek.textContent = this.elements.dayOfWeek.value || '?';
+                this.elements.displayYear.textContent = this.elements.year.value || '-';
+            }
+
+            parseCronExpression() {
+                const cronExpression = this.elements.manualCronInput.value.trim();
+                if (!cronExpression) {
+                    showToast.warning('請輸入 Cron 表達式');
+                    return;
+                }
+
+                try {
+                    const parts = cronExpression.split(/\s+/);
+                    if (parts.length < 6 || parts.length > 7) {
+                        throw new Error('Cron 表達式必須包含 6-7 個欄位');
+                    }
+
+                    // 更新輸入欄位
+                    this.elements.seconds.value = parts[0] || '0';
+                    this.elements.minutes.value = parts[1] || '0';
+                    this.elements.hours.value = parts[2] || '*';
+                    this.elements.dayOfMonth.value = parts[3] || '*';
+                    this.elements.month.value = parts[4] || '*';
+                    this.elements.dayOfWeek.value = parts[5] || '?';
+                    this.elements.year.value = parts[6] || '';
+
+                    this.updateExpression(cronExpression);
+                    this.updateDisplay();
+                    this.explainCron(cronExpression);
+                    this.calculateNextRuns(cronExpression);
+                    this.validateExpression(cronExpression);
+
+                    showToast.success('Cron 表達式解析成功');
+                } catch (error) {
+                    this.showError('解析表達式失敗: ' + error.message);
+                }
+            }
+
+            explainCron(cronExpression) {
+                try {
+                    const parts = cronExpression.split(/\s+/);
+                    const [sec, min, hour, dayMonth, month, dayWeek, year] = parts;
+
+                    let explanation = '此 Cron 表達式表示：';
+                    
+                    // 頻率分析
+                    if (sec === '*' && min === '*' && hour === '*') {
+                        explanation = '每秒執行';
+                    } else if (min === '*' && hour === '*') {
+                        explanation = `每分鐘的第 ${sec} 秒執行`;
+                    } else if (hour === '*') {
+                        if (min.includes('/')) {
+                            const interval = min.split('/')[1];
+                            explanation = `每 ${interval} 分鐘執行`;
+                        } else if (min === '*') {
+                            explanation = `每小時的第 ${sec} 秒執行`;
+                        } else {
+                            explanation = `每小時的第 ${min} 分 ${sec} 秒執行`;
+                        }
+                    } else {
+                        // 具體時間
+                        const timeStr = this.formatTime(hour, min, sec);
+                        
+                        if (dayMonth === '*' && dayWeek === '?') {
+                            explanation = `每日 ${timeStr} 執行`;
+                        } else if (dayWeek !== '?' && dayWeek !== '*') {
+                            const weekStr = this.formatDayOfWeek(dayWeek);
+                            explanation = `每週${weekStr} ${timeStr} 執行`;
+                        } else if (dayMonth !== '*') {
+                            explanation = `每月 ${dayMonth} 日 ${timeStr} 執行`;
+                        }
+                    }
+
+                    // 月份限制
+                    if (month !== '*') {
+                        explanation += `，僅在 ${this.formatMonth(month)} 執行`;
+                    }
+
+                    // 年份限制
+                    if (year && year !== '*') {
+                        explanation += `，僅在 ${year} 年執行`;
+                    }
+
+                    this.elements.cronExplanation.textContent = explanation;
+                } catch (error) {
+                    this.elements.cronExplanation.textContent = '無法解析此表達式';
+                }
+            }
+
+            formatTime(hour, min, sec) {
+                const h = hour === '*' ? '每小時' : this.padZero(hour);
+                const m = min === '*' ? '每分鐘' : this.padZero(min);
+                const s = sec === '0' ? '' : `:${this.padZero(sec)}`;
+                
+                if (hour === '*') return '每小時';
+                if (min === '*') return `${h}點每分鐘`;
+                
+                return `${h}:${m}${s}`;
+            }
+
+            formatDayOfWeek(dayWeek) {
+                const days = {
+                    '1': '日', '2': '一', '3': '二', '4': '三', '5': '四', '6': '五', '7': '六',
+                    'SUN': '日', 'MON': '一', 'TUE': '二', 'WED': '三', 'THU': '四', 'FRI': '五', 'SAT': '六'
+                };
+                
+                if (dayWeek.includes(',')) {
+                    return dayWeek.split(',').map(d => days[d.trim()] || d).join('、');
+                }
+                
+                return days[dayWeek] || dayWeek;
+            }
+
+            formatMonth(month) {
+                const months = {
+                    '1': '1月', '2': '2月', '3': '3月', '4': '4月', '5': '5月', '6': '6月',
+                    '7': '7月', '8': '8月', '9': '9月', '10': '10月', '11': '11月', '12': '12月',
+                    'JAN': '1月', 'FEB': '2月', 'MAR': '3月', 'APR': '4月', 'MAY': '5月', 'JUN': '6月',
+                    'JUL': '7月', 'AUG': '8月', 'SEP': '9月', 'OCT': '10月', 'NOV': '11月', 'DEC': '12月'
+                };
+                
+                if (month.includes(',')) {
+                    return month.split(',').map(m => months[m.trim()] || m).join('、');
+                }
+                
+                return months[month] || month;
+            }
+
+            calculateNextRuns(cronExpression) {
+                try {
+                    const nextRuns = this.getNextExecutionTimes(cronExpression, 10);
+                    this.displayNextRuns(nextRuns);
+                } catch (error) {
+                    this.elements.nextRuns.innerHTML = '<div class="next-run-item"><span class="run-time">無法計算執行時間</span></div>';
+                }
+            }
+
+            getNextExecutionTimes(cronExpression, count = 10) {
+                const parts = cronExpression.split(/\s+/);
+                const [sec, min, hour, dayMonth, month, dayWeek, year] = parts;
+                
+                const now = new Date();
+                const results = [];
+                let current = new Date(now.getTime() + 1000); // 從下一秒開始
+                let attempts = 0;
+                const maxAttempts = 100000; // 防止無限循環
+
+                while (results.length < count && attempts < maxAttempts) {
+                    attempts++;
+                    
+                    if (this.matchesCronExpression(current, parts)) {
+                        results.push(new Date(current));
+                    }
+                    
+                    // 移到下一分鐘（簡化處理）
+                    current.setSeconds(0);
+                    current.setMinutes(current.getMinutes() + 1);
+                }
+
+                return results;
+            }
+
+            matchesCronExpression(date, parts) {
+                const [sec, min, hour, dayMonth, month, dayWeek, year] = parts;
+                
+                // 簡化的匹配邏輯（實際應該更複雜）
+                return (
+                    this.matchField(date.getSeconds(), sec, 0, 59) &&
+                    this.matchField(date.getMinutes(), min, 0, 59) &&
+                    this.matchField(date.getHours(), hour, 0, 23) &&
+                    this.matchDayField(date, dayMonth, dayWeek) &&
+                    this.matchField(date.getMonth() + 1, month, 1, 12) &&
+                    this.matchField(date.getFullYear(), year || '*', 1970, 2099)
+                );
+            }
+
+            matchField(value, pattern, min, max) {
+                if (pattern === '*') return true;
+                if (pattern === '?') return true;
+                
+                // 處理星期的字符串值
+                if (min === 1 && max === 7) { // 這是星期欄位
+                    pattern = this.convertDayOfWeekToNumber(pattern);
+                }
+                
+                // 簡單的數字匹配
+                if (!isNaN(pattern)) {
+                    return value === parseInt(pattern);
+                }
+                
+                // 範圍匹配 (例如: 10-15)
+                if (pattern.includes('-')) {
+                    const [start, end] = pattern.split('-').map(x => {
+                        const converted = min === 1 && max === 7 ? this.convertDayOfWeekToNumber(x) : x;
+                        return parseInt(converted);
+                    });
+                    return value >= start && value <= end;
+                }
+                
+                // 列表匹配 (例如: 1,3,5 或 MON,WED,FRI)
+                if (pattern.includes(',')) {
+                    const values = pattern.split(',').map(x => {
+                        const trimmed = x.trim();
+                        const converted = min === 1 && max === 7 ? this.convertDayOfWeekToNumber(trimmed) : trimmed;
+                        return parseInt(converted);
+                    });
+                    return values.includes(value);
+                }
+                
+                // 間隔匹配 (例如: */5)
+                if (pattern.includes('/')) {
+                    const [base, interval] = pattern.split('/');
+                    const baseValue = base === '*' ? min : parseInt(base);
+                    return (value - baseValue) % parseInt(interval) === 0;
+                }
+                
+                return false;
+            }
+
+            convertDayOfWeekToNumber(dayStr) {
+                const dayMap = {
+                    'SUN': '1', 'MON': '2', 'TUE': '3', 'WED': '4', 
+                    'THU': '5', 'FRI': '6', 'SAT': '7'
+                };
+                return dayMap[dayStr.toUpperCase()] || dayStr;
+            }
+
+            matchDayField(date, dayMonth, dayWeek) {
+                // 如果使用 ?, 則該欄位被忽略
+                if (dayMonth === '?' && dayWeek === '?') return true;
+                if (dayMonth === '?' && dayWeek !== '?') {
+                    return this.matchField(date.getDay() === 0 ? 7 : date.getDay(), dayWeek, 1, 7);
+                }
+                if (dayWeek === '?' && dayMonth !== '?') {
+                    return this.matchField(date.getDate(), dayMonth, 1, 31);
+                }
+                
+                // 兩者都指定時，任一匹配即可
+                return this.matchField(date.getDate(), dayMonth, 1, 31) || 
+                       this.matchField(date.getDay() === 0 ? 7 : date.getDay(), dayWeek, 1, 7);
+            }
+
+            displayNextRuns(runs) {
+                if (runs.length === 0) {
+                    this.elements.nextRuns.innerHTML = '<div class="next-run-item"><span class="run-time">未找到符合的執行時間</span></div>';
+                    return;
+                }
+
+                const html = runs.map(run => {
+                    const timeStr = run.toLocaleString('zh-TW', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    });
+                    
+                    const relative = this.getRelativeTime(run);
+                    
+                    return `
+                        <div class="next-run-item">
+                            <span class="run-time">${timeStr}</span>
+                            <span class="run-relative">${relative}</span>
+                        </div>
+                    `;
+                }).join('');
+
+                this.elements.nextRuns.innerHTML = html;
+            }
+
+            getRelativeTime(date) {
+                const now = new Date();
+                const diff = date.getTime() - now.getTime();
+                
+                if (diff < 0) return '已過期';
+                
+                const seconds = Math.floor(diff / 1000);
+                const minutes = Math.floor(seconds / 60);
+                const hours = Math.floor(minutes / 60);
+                const days = Math.floor(hours / 24);
+                
+                if (days > 0) return `${days} 天後`;
+                if (hours > 0) return `${hours} 小時後`;
+                if (minutes > 0) return `${minutes} 分鐘後`;
+                return `${seconds} 秒後`;
+            }
+
+            validateExpression(cronExpression) {
+                try {
+                    const parts = cronExpression.split(/\s+/);
+                    
+                    if (parts.length < 6 || parts.length > 7) {
+                        throw new Error('Cron 表達式必須包含 6-7 個欄位');
+                    }
+
+                    // 檢查日期和星期的互斥性 (Quartz 專用規則)
+                    const dayMonth = parts[3];
+                    const dayWeek = parts[5];
+                    
+                    // 在 Quartz 中，dayOfMonth 和 dayOfWeek 其中一個必須是 ?
+                    if (dayMonth === '?' && dayWeek === '?') {
+                        throw new Error('日期和星期欄位不能同時使用 ?，其中一個必須指定值');
+                    }
+                    
+                    // 檢查是否都不是 ?
+                    if (dayMonth !== '?' && dayWeek !== '?') {
+                        throw new Error('在 Quartz 中，日期和星期欄位其中一個必須使用 ?（當指定星期時日期用?，當指定日期時星期用?）');
+                    }
+                    
+                    // 額外的格式驗證
+                    this.validateFieldFormats(parts);
+
+                    this.elements.cronExpression.className = 'cron-expression valid';
+                    this.hideError();
+                } catch (error) {
+                    this.elements.cronExpression.className = 'cron-expression invalid';
+                    this.showError(error.message);
+                }
+            }
+
+            validateFieldFormats(parts) {
+                const [sec, min, hour, dayMonth, month, dayWeek, year] = parts;
+                
+                // 驗證數字範圍
+                this.validateRange(sec, 0, 59, '秒');
+                this.validateRange(min, 0, 59, '分');
+                this.validateRange(hour, 0, 23, '時');
+                
+                if (dayMonth !== '?') {
+                    this.validateRange(dayMonth, 1, 31, '日');
+                }
+                
+                this.validateRange(month, 1, 12, '月');
+                
+                if (dayWeek !== '?') {
+                    this.validateDayOfWeek(dayWeek);
+                }
+                
+                if (year && year !== '*') {
+                    this.validateRange(year, 1970, 2099, '年');
+                }
+            }
+
+            validateRange(value, min, max, fieldName) {
+                if (value === '*' || value === '?' || value.includes('/') || value.includes('-') || value.includes(',')) {
+                    return; // 特殊字符暫時跳過詳細驗證
+                }
+                
+                const num = parseInt(value);
+                if (isNaN(num) || num < min || num > max) {
+                    throw new Error(`${fieldName}欄位值 "${value}" 超出有效範圍 (${min}-${max})`);
+                }
+            }
+
+            validateDayOfWeek(value) {
+                if (value === '*' || value === '?' || value.includes('/') || value.includes('-') || value.includes(',')) {
+                    return; // 特殊字符暫時跳過詳細驗證
+                }
+                
+                const validDays = ['1', '2', '3', '4', '5', '6', '7', 'SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+                if (!validDays.includes(value.toUpperCase())) {
+                    throw new Error(`星期欄位值 "${value}" 無效，請使用 1-7 或 SUN-SAT`);
+                }
+            }
+
+            showError(message) {
+                this.elements.errorMessage.textContent = message;
+                this.elements.errorMessage.style.display = 'block';
+            }
+
+            hideError() {
+                this.elements.errorMessage.style.display = 'none';
+            }
+
+            setPreset(cronExpression) {
+                this.elements.manualCronInput.value = cronExpression;
+                
+                // 解析表達式但不顯示解析成功的 toast
+                const parts = cronExpression.split(/\s+/);
+                if (parts.length >= 6 && parts.length <= 7) {
+                    // 更新輸入欄位
+                    this.elements.seconds.value = parts[0] || '0';
+                    this.elements.minutes.value = parts[1] || '0';
+                    this.elements.hours.value = parts[2] || '*';
+                    this.elements.dayOfMonth.value = parts[3] || '*';
+                    this.elements.month.value = parts[4] || '*';
+                    this.elements.dayOfWeek.value = parts[5] || '?';
+                    this.elements.year.value = parts[6] || '';
+
+                    this.updateExpression(cronExpression);
+                    this.updateDisplay();
+                    this.explainCron(cronExpression);
+                    this.calculateNextRuns(cronExpression);
+                    this.validateExpression(cronExpression);
+
+                    // 顯示預設套用成功的 toast
+                    showToast.success('已套用預設表達式設定');
+                } else {
+                    showToast.error('預設表達式格式錯誤');
+                }
+            }
+
+            reset() {
+                this.elements.seconds.value = '0';
+                this.elements.minutes.value = '0';
+                this.elements.hours.value = '12';
+                this.elements.dayOfMonth.value = '*';
+                this.elements.month.value = '*';
+                this.elements.dayOfWeek.value = '?';
+                this.elements.year.value = '';
+                this.generateCron();
+                showToast.info('已重置為預設設定');
+            }
+
+            copyExpression() {
+                const expression = this.elements.cronExpression.textContent;
+                navigator.clipboard.writeText(expression).then(() => {
+                    // 添加複製成功的視覺特效
+                    this.addCopySuccessEffect();
+                    // 觸發爆米花特效
+                    this.triggerPopcornEffect();
+                    // 顯示成功提示
+                    showToast.success('Cron 表達式已複製到剪貼簿 🍿');
+                }).catch(() => {
+                    showToast.error('複製失敗，請手動選取並複製');
+                });
+            }
+
+            addCopySuccessEffect() {
+                // 獲取複製按鈕
+                const copyBtn = document.querySelector('[onclick="copyCronExpression()"]');
+                if (copyBtn) {
+                    copyBtn.classList.add('copy-success-effect');
+                    setTimeout(() => {
+                        copyBtn.classList.remove('copy-success-effect');
+                    }, 600);
+                }
+            }
+
+            triggerPopcornEffect() {
+                // 創建爆米花容器
+                let container = document.getElementById('popcorn-container');
+                if (!container) {
+                    container = document.createElement('div');
+                    container.id = 'popcorn-container';
+                    container.className = 'popcorn-container';
+                    document.body.appendChild(container);
+                }
+
+                // 爆米花表情符號數組
+                const popcornEmojis = ['🍿', '🌽', '🍿', '🌟', '✨', '🍿', '💫', '🍿'];
+                
+                // 創建20個爆米花
+                for (let i = 0; i < 20; i++) {
+                    setTimeout(() => {
+                        this.createPopcorn(container, popcornEmojis);
+                    }, i * 100); // 每100ms創建一個，製造連續效果
+                }
+
+                // 3秒後清理容器
+                setTimeout(() => {
+                    if (container && container.parentNode) {
+                        container.parentNode.removeChild(container);
+                    }
+                }, 5000);
+            }
+
+            createPopcorn(container, emojis) {
+                const popcorn = document.createElement('div');
+                popcorn.className = 'popcorn';
+                
+                // 隨機選擇表情符號
+                const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+                popcorn.textContent = emoji;
+                
+                // 隨機位置（從頂部開始）
+                const startX = Math.random() * window.innerWidth;
+                popcorn.style.left = startX + 'px';
+                popcorn.style.top = '-50px';
+                
+                // 隨機大小
+                const size = 20 + Math.random() * 20; // 20-40px
+                popcorn.style.fontSize = size + 'px';
+                
+                // 隨機動畫持續時間
+                const duration = 2.5 + Math.random() * 2; // 2.5-4.5秒
+                popcorn.style.animationDuration = duration + 's';
+                
+                // 創建更自然的飄移軌跡
+                const driftIntensity = 50 + Math.random() * 100; // 50-150px的飄移幅度
+                const driftDirection = Math.random() > 0.5 ? 1 : -1; // 隨機方向
+                
+                popcorn.style.setProperty('--drift-10', (driftIntensity * 0.2 * driftDirection) + 'px');
+                popcorn.style.setProperty('--drift-30', (driftIntensity * 0.5 * driftDirection) + 'px');
+                popcorn.style.setProperty('--drift-60', (driftIntensity * 0.8 * driftDirection) + 'px');
+                popcorn.style.setProperty('--drift-100', (driftIntensity * driftDirection) + 'px');
+                
+                // 添加隨機的初始旋轉
+                const initialRotation = Math.random() * 360;
+                popcorn.style.transform = `rotate(${initialRotation}deg)`;
+                
+                // 添加到容器
+                container.appendChild(popcorn);
+                
+                // 動畫結束後移除元素
+                setTimeout(() => {
+                    if (popcorn && popcorn.parentNode) {
+                        popcorn.parentNode.removeChild(popcorn);
+                    }
+                }, duration * 1000);
+            }
+
+            padZero(value) {
+                return value.toString().padStart(2, '0');
+            }
+        }
+
+        // 初始化
+        let cronGenerator;
+        document.addEventListener('DOMContentLoaded', function() {
+            cronGenerator = new QuartzCronGenerator();
+        });
+
+        // 全域函數
+        function generateCron() {
+            cronGenerator.generateCron();
+        }
+
+        function parseCronExpression() {
+            cronGenerator.parseCronExpression();
+        }
+
+        function setPreset(expression) {
+            cronGenerator.setPreset(expression);
+        }
+
+        function resetForm() {
+            cronGenerator.reset();
+        }
+
+        function copyCronExpression() {
+            cronGenerator.copyExpression();
+        }
+
+        function handleManualInput(event) {
+            if (event.key === 'Enter') {
+                parseCronExpression();
+            }
+        }
+
+        // SEO 結構化數據
+        const structuredData = {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Cron Expression Generator & Explainer - Quartz",
+            "description": "專業的 Quartz Cron 表達式生成器與解析工具，支援可視化設定、即時預覽執行時間、自動生成和詳細解釋",
+            "url": "https://sds-site.vercel.app/CronGenerator",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "Any",
+            "browserRequirements": "Requires JavaScript",
+            "softwareVersion": "1.0",
+            "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "TWD"
+            },
+            "creator": {
+                "@type": "Organization",
+                "name": "SDS Site"
+            }
+        };
+
+        const script = document.createElement('script');
+        script.type = 'application/ld+json';
+        script.textContent = JSON.stringify(structuredData);
+        document.head.appendChild(script);
+    </script>
+
+    <!-- 統一導航組件 -->
+    <script src="components/navigation.js"></script>
+</body>
+</html>

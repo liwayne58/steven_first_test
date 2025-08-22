@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-TW" itemscope itemtype="https://schema.org/WebApplication">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Performance Optimization -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="referrer" content="origin-when-cross-origin" />
+    
+    <!-- SEO Meta Tags -->
+    <title>JSON格式化工具 - 線上JSON美化驗證器 | 免費JSON Formatter</title>
+    <meta name="description" content="專業的線上JSON格式化工具，支援JSON美化、壓縮、驗證與語法高亮。快速格式化和美化您的JSON數據，提高程式開發效率。完全免費，隱私安全。" />
+    <meta name="keywords" content="JSON formatter, JSON格式化, JSON美化, JSON validator, JSON驗證, 線上工具, 開發工具, JSON parser, 程式開發, API測試" />
+    <meta name="author" content="SDS Site Tools" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="theme-color" content="#6366f1" />
+    
+    <!-- Enhanced Open Graph Meta Tags -->
+    <meta property="og:title" content="JSON格式化工具 - 線上JSON美化驗證器 | 免費JSON Formatter" />
+    <meta property="og:description" content="專業的線上JSON格式化工具，支援JSON美化、壓縮、驗證與語法高亮。完全免費，隱私安全，提高程式開發效率。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://sds-site.vercel.app/JsonFormatter" />
+    <meta property="og:image" content="https://sds-site.vercel.app/img/json-formatter-preview.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="JSON格式化工具介面截圖" />
+    <meta property="og:site_name" content="SDS Site - 開發者工具集" />
+    <meta property="og:locale" content="zh_TW" />
+    
+    <!-- Enhanced Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="JSON格式化工具 - 線上JSON美化驗證器" />
+    <meta name="twitter:description" content="專業的線上JSON格式化工具，支援JSON美化、壓縮、驗證與語法高亮。完全免費，隱私安全。" />
+    <meta name="twitter:image" content="https://sds-site.vercel.app/img/json-formatter-preview.jpg" />
+    <meta name="twitter:image:alt" content="JSON格式化工具介面" />
+    <meta name="twitter:creator" content="@SDSSite" />
+    <meta name="twitter:site" content="@SDSSite" />
+    
+    <!-- Technical Meta Tags -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="JSON Formatter" />
+    
+    <!-- Performance and Preload -->
+    <link rel="preload" href="styles.css" as="style" />
+    <link rel="preload" href="util/Toast.js" as="script" />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="JsonFormatter.html" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="https://sds-site.vercel.app/img/favicon.ico" />
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Toast JS -->
+    <script src="util/Toast.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>JSON格式化工具 - 專業線上JSON美化與驗證器</h1>
+            <p>強大的線上JSON格式化與驗證工具，支援語法高亮、實時驗證與快速美化功能</p>
+        </header>
+
+        <!-- Main Content -->
+        <main role="main" aria-label="JSON格式化工具主要功能">
+            <!-- Toolbar -->
+            <section class="toolbar" aria-label="工具列">
+                <button class="btn btn-primary" onclick="formatJSON()" data-tooltip="格式化並美化JSON" aria-label="格式化JSON">
+                    <span>🎨</span> 格式化
+                </button>
+                <button class="btn btn-secondary" onclick="minifyJSON()" data-tooltip="壓縮JSON移除空白" aria-label="壓縮JSON">
+                    <span>📦</span> 壓縮
+                </button>
+                <button class="btn btn-secondary" onclick="validateJSON()" data-tooltip="驗證JSON語法" aria-label="驗證JSON語法">
+                    <span>✓</span> 驗證
+                </button>
+                <button class="btn btn-secondary" onclick="clearAll()" data-tooltip="清空所有內容" aria-label="清空內容">
+                    <span>🗑️</span> 清空
+                </button>
+                <button class="btn btn-success" onclick="copyOutput()" data-tooltip="複製格式化結果" aria-label="複製結果">
+                    <span>📋</span> 複製結果
+                </button>
+                <button class="btn btn-secondary" onclick="loadSample()" data-tooltip="載入範例JSON" aria-label="載入範例">
+                    <span>📄</span> 範例
+                </button>
+            </section>
+
+            <!-- JSON Editor Section -->
+            <section class="editor-container" aria-label="JSON編輯器">
+                <!-- Input Panel -->
+                <div class="editor-panel">
+                    <div class="panel-header">輸入 JSON</div>
+                    <textarea 
+                        id="jsonInput" 
+                        class="editor" 
+                        placeholder="請在此處貼上或輸入您的JSON數據..."
+                        oninput="autoFormat()"
+                        aria-label="JSON輸入區域"
+                        aria-describedby="statusText"
+                    ></textarea>
+                </div>
+
+                <!-- Output Panel -->
+                <div class="editor-panel">
+                    <div class="panel-header">格式化結果</div>
+                    <div id="jsonOutput" class="output" aria-label="格式化後的JSON結果" aria-live="polite"></div>
+                </div>
+            </section>
+
+            <!-- Status Bar -->
+            <section class="status-bar" aria-label="狀態資訊">
+                <div class="status-item">
+                    <span id="statusIndicator" aria-label="JSON驗證狀態">🔴</span>
+                    <span id="statusText">請輸入JSON數據</span>
+                </div>
+                <div class="status-item">
+                    <span>字符數:</span>
+                    <span id="charCount" aria-label="字符計數">0</span>
+                </div>
+            </section>
+
+            <!-- How to Use Section -->
+            <section class="how-to-use" aria-label="使用說明">
+                <h2>如何使用JSON格式化工具</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3>貼上JSON數據</h3>
+                        <p>將您的JSON數據複製並貼到左側的輸入框中，支援任何格式的JSON文本</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3>選擇處理方式</h3>
+                        <p>點擊工具列的按鈕：格式化美化、壓縮精簡或驗證語法正確性</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3>獲取處理結果</h3>
+                        <p>在右側面板查看處理結果，使用複製按鈕快速複製到剪貼板</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section class="features" aria-label="工具特色功能">
+                <h2 class="sr-only">JSON格式化工具特色功能</h2>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>智能格式化與美化</h3>
+                    <p>自動檢測並美化JSON格式，支援語法高亮顯示，提供專業的代碼閱讀體驗，提升開發效率</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>實時語法驗證</h3>
+                    <p>即時檢查JSON語法錯誤，提供詳細錯誤信息與行號定位，幫助快速修正JSON格式問題</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>響應式跨平台設計</h3>
+                    <p>完美適配桌面、平板和手機等各種設備，支援觸控操作，隨時隨地進行JSON處理工作</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>隱私安全保護</h3>
+                    <p>純前端本地處理，數據不會上傳到服務器，確保您的敏感JSON數據完全安全可靠</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Navigation -->
+        <nav class="navigation" data-auto-navigation>
+            <!-- 導航內容會自動載入 -->
+        </nav>
+
+        <!-- 頁腳會由導航組件自動添加 -->
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        let isAutoFormatEnabled = true;
+        
+        // Auto format on input
+        function autoFormat() {
+            if (!isAutoFormatEnabled) return;
+            
+            const input = document.getElementById('jsonInput').value.trim();
+            updateCharCount(input);
+            
+            if (input === '') {
+                clearOutput();
+                updateStatus('請輸入JSON數據', 'neutral');
+                return;
+            }
+            
+            try {
+                const parsed = JSON.parse(input);
+                const formatted = JSON.stringify(parsed, null, 2);
+                displayFormattedJSON(formatted);
+                updateStatus('JSON格式正確', 'valid');
+            } catch (error) {
+                displayError(error.message);
+                updateStatus('JSON格式錯誤: ' + error.message, 'error');
+            }
+        }
+
+        // Format JSON with indentation
+        function formatJSON() {
+            const input = document.getElementById('jsonInput').value.trim();
+            
+            if (input === '') {
+                toast.showError('請先輸入JSON數據');
+                return;
+            }
+            
+            try {
+                const parsed = JSON.parse(input);
+                const formatted = JSON.stringify(parsed, null, 2);
+                displayFormattedJSON(formatted);
+                updateStatus('JSON格式化完成', 'valid');
+            } catch (error) {
+                displayError(error.message);
+                updateStatus('JSON格式錯誤: ' + error.message, 'error');
+            }
+        }
+
+        // Minify JSON
+        function minifyJSON() {
+            const input = document.getElementById('jsonInput').value.trim();
+            
+            if (input === '') {
+                toast.showError('請先輸入JSON數據');
+                return;
+            }
+            
+            try {
+                const parsed = JSON.parse(input);
+                const minified = JSON.stringify(parsed);
+                document.getElementById('jsonOutput').textContent = minified;
+                updateStatus('JSON壓縮完成', 'valid');
+            } catch (error) {
+                displayError(error.message);
+                updateStatus('JSON格式錯誤: ' + error.message, 'error');
+            }
+        }
+
+        // Validate JSON only
+        function validateJSON() {
+            const input = document.getElementById('jsonInput').value.trim();
+            
+            if (input === '') {
+                toast.showError('請先輸入JSON數據');
+                return;
+            }
+            
+            try {
+                JSON.parse(input);
+                updateStatus('✅ JSON格式正確', 'valid');
+                toast.showSuccess('JSON格式驗證通過！');
+            } catch (error) {
+                displayError(error.message);
+                updateStatus('❌ JSON格式錯誤: ' + error.message, 'error');
+                toast.showError('JSON格式錯誤：' + error.message);
+            }
+        }
+
+        // Display formatted JSON with syntax highlighting
+        function displayFormattedJSON(json) {
+            const highlighted = syntaxHighlight(json);
+            document.getElementById('jsonOutput').innerHTML = highlighted;
+        }
+
+        // Display error message
+        function displayError(message) {
+            document.getElementById('jsonOutput').innerHTML = 
+                `<div class="error-message">❌ JSON語法錯誤：\n${message}</div>`;
+        }
+
+        // Clear all content
+        function clearAll() {
+            document.getElementById('jsonInput').value = '';
+            clearOutput();
+            updateStatus('已清空所有內容', 'neutral');
+            updateCharCount('');
+        }
+
+        // Clear output only
+        function clearOutput() {
+            document.getElementById('jsonOutput').innerHTML = '';
+        }
+
+        // Copy output to clipboard
+        async function copyOutput() {
+            const output = document.getElementById('jsonOutput');
+            const text = output.textContent || output.innerText;
+            
+            if (!text.trim()) {
+                toast.showError('沒有可複製的內容');
+                return;
+            }
+            
+            try {
+                await navigator.clipboard.writeText(text);
+                
+                // Visual feedback
+                const button = event.target;
+                const originalBg = button.style.background;
+                button.classList.add('copy-success');
+                button.innerHTML = '<span>✓</span> 已複製';
+                
+                setTimeout(() => {
+                    button.classList.remove('copy-success');
+                    button.innerHTML = '<span>📋</span> 複製結果';
+                }, 1500);
+                
+                updateStatus('已複製到剪貼板', 'valid');
+            } catch (err) {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                toast.showSuccess('已複製到剪貼板');
+                updateStatus('已複製到剪貼板', 'valid');
+            }
+        }
+
+        // Load sample JSON
+        function loadSample() {
+            const sampleJSON = {
+                "name": "張小明",
+                "age": 30,
+                "city": "台北",
+                "isActive": true,
+                "hobbies": ["閱讀", "旅行", "攝影"],
+                "address": {
+                    "street": "信義路100號",
+                    "district": "信義區",
+                    "zipCode": "110"
+                },
+                "phoneNumbers": [
+                    {
+                        "type": "home",
+                        "number": "02-1234-5678"
+                    },
+                    {
+                        "type": "mobile",
+                        "number": "0912-345-678"
+                    }
+                ],
+                "spouse": null,
+                "salary": 75000.5
+            };
+            
+            document.getElementById('jsonInput').value = JSON.stringify(sampleJSON, null, 2);
+            autoFormat();
+        }
+
+        // Update status bar
+        function updateStatus(message, type) {
+            const indicator = document.getElementById('statusIndicator');
+            const text = document.getElementById('statusText');
+            
+            text.textContent = message;
+            
+            switch(type) {
+                case 'valid':
+                    indicator.textContent = '🟢';
+                    break;
+                case 'error':
+                    indicator.textContent = '🔴';
+                    break;
+                default:
+                    indicator.textContent = '🟡';
+            }
+        }
+
+        // Update character count
+        function updateCharCount(text) {
+            document.getElementById('charCount').textContent = text.length;
+        }
+
+        // Syntax highlighting for JSON
+        function syntaxHighlight(json) {
+            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            
+            return json.replace(
+                /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+                function (match) {
+                    let cls = 'json-number';
+                    if (/^"/.test(match)) {
+                        if (/:$/.test(match)) {
+                            cls = 'json-key';
+                        } else {
+                            cls = 'json-string';
+                        }
+                    } else if (/true|false/.test(match)) {
+                        cls = 'json-boolean';
+                    } else if (/null/.test(match)) {
+                        cls = 'json-null';
+                    }
+                    return '<span class="' + cls + '">' + match + '</span>';
+                }
+            );
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'Enter':
+                        e.preventDefault();
+                        formatJSON();
+                        break;
+                    case 'l':
+                        e.preventDefault();
+                        clearAll();
+                        break;
+                    case 'c':
+                        if (e.shiftKey) {
+                            e.preventDefault();
+                            copyOutput();
+                        }
+                        break;
+                }
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // 確保 Toast 已初始化
+            if (typeof toast === 'undefined' && typeof initializeToast === 'function') {
+                initializeToast();
+            }
+            
+            updateStatus('準備就緒，請輸入JSON數據', 'neutral');
+            
+            // Load sample on first visit
+            if (localStorage.getItem('firstVisit') !== 'false') {
+                setTimeout(() => {
+                    if (document.getElementById('jsonInput').value.trim() === '') {
+                        loadSample();
+                    }
+                }, 1000);
+                localStorage.setItem('firstVisit', 'false');
+            }
+        });
+
+        // Add comprehensive structured data for SEO
+        const structuredData = {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "JSON格式化工具",
+            "alternateName": "JSON Formatter & Validator",
+            "description": "專業的線上JSON格式化工具，支援JSON美化、壓縮、驗證與語法高亮。完全免費，隱私安全，提高程式開發效率。",
+            "url": "https://sds-site.vercel.app/JsonFormatter",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "Any",
+            "permissions": "browser",
+            "browserRequirements": "Chrome 60+, Firefox 55+, Safari 11+, Edge 79+",
+            "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "TWD",
+                "description": "完全免費使用"
+            },
+            "author": {
+                "@type": "Organization",
+                "name": "SDS Site Tools",
+                "url": "https://sds-site.vercel.app"
+            },
+            "publisher": {
+                "@type": "Organization", 
+                "name": "SDS Site",
+                "url": "https://sds-site.vercel.app"
+            },
+            "featureList": [
+                "JSON格式化與美化",
+                "JSON語法驗證", 
+                "JSON壓縮功能",
+                "語法高亮顯示",
+                "實時錯誤檢測",
+                "一鍵複製結果",
+                "範例JSON載入",
+                "響應式設計",
+                "隱私安全處理"
+            ],
+            "softwareVersion": "2.0",
+            "dateCreated": "2025-01-01",
+            "dateModified": "2025-08-21",
+            "inLanguage": "zh-TW",
+            "potentialAction": {
+                "@type": "UseAction",
+                "target": "https://sds-site.vercel.app/JsonFormatter",
+                "description": "格式化和驗證JSON數據"
+            }
+        };
+
+        // Add FAQ structured data
+        const faqData = {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": "什麼是JSON格式化工具？",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "JSON格式化工具是一個線上服務，可以將壓縮或格式混亂的JSON數據轉換為易於閱讀的格式，同時驗證JSON語法的正確性。"
+                    }
+                },
+                {
+                    "@type": "Question", 
+                    "name": "如何使用JSON格式化工具？",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "只需將您的JSON數據貼到輸入框中，工具會自動格式化並顯示結果。您可以選擇格式化、壓縮或僅驗證JSON語法。"
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "JSON格式化工具是否安全？", 
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "是的，我們的工具完全在瀏覽器前端運行，您的數據不會上傳到任何服務器，確保完全的隱私安全。"
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "支援哪些瀏覽器？",
+                    "acceptedAnswer": {
+                        "@type": "Answer", 
+                        "text": "支援所有現代瀏覽器，包括Chrome 60+、Firefox 55+、Safari 11+、Edge 79+等。"
+                    }
+                }
+            ]
+        };
+
+        // Add HowTo structured data
+        const howToData = {
+            "@context": "https://schema.org",
+            "@type": "HowTo",
+            "name": "如何使用JSON格式化工具",
+            "description": "學習如何使用線上JSON格式化工具來美化、驗證和處理JSON數據",
+            "image": "https://sds-site.vercel.app/img/json-formatter-howto.jpg",
+            "totalTime": "PT2M",
+            "estimatedCost": {
+                "@type": "MonetaryAmount",
+                "currency": "TWD",
+                "value": "0"
+            },
+            "step": [
+                {
+                    "@type": "HowToStep",
+                    "name": "貼上JSON數據",
+                    "text": "將您的JSON數據複製並貼到左側的輸入框中",
+                    "image": "https://sds-site.vercel.app/img/step1.jpg"
+                },
+                {
+                    "@type": "HowToStep", 
+                    "name": "選擇操作類型",
+                    "text": "點擊格式化、壓縮或驗證按鈕來處理您的JSON數據",
+                    "image": "https://sds-site.vercel.app/img/step2.jpg"
+                },
+                {
+                    "@type": "HowToStep",
+                    "name": "查看處理結果",
+                    "text": "在右側面板查看格式化後的結果，並可一鍵複製",
+                    "image": "https://sds-site.vercel.app/img/step3.jpg"
+                }
+            ]
+        };
+
+        // Add structured data to head
+        const webAppScript = document.createElement('script');
+        webAppScript.type = 'application/ld+json';
+        webAppScript.textContent = JSON.stringify(structuredData);
+        document.head.appendChild(webAppScript);
+
+        const faqScript = document.createElement('script');
+        faqScript.type = 'application/ld+json';
+        faqScript.textContent = JSON.stringify(faqData);
+        document.head.appendChild(faqScript);
+
+        const howToScript = document.createElement('script');
+        howToScript.type = 'application/ld+json';
+        howToScript.textContent = JSON.stringify(howToData);
+        document.head.appendChild(howToScript);
+    </script>
+
+    <!-- 統一導航組件 -->
+    <script src="components/navigation.js"></script>
+</body>
+</html>

@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64 編碼解碼工具 - 支援圖片與文字轉換 | 免費線上Base64轉換器</title>
+    <meta name="description" content="免費線上Base64工具，支援圖片拖曳上傳、文字編碼解碼、JPG/PNG/GIF圖片轉Base64、Base64還原圖片。即時預覽、一鍵複製，開發者必備工具！">
+    <meta name="keywords" content="Base64, Base64 編碼, Base64 解碼, 圖片轉Base64, Base64轉圖片, JPG轉Base64, PNG轉Base64, 圖片編碼, 圖片解碼, 拖曳上傳, 文字轉Base64, 檔案轉Base64, 線上工具, 開發者工具, 圖片Base64, Base64圖片, 在线Base64">
+    <meta name="author" content="SDS Site Tools">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sds-site.vercel.app/Base64Converter">
+    <meta property="og:title" content="Base64 編碼解碼工具 - 支援圖片與文字轉換">
+    <meta property="og:description" content="免費線上Base64工具，支援圖片拖曳上傳、文字編碼解碼、JPG/PNG/GIF圖片轉Base64、Base64還原圖片。開發者必備工具！">
+    <meta property="og:image" content="https://sds-site.vercel.app/images/base64-converter-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="SDS Site Tools">
+    <meta property="og:locale" content="zh_TW">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://sds-site.vercel.app/Base64Converter">
+    <meta name="twitter:title" content="Base64 編碼解碼工具 - 支援圖片與文字轉換">
+    <meta name="twitter:description" content="免費線上Base64工具，支援圖片拖曳上傳、文字編碼解碼、JPG/PNG/GIF圖片轉Base64、Base64還原圖片。開發者必備工具！">
+    <meta name="twitter:image" content="https://sds-site.vercel.app/images/base64-converter-preview.png">
+    
+    <!-- Additional SEO -->
+    <meta name="theme-color" content="#3b82f6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Base64 工具">
+    
+    <link rel="canonical" href="Base64Converter.html">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="util/Toast.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Base64 圖片文字編碼解碼工具</h1>
+            <p>支援圖片拖曳上傳與文字編碼的完整Base64解決方案</p>
+        </header>
+
+        <main>
+        <section class="main-card" aria-label="文字Base64處理區域">
+            <div class="toolbar">
+                <button class="btn btn-primary" onclick="encodeText()" title="將文字編碼為Base64">
+                    🔐 編碼
+                </button>
+                <button class="btn btn-secondary" onclick="decodeText()" title="將Base64解碼為文字">
+                    🔓 解碼
+                </button>
+                <button class="btn btn-secondary" onclick="clearAll()" title="清除所有內容">
+                    🗑️ 清除
+                </button>
+                <button class="btn btn-secondary" onclick="copyResult()" title="複製結果到剪貼簿">
+                    📋 複製結果
+                </button>
+                <button class="btn btn-secondary" onclick="switchPanels()" title="交換輸入與輸出內容">
+                    🔄 交換
+                </button>
+            </div>
+
+            <div class="editor-container">
+                <div class="editor-panel">
+                    <div class="panel-header">
+                        原始內容 / Base64 輸入
+                    </div>
+                    <textarea 
+                        id="inputText" 
+                        class="editor" 
+                        placeholder="請輸入要編碼的文字，或貼上要解碼的Base64字串..."
+                        oninput="updateStatus()"
+                    ></textarea>
+                </div>
+
+                <div class="editor-panel">
+                    <div class="panel-header">
+                        輸出結果
+                    </div>
+                    <div id="outputText" class="output" onclick="selectOutput()"></div>
+                </div>
+            </div>
+
+            <div class="status-bar">
+                <div class="status-item">
+                    <span>輸入字元數：</span>
+                    <span id="inputLength">0</span>
+                </div>
+                <div class="status-item">
+                    <span>輸出字元數：</span>
+                    <span id="outputLength">0</span>
+                </div>
+                <div class="status-item" id="statusIndicator">
+                    <span class="status-valid">✓ 就緒</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 圖片處理區塊 -->
+        <section class="main-card" aria-label="圖片Base64處理區域">
+            <div class="toolbar">
+                <button class="btn btn-primary" onclick="encodeImageToBase64()" title="將圖片編碼為Base64">
+                    🖼️ 圖片編碼
+                </button>
+                <button class="btn btn-secondary" onclick="decodeBase64ToImage()" title="將Base64解碼為圖片">
+                    🎨 圖片解碼
+                </button>
+                <button class="btn btn-secondary" onclick="clearImageArea()" title="清除圖片區域">
+                    🗑️ 清除圖片
+                </button>
+                <button class="btn btn-secondary" onclick="downloadImage()" title="下載圖片">
+                    💾 下載圖片
+                </button>
+            </div>
+
+            <div class="editor-container">
+                <div class="editor-panel">
+                    <div class="panel-header">
+                        圖片上傳區域
+                    </div>
+                    <div id="imageDropZone" class="image-drop-zone">
+                        <div class="drop-zone-content">
+                            <div class="drop-zone-icon">🖼️</div>
+                            <div class="drop-zone-text">
+                                <p><strong>拖曳圖片到此處</strong></p>
+                                <p>或者</p>
+                                <button class="btn btn-outline" onclick="document.getElementById('imageInput').click()">
+                                    選擇圖片檔案
+                                </button>
+                            </div>
+                            <div class="drop-zone-info">
+                                支援格式：JPG, PNG, GIF, WebP, SVG (最大 10MB)
+                            </div>
+                        </div>
+                        <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImageSelect(this.files[0])">
+                        <div id="imagePreview" class="image-preview" style="display: none;">
+                            <img id="previewImg" alt="預覽圖片">
+                            <div class="image-info">
+                                <div class="image-name" id="imageName"></div>
+                                <div class="image-size" id="imageSize"></div>
+                            </div>
+                        </div>
+                        <div id="imageLoadingOverlay" class="image-loading-overlay" style="display: none;">
+                            <div class="loading-spinner"></div>
+                            <div class="loading-text">處理中...</div>
+                            <div class="loading-progress" id="loadingProgress"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="editor-panel">
+                    <div class="panel-header">
+                        Base64 圖片數據
+                    </div>
+                    <textarea 
+                        id="imageBase64Output" 
+                        class="editor image-base64-output" 
+                        placeholder="圖片的Base64編碼會顯示在這裡，也可以直接貼上Base64數據進行解碼..."
+                        oninput="debouncedUpdateImageBase64Status()"
+                    ></textarea>
+                </div>
+            </div>
+
+            <div class="status-bar">
+                <div class="status-item">
+                    <span>圖片大小：</span>
+                    <span id="originalImageSize">0 KB</span>
+                </div>
+                <div class="status-item">
+                    <span>Base64大小：</span>
+                    <span id="base64ImageSize">0 KB</span>
+                </div>
+                <div class="status-item" id="imageStatusIndicator">
+                    <span class="status-valid">✓ 準備上傳圖片</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="features" aria-label="功能特色">
+            <div class="feature-card">
+                <div class="feature-icon">🔐</div>
+                <h3>文字編碼</h3>
+                <p>將任何文字內容快速轉換為Base64格式，支援中文等各種字符</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔒️</div>
+                <h3>圖片編碼</h3>
+                <p>支援拖曳上傳圖片檔案，快速轉換為Base64格式，支援JPG、PNG、GIF等格式</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔓️</div>
+                <h3>Base64解碼</h3>
+                <p>將Base64字串解碼回原始文字或圖片，自動檢測格式有效性</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>即時處理</h3>
+                <p>無需上傳檔案，所有處理都在瀏覽器本地完成，保護您的隱私</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>響應式設計</h3>
+                <p>完美支援桌面、平板和手機設備，隨時隨地使用</p>
+            </div>
+        </section>
+
+        <article class="info-card">
+            <div class="info-card-content">
+                <h4>關於Base64編碼</h4>
+                <p>Base64是一種基於64個可列印字符來表示二進位資料的表示方法。常用於在不支援二進位資料的系統中傳輸資料，如電子郵件、網頁等。編碼後的資料通常會比原始資料大約33%。</p>
+                <br>
+                <p><strong>圖片Base64應用：</strong>可將JPG、PNG、GIF等圖片直接嵌入CSS或HTML中，減少HTTP請求。常用於小圖標、數據URI和API資料傳輸。</p>
+            </div>
+        </article>
+        </main>
+
+        <!-- Navigation -->
+        <nav class="navigation" data-auto-navigation>
+            <!-- 導航內容會自動載入 -->
+        </nav>
+
+        <!-- 頁腳會由導航組件自動添加 -->
+    </div>
+
+    <script>
+        // Base64編碼函數
+        function encodeText() {
+            const input = document.getElementById('inputText');
+            const output = document.getElementById('outputText');
+            const statusIndicator = document.getElementById('statusIndicator');
+            
+            try {
+                if (input.value.trim() === '') {
+                    output.textContent = '';
+                    updateStatus();
+                    return;
+                }
+                
+                // 使用UTF-8編碼處理中文
+                const encoded = btoa(unescape(encodeURIComponent(input.value)));
+                output.textContent = encoded;
+                
+                statusIndicator.innerHTML = '<span class="status-valid">✓ 編碼成功</span>';
+                updateStatus();
+                
+            } catch (error) {
+                output.textContent = '';
+                statusIndicator.innerHTML = '<span class="status-error">✗ 編碼失敗：' + error.message + '</span>';
+                updateStatus();
+            }
+        }
+
+        // Base64解碼函數
+        function decodeText() {
+            const input = document.getElementById('inputText');
+            const output = document.getElementById('outputText');
+            const statusIndicator = document.getElementById('statusIndicator');
+            
+            try {
+                if (input.value.trim() === '') {
+                    output.textContent = '';
+                    updateStatus();
+                    return;
+                }
+                
+                // 檢查是否為有效的Base64格式
+                if (!isValidBase64(input.value.trim())) {
+                    throw new Error('無效的Base64格式');
+                }
+                
+                // 解碼並處理UTF-8
+                const decoded = decodeURIComponent(escape(atob(input.value.trim())));
+                output.textContent = decoded;
+                
+                statusIndicator.innerHTML = '<span class="status-valid">✓ 解碼成功</span>';
+                updateStatus();
+                
+            } catch (error) {
+                output.textContent = '';
+                statusIndicator.innerHTML = '<span class="status-error">✗ 解碼失敗：' + error.message + '</span>';
+                updateStatus();
+            }
+        }
+
+        // 檢查Base64格式是否有效
+        function isValidBase64(str) {
+            // Base64字符集檢查
+            const base64Regex = /^[A-Za-z0-9+/]*={0,2}$/;
+            if (!base64Regex.test(str)) {
+                return false;
+            }
+            
+            // 長度檢查（必須是4的倍數）
+            if (str.length % 4 !== 0) {
+                return false;
+            }
+            
+            return true;
+        }
+
+        // 清除所有內容
+        function clearAll() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('outputText').textContent = '';
+            document.getElementById('statusIndicator').innerHTML = '<span class="status-valid">✓ 已清除</span>';
+            updateStatus();
+            
+            // 1秒後恢復就緒狀態
+            setTimeout(() => {
+                document.getElementById('statusIndicator').innerHTML = '<span class="status-valid">✓ 就緒</span>';
+            }, 1000);
+        }
+
+        // 複製結果到剪貼簿
+        function copyResult() {
+            const output = document.getElementById('outputText');
+            const statusIndicator = document.getElementById('statusIndicator');
+            
+            if (output.textContent.trim() === '') {
+                statusIndicator.innerHTML = '<span class="status-error">✗ 沒有可複製的內容</span>';
+                setTimeout(() => {
+                    statusIndicator.innerHTML = '<span class="status-valid">✓ 就緒</span>';
+                }, 2000);
+                return;
+            }
+            
+            navigator.clipboard.writeText(output.textContent).then(() => {
+                statusIndicator.innerHTML = '<span class="status-valid">✓ 已複製到剪貼簿</span>';
+                setTimeout(() => {
+                    statusIndicator.innerHTML = '<span class="status-valid">✓ 就緒</span>';
+                }, 2000);
+            }).catch(() => {
+                // 降級方案：使用傳統方法
+                const textArea = document.createElement('textarea');
+                textArea.value = output.textContent;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                statusIndicator.innerHTML = '<span class="status-valid">✓ 已複製到剪貼簿</span>';
+                setTimeout(() => {
+                    statusIndicator.innerHTML = '<span class="status-valid">✓ 就緒</span>';
+                }, 2000);
+            });
+        }
+
+        // 交換輸入和輸出內容
+        function switchPanels() {
+            const input = document.getElementById('inputText');
+            const output = document.getElementById('outputText');
+            
+            if (output.textContent.trim() === '') {
+                document.getElementById('statusIndicator').innerHTML = '<span class="status-error">✗ 沒有可交換的內容</span>';
+                setTimeout(() => {
+                    document.getElementById('statusIndicator').innerHTML = '<span class="status-valid">✓ 就緒</span>';
+                }, 2000);
+                return;
+            }
+            
+            const temp = input.value;
+            input.value = output.textContent;
+            output.textContent = temp;
+            
+            updateStatus();
+            document.getElementById('statusIndicator').innerHTML = '<span class="status-valid">✓ 已交換內容</span>';
+            setTimeout(() => {
+                document.getElementById('statusIndicator').innerHTML = '<span class="status-valid">✓ 就緒</span>';
+            }, 1500);
+        }
+
+        // 點擊輸出區域選中所有文字
+        function selectOutput() {
+            const output = document.getElementById('outputText');
+            if (output.textContent.trim() === '') return;
+            
+            const range = document.createRange();
+            range.selectNodeContents(output);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+
+        // 更新狀態資訊
+        function updateStatus() {
+            const input = document.getElementById('inputText').value;
+            const output = document.getElementById('outputText').textContent;
+            
+            document.getElementById('inputLength').textContent = input.length;
+            document.getElementById('outputLength').textContent = output.length;
+        }
+
+        // 鍵盤快速鍵
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'e':
+                        e.preventDefault();
+                        encodeText();
+                        break;
+                    case 'd':
+                        e.preventDefault();
+                        decodeText();
+                        break;
+                    case 'k':
+                        e.preventDefault();
+                        clearAll();
+                        break;
+                    case 'c':
+                        if (e.shiftKey) {
+                            e.preventDefault();
+                            copyResult();
+                        }
+                        break;
+                    case 's':
+                        e.preventDefault();
+                        switchPanels();
+                        break;
+                }
+            }
+        });
+
+        // 頁面載入完成後的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStatus();
+            document.getElementById('inputText').focus();
+            setupImageDropZone(); // 初始化圖片拖放區域
+        });
+
+        // 拖放文件支援
+        const inputArea = document.getElementById('inputText');
+        
+        inputArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            inputArea.style.backgroundColor = '#f0f9ff';
+        });
+        
+        inputArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            inputArea.style.backgroundColor = '';
+        });
+        
+        inputArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            inputArea.style.backgroundColor = '';
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.type.startsWith('text/') || file.size < 1024 * 1024) { // 限制1MB以下的文字檔
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        inputArea.value = e.target.result;
+                        updateStatus();
+                    };
+                    reader.readAsText(file);
+                } else {
+                    document.getElementById('statusIndicator').innerHTML = '<span class="status-error">✗ 請拖放文字檔案</span>';
+                    setTimeout(() => {
+                        document.getElementById('statusIndicator').innerHTML = '<span class="status-valid">✓ 就緒</span>';
+                    }, 3000);
+                }
+            }
+        });
+
+        // 圖片處理相關函數
+        let currentImageFile = null;
+        let debounceTimer = null;
+
+        // 顯示圖片Loading
+        function showImageLoading(text = '處理中...', progress = '') {
+            const overlay = document.getElementById('imageLoadingOverlay');
+            const loadingText = overlay.querySelector('.loading-text');
+            const loadingProgress = document.getElementById('loadingProgress');
+            
+            loadingText.textContent = text;
+            loadingProgress.textContent = progress;
+            overlay.style.display = 'flex';
+        }
+
+        // 隱藏圖片Loading
+        function hideImageLoading() {
+            const overlay = document.getElementById('imageLoadingOverlay');
+            overlay.style.display = 'none';
+        }
+
+        // 防抖動的狀態更新函數
+        function debouncedUpdateImageBase64Status() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(updateImageBase64Status, 300); // 300ms延遲
+        }
+
+        // 處理圖片上傳區域的拖放事件
+        function setupImageDropZone() {
+            const dropZone = document.getElementById('imageDropZone');
+            
+            dropZone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+            
+            dropZone.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+            });
+            
+            dropZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleImageSelect(files[0]);
+                }
+            });
+        }
+
+        // 處理圖片選擇
+        function handleImageSelect(file) {
+            const statusIndicator = document.getElementById('imageStatusIndicator');
+            
+            if (!file) return;
+            
+            // 檢查檔案大小 (10MB限制)
+            if (file.size > 10 * 1024 * 1024) {
+                showToast.error('檔案太大，請選擇小於10MB的圖片');
+                return;
+            }
+            
+            // 檢查檔案類型
+            if (!file.type.startsWith('image/')) {
+                showToast.error('請選擇有效的圖片檔案');
+                return;
+            }
+            
+            currentImageFile = file;
+            
+            // 顯示Loading
+            showImageLoading('正在載入圖片...', `檔案大小: ${formatFileSize(file.size)}`);
+            
+            // 顯示圖片預覽
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                setTimeout(() => {
+                    showImagePreview(e.target.result, file.name, file.size);
+                    hideImageLoading();
+                    statusIndicator.innerHTML = '<span class="status-valid">✓ 圖片載入成功</span>';
+                    showToast.success(`圖片載入成功: ${file.name}`);
+                }, 300); // 稍微延遲以顯示Loading效果
+            };
+            
+            reader.onerror = function() {
+                hideImageLoading();
+                statusIndicator.innerHTML = '<span class="status-error">✗ 圖片載入失敗</span>';
+                showToast.error('圖片載入失敗，請重試');
+            };
+            
+            reader.readAsDataURL(file);
+        }
+
+        // 顯示圖片預覽
+        function showImagePreview(dataUrl, fileName, fileSize) {
+            const dropZone = document.getElementById('imageDropZone');
+            const preview = document.getElementById('imagePreview');
+            const previewImg = document.getElementById('previewImg');
+            const imageName = document.getElementById('imageName');
+            const imageSize = document.getElementById('imageSize');
+            const originalSizeElement = document.getElementById('originalImageSize');
+            
+            previewImg.src = dataUrl;
+            imageName.textContent = fileName;
+            imageSize.textContent = formatFileSize(fileSize);
+            originalSizeElement.textContent = formatFileSize(fileSize);
+            
+            dropZone.querySelector('.drop-zone-content').style.display = 'none';
+            preview.style.display = 'flex';
+        }
+
+        // 將圖片編碼為Base64（異步優化版）
+        async function encodeImageToBase64() {
+            const statusIndicator = document.getElementById('imageStatusIndicator');
+            const output = document.getElementById('imageBase64Output');
+            const base64SizeElement = document.getElementById('base64ImageSize');
+            
+            if (!currentImageFile) {
+                showToast.error('請先選擇圖片檔案');
+                return;
+            }
+            
+            // 檢查檔案大小並顯示警告
+            if (currentImageFile.size > 5 * 1024 * 1024) { // 5MB
+                showToast.warning('圖片較大，編碼可能需要較長時間');
+            }
+            
+            // 顯示Loading
+            showImageLoading('正在編碼圖片...', `處理中: ${formatFileSize(currentImageFile.size)}`);
+            statusIndicator.innerHTML = '<span class="status-valid">🔄 正在編碼圖片...</span>';
+            
+            // 使用 setTimeout 來確保UI更新
+            setTimeout(() => {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    // 使用 requestAnimationFrame 來避免阻塞UI
+                    requestAnimationFrame(() => {
+                        const base64String = e.target.result;
+                        output.value = base64String;
+                        
+                        const base64Size = new Blob([base64String]).size;
+                        base64SizeElement.textContent = formatFileSize(base64Size);
+                        
+                        hideImageLoading();
+                        statusIndicator.innerHTML = '<span class="status-valid">✓ 圖片編碼完成</span>';
+                        showToast.success('圖片編碼完成！');
+                    });
+                };
+                
+                reader.onerror = function() {
+                    hideImageLoading();
+                    statusIndicator.innerHTML = '<span class="status-error">✗ 編碼失敗</span>';
+                    showToast.error('圖片編碼失敗，請重試');
+                };
+                
+                reader.readAsDataURL(currentImageFile);
+            }, 50); // 50ms延遲確保UI更新
+        }
+
+        // 更新圖片Base64狀態（優化版）
+        function updateImageBase64Status() {
+            const input = document.getElementById('imageBase64Output');
+            const statusIndicator = document.getElementById('imageStatusIndicator');
+            const base64SizeElement = document.getElementById('base64ImageSize');
+            
+            // 使用 requestAnimationFrame 來避免阻塞UI
+            requestAnimationFrame(() => {
+                if (input.value.trim()) {
+                    const base64Size = new Blob([input.value.trim()]).size;
+                    base64SizeElement.textContent = formatFileSize(base64Size);
+                    
+                    // 檢查數據大小，如果太大則顯示警告
+                    if (base64Size > 5 * 1024 * 1024) { // 5MB
+                        statusIndicator.innerHTML = '<span class="status-warning">⚠ 數據較大，處理可能需要時間</span>';
+                    } else if (input.value.trim().startsWith('data:image/')) {
+                        statusIndicator.innerHTML = '<span class="status-valid">✓ 偵測到Base64圖片數據</span>';
+                    } else {
+                        statusIndicator.innerHTML = '<span class="status-error">⚠ 輸入的數據可能不是有效的圖片格式</span>';
+                    }
+                } else {
+                    base64SizeElement.textContent = '0 KB';
+                    statusIndicator.innerHTML = '<span class="status-valid">✓ 準備上傳圖片</span>';
+                }
+            });
+        }
+
+        // 將Base64解碼為圖片（異步優化版）
+        async function decodeBase64ToImage() {
+            const statusIndicator = document.getElementById('imageStatusIndicator');
+            const input = document.getElementById('imageBase64Output');
+            
+            let base64Data = input.value.trim();
+            
+            // 如果圖片Base64區域為空，檢查文字區域
+            if (!base64Data) {
+                const textInput = document.getElementById('inputText');
+                if (textInput.value.trim()) {
+                    base64Data = textInput.value.trim();
+                    // 將數據複製到圖片區域
+                    input.value = base64Data;
+                } else {
+                    showToast.error('請輸入或貼上Base64圖片數據');
+                    return;
+                }
+            }
+            
+            // 檢查數據大小並顯示警告
+            const dataSize = new Blob([base64Data]).size;
+            if (dataSize > 10 * 1024 * 1024) { // 10MB
+                showToast.warning(`數據較大（${formatFileSize(dataSize)}），處理可能需要較長時間`);
+            }
+            
+            // 顯示處理進度
+            showImageLoading('正在處理數據...', `數據大小: ${formatFileSize(dataSize)}`);
+            statusIndicator.innerHTML = '<span class="status-valid">🔄 正在處理數據...</span>';
+            
+            // 使用 setTimeout 來確保UI更新
+            setTimeout(async () => {
+                try {
+                    // 檢查是否包含data URL前綴，如果沒有則嘗試添加
+                    if (!base64Data.startsWith('data:')) {
+                        showImageLoading('正在格式化數據...', '檢查Base64格式');
+                        statusIndicator.innerHTML = '<span class="status-valid">🔄 正在格式化數據...</span>';
+                        
+                        // 如果是純Base64數據，嘗試添加常見的圖片格式前綴
+                        if (base64Data.match(/^[A-Za-z0-9+/]+={0,2}$/)) {
+                            base64Data = 'data:image/png;base64,' + base64Data;
+                            input.value = base64Data;
+                        } else {
+                            hideImageLoading();
+                            showToast.error('無效的Base64格式');
+                            return;
+                        }
+                    }
+                    
+                    // 檢查是否為圖片類型的data URL
+                    if (!base64Data.startsWith('data:image/')) {
+                        hideImageLoading();
+                        showToast.error('數據不是圖片格式');
+                        return;
+                    }
+                    
+                    showImageLoading('正在載入圖片...', '驗證圖片數據');
+                    statusIndicator.innerHTML = '<span class="status-valid">🔄 正在載入圖片...</span>';
+                    
+                    // 異步載入圖片
+                    const img = await loadImageAsync(base64Data);
+                    
+                    showImageLoading('正在生成預覽...', '處理圖片預覽');
+                    statusIndicator.innerHTML = '<span class="status-valid">🔄 正在生成預覽...</span>';
+                    
+                    // 使用 requestAnimationFrame 來確保UI流暢
+                    requestAnimationFrame(async () => {
+                        try {
+                            // 從Base64提取檔案資訊
+                            const mimeMatch = base64Data.match(/data:([^;]+);/);
+                            const mime = mimeMatch ? mimeMatch[1] : 'image/png';
+                            const extension = mime.split('/')[1] || 'png';
+                            const fileName = `decoded_image.${extension}`;
+                            
+                            // 計算大小
+                            const base64String = base64Data.split(',')[1];
+                            const fileSize = (base64String.length * 0.75); // 大約的檔案大小
+                            
+                            showImagePreview(base64Data, fileName, fileSize);
+                            
+                            showImageLoading('正在建立檔案...', '準備下載檔案');
+                            statusIndicator.innerHTML = '<span class="status-valid">🔄 正在建立檔案...</span>';
+                            
+                            // 異步創建檔案物件
+                            const blob = await fetch(base64Data).then(res => res.blob());
+                            currentImageFile = new File([blob], fileName, { type: mime });
+                            
+                            // 更新檔案大小顯示
+                            const originalSizeElement = document.getElementById('originalImageSize');
+                            originalSizeElement.textContent = formatFileSize(blob.size);
+                            
+                            hideImageLoading();
+                            statusIndicator.innerHTML = '<span class="status-valid">✓ Base64解碼成功</span>';
+                            showToast.success('Base64解碼成功！');
+                            
+                        } catch (error) {
+                            hideImageLoading();
+                            showToast.error('解碼過程發生錯誤');
+                        }
+                    });
+                    
+                } catch (error) {
+                    hideImageLoading();
+                    if (error.message === 'invalid_image') {
+                        showToast.error('無效的圖片數據或格式不支援');
+                    } else {
+                        showToast.error('解碼失敗：' + error.message);
+                    }
+                }
+            }, 50); // 50ms延遲確保UI更新
+        }
+
+        // 異步載入圖片的輔助函數
+        function loadImageAsync(src) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.onerror = () => reject(new Error('invalid_image'));
+                img.src = src;
+            });
+        }
+
+        // 清除圖片區域
+        function clearImageArea() {
+            const dropZone = document.getElementById('imageDropZone');
+            const preview = document.getElementById('imagePreview');
+            const output = document.getElementById('imageBase64Output');
+            const statusIndicator = document.getElementById('imageStatusIndicator');
+            const originalSizeElement = document.getElementById('originalImageSize');
+            const base64SizeElement = document.getElementById('base64ImageSize');
+            
+            currentImageFile = null;
+            preview.style.display = 'none';
+            dropZone.querySelector('.drop-zone-content').style.display = 'block';
+            output.value = '';
+            originalSizeElement.textContent = '0 KB';
+            base64SizeElement.textContent = '0 KB';
+            hideImageLoading();
+            
+            statusIndicator.innerHTML = '<span class="status-valid">✓ 已清除圖片</span>';
+            showToast.success('圖片區域已清除');
+            setTimeout(() => {
+                statusIndicator.innerHTML = '<span class="status-valid">✓ 準備上傳圖片</span>';
+            }, 1500);
+        }
+
+        // 下載圖片
+        function downloadImage() {
+            const statusIndicator = document.getElementById('imageStatusIndicator');
+            
+            if (!currentImageFile) {
+                showToast.error('沒有可下載的圖片');
+                return;
+            }
+            
+            const url = URL.createObjectURL(currentImageFile);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = currentImageFile.name;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            statusIndicator.innerHTML = '<span class="status-valid">✓ 圖片下載開始</span>';
+            showToast.success(`開始下載: ${currentImageFile.name}`);
+            setTimeout(() => {
+                statusIndicator.innerHTML = '<span class="status-valid">✓ 準備上傳圖片</span>';
+            }, 2000);
+        }
+
+        // 格式化檔案大小
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+
+        // Add structured data for SEO
+        const structuredData = {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Base64 圖片文字編碼解碼工具",
+            "alternateName": "Base64 Converter with Image Support",
+            "description": "免費線上Base64工具，支援圖片拖曳上傣、JPG/PNG/GIF圖片轉Base64、Base64還原圖片、文字編碼解碼。開發者必備的完整Base64解決方案！",
+            "url": "https://sds-site.vercel.app/Base64Converter",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "Any",
+            "permissions": "browser",
+            "browserRequirements": "HTML5, JavaScript",
+            "softwareVersion": "2.0",
+            "featureList": [
+                "圖片拖曳上傳",
+                "JPG/PNG/GIF圖片轉Base64",
+                "Base64解碼為圖片",
+                "文字Base64編碼解碼",
+                "即時預覽",
+                "一鍵複製",
+                "檔案下載",
+                "響應式設計"
+            ],
+            "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "TWD",
+                "availability": "https://schema.org/InStock"
+            },
+            "author": {
+                "@type": "Organization",
+                "name": "SDS Site Tools",
+                "url": "https://sds-site.vercel.app"
+            },
+            "screenshot": "https://sds-site.vercel.app/images/base64-converter-preview.png",
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "4.8",
+                "ratingCount": "1250",
+                "bestRating": "5",
+                "worstRating": "1"
+            }
+        };
+
+        const script = document.createElement('script');
+        script.type = 'application/ld+json';
+        script.textContent = JSON.stringify(structuredData);
+        document.head.appendChild(script);
+
+        // Add FAQ structured data
+        const faqData = {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": "如何將圖片轉換為Base64？",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "拖曳圖片到上傳區域或點擊選擇檔案，然後點擊「圖片編碼」按鈕即可將圖片轉換為Base64格式。支援JPG、PNG、GIF、WebP等格式。"
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "如何將Base64還原為圖片？",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "在Base64文字區域貼上圖片的Base64數據，然後點擊「圖片解碼」按鈕，系統會自動解析並顯示圖片預覽，可以下載還原的圖片檔案。"
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "支援哪些圖片格式？",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "支援所有常見的圖片格式，包括JPG、JPEG、PNG、GIF、WebP、SVG等。檔案大小限制為10MB。"
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Base64圖片有什麼用途？",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Base64圖片常用於網頁開發中直接嵌入小圖標、減少HTTP請求、API資料傳輸、電子郵件圖片嵌入等場景。"
+                    }
+                }
+            ]
+        };
+
+        const faqScript = document.createElement('script');
+        faqScript.type = 'application/ld+json';
+        faqScript.textContent = JSON.stringify(faqData);
+        document.head.appendChild(faqScript);
+
+        // Add HowTo structured data
+        const howToData = {
+            "@context": "https://schema.org",
+            "@type": "HowTo",
+            "name": "如何使用Base64圖片轉換工具",
+            "description": "學習如何使用線上工具將圖片轉換為Base64格式，以及如何將Base64數據還原為圖片",
+            "totalTime": "PT2M",
+            "supply": [
+                {
+                    "@type": "HowToSupply",
+                    "name": "圖片檔案（JPG、PNG等）"
+                }
+            ],
+            "tool": [
+                {
+                    "@type": "HowToTool",
+                    "name": "Base64圖片轉換工具"
+                }
+            ],
+            "step": [
+                {
+                    "@type": "HowToStep",
+                    "name": "上傳圖片",
+                    "text": "拖曳圖片到上傳區域或點擊選擇檔案按鈕",
+                    "url": "https://sds-site.vercel.app/Base64Converter#upload"
+                },
+                {
+                    "@type": "HowToStep",
+                    "name": "轉換為Base64",
+                    "text": "點擊「圖片編碼」按鈕將圖片轉換為Base64格式",
+                    "url": "https://sds-site.vercel.app/Base64Converter#encode"
+                },
+                {
+                    "@type": "HowToStep",
+                    "name": "複製或下載結果",
+                    "text": "複製Base64數據到剪貼簿或下載處理後的檔案",
+                    "url": "https://sds-site.vercel.app/Base64Converter#result"
+                }
+            ]
+        };
+
+        const howToScript = document.createElement('script');
+        howToScript.type = 'application/ld+json';
+        howToScript.textContent = JSON.stringify(howToData);
+        document.head.appendChild(howToScript);
+    </script>
+
+    <!-- 統一導航組件 -->
+    <script src="components/navigation.js"></script>
+</body>
+</html>

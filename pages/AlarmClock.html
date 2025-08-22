@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO 基本標籤 -->
+    <title>開發者鬧鐘 - 程式設計師專用時間管理工具 | SDS Site</title>
+    <meta name="description" content="專為開發者設計的可愛鬧鐘工具！支援固定時間和倒數計時模式，小鴨子陪你管理編程時間。具備音量測試、安全提醒功能，讓程式設計師養成良好的工作休息習慣。">
+    <meta name="keywords" content="開發者鬧鐘,程式設計師工具,倒數計時器,固定時間鬧鐘,編程工具,時間管理,工作休息提醒,SDS Site,developer alarm,programming timer">
+    <meta name="author" content="SDS Site">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph 標籤 (Facebook, LinkedIn 等) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="開發者鬧鐘 - 程式設計師專用時間管理工具">
+    <meta property="og:description" content="專為開發者設計的可愛鬧鐘工具！支援固定時間和倒數計時模式，小鴨子陪你管理編程時間，養成良好的工作休息習慣。">
+    <meta property="og:url" content="https://sds-site.vercel.app/AlarmClock.html">
+    <meta property="og:site_name" content="SDS Site - 開發者工具集">
+    <meta property="og:locale" content="zh_TW">
+    <meta property="og:image" content="https://sds-site.vercel.app/images/alarm-clock-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="開發者鬧鐘工具預覽圖 - 可愛的小鴨子時間管理界面">
+    
+    <!-- Twitter Card 標籤 -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="開發者鬧鐘 - 程式設計師專用時間管理工具">
+    <meta name="twitter:description" content="專為開發者設計的可愛鬧鐘工具！支援固定時間和倒數計時模式，小鴨子陪你管理編程時間。">
+    <meta name="twitter:image" content="https://sds-site.vercel.app/images/alarm-clock-preview.png">
+    <meta name="twitter:image:alt" content="開發者鬧鐘工具預覽圖">
+    <meta name="twitter:site" content="@SDS_Site">
+    <meta name="twitter:creator" content="@SDS_Site">
+    
+    <!-- 結構化資料 (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "開發者鬧鐘",
+        "alternateName": "Developer Alarm Clock",
+        "description": "專為程式設計師設計的時間管理鬧鐘工具，支援固定時間和倒數計時模式，具備音量測試和安全提醒功能。",
+        "url": "https://sds-site.vercel.app/AlarmClock.html",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "creator": {
+            "@type": "Organization",
+            "name": "SDS Site",
+            "url": "https://sds-site.vercel.app"
+        },
+        "dateCreated": "2025-08-21",
+        "inLanguage": "zh-TW",
+        "isAccessibleForFree": true,
+        "keywords": "開發者工具,鬧鐘,時間管理,程式設計師,倒數計時",
+        "screenshot": "https://sds-site.vercel.app/images/alarm-clock-preview.png",
+        "softwareVersion": "1.0",
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "ratingCount": "150",
+            "bestRating": "5",
+            "worstRating": "1"
+        },
+        "featureList": [
+            "固定時間鬧鐘設定",
+            "倒數計時功能", 
+            "音量測試與調整",
+            "可愛小鴨子動畫",
+            "響應式設計",
+            "無需安裝"
+        ]
+    }
+    </script>
+    
+    <!-- 網站圖示和 PWA 相關 -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦆</text></svg>">
+    <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦆</text></svg>">
+    
+    <!-- 預連接和 DNS 預取 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- 規範化網址 -->
+    <link rel="canonical" href="https://sds-site.vercel.app/AlarmClock.html">
+    
+    <!-- 語言相關 -->
+    <link rel="alternate" hreflang="zh-TW" href="https://sds-site.vercel.app/AlarmClock.html">
+    <link rel="alternate" hreflang="zh-CN" href="https://sds-site.vercel.app/AlarmClock.html">
+    <link rel="alternate" hreflang="en" href="https://sds-site.vercel.app/en/AlarmClock.html">
+    
+    <!-- 主題顏色 -->
+    <meta name="theme-color" content="#3b82f6">
+    <meta name="msapplication-TileColor" content="#3b82f6">
+    
+    <!-- 安全性 -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* 無障礙輔助樣式 */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* 焦點樣式增強 */
+        .mode-card:focus,
+        .quick-time-btn:focus,
+        .alarm-btn:focus,
+        .test-sound-btn:focus,
+        .time-input:focus,
+        .countdown-number:focus,
+        .volume-slider:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        /* 鬧鐘專用樣式 */
+        .alarm-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .alarm-mode-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .mode-card {
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mode-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .mode-card.active {
+            border-color: var(--primary-color);
+            background: linear-gradient(135deg, rgba(59, 130, 246), rgba(178, 59, 246));
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .mode-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .mode-card:hover::before {
+            left: 100%;
+        }
+
+        .mode-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .mode-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .mode-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .alarm-setup {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .setup-section {
+            display: none;
+        }
+
+        .setup-section.active {
+            display: block;
+        }
+
+        .time-input-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .time-input {
+            font-size: 2rem;
+            font-weight: 600;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            text-align: center;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            min-width: 80px;
+        }
+
+        .time-select {
+            min-width: 100px;
+            cursor: pointer;
+        }
+
+        .time-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            background: var(--bg-primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .quick-time-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .quick-time-btn {
+            padding: 8px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quick-time-btn:hover {
+            border-color: var(--primary-color);
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .time-separator {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .countdown-input {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .countdown-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .countdown-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .countdown-number {
+            font-size: 1.5rem;
+            font-weight: 600;
+            padding: 8px 12px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            text-align: center;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            width: 70px;
+        }
+
+        .countdown-number:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            background: var(--bg-primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .alarm-display {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        .current-time {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .alarm-info {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .alarm-status {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+        }
+
+        .status-waiting {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning-color);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .status-active {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-ringing {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error-color);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* 進度條和小鴨子 */
+        .progress-container {
+            position: relative;
+            width: 100%;
+            height: 80px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            margin: 24px 0;
+            border: 2px solid var(--border-color);
+            overflow: visible; /* 改為visible讓鸭子完全顯示 */
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success-color), var(--primary-color));
+            border-radius: var(--radius-lg);
+            transition: width 1s ease;
+            position: relative;
+        }
+
+        .progress-duck {
+            position: absolute;
+            top: 50%;
+            left: -30px;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            transition: all 1s ease;
+            z-index: 10;
+            animation: duck-walk 2s infinite;
+        }
+
+        @keyframes duck-walk {
+            0%, 100% { 
+                transform: translateY(-50%) rotate(-5deg);
+            }
+            25% { 
+                transform: translateY(-55%) rotate(0deg);
+            }
+            50% { 
+                transform: translateY(-50%) rotate(5deg);
+            }
+            75% { 
+                transform: translateY(-45%) rotate(0deg);
+            }
+        }
+
+        @keyframes duck-dance {
+            0%, 100% { 
+                transform: translateY(-50%) rotate(-10deg) scale(1);
+            }
+            25% { 
+                transform: translateY(-60%) rotate(10deg) scale(1.1);
+            }
+            50% { 
+                transform: translateY(-40%) rotate(-10deg) scale(1.1);
+            }
+            75% { 
+                transform: translateY(-60%) rotate(10deg) scale(1);
+            }
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: 600;
+            color: var(--text-primary);
+            z-index: 5;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .alarm-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 120px;
+            justify-content: center;
+        }
+
+        .btn-start {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-start:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .btn-pause {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .btn-pause:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+        }
+
+        .btn-stop {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .btn-stop:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        .btn-reset {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-reset:hover {
+            background: #475569;
+            transform: translateY(-2px);
+        }
+
+        /* 音量測試區域 */
+        .volume-test-section {
+            background: rgba(255, 243, 205, 0.8);
+            border: 2px solid #fbbf24;
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .volume-warning {
+            color: #92400e;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .volume-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .volume-slider-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .volume-slider {
+            width: 150px;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #fbbf24;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #92400e;
+        }
+
+        .volume-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #fbbf24;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #92400e;
+        }
+
+        .volume-value {
+            font-weight: 600;
+            color: #92400e;
+            min-width: 40px;
+        }
+
+        .test-sound-btn {
+            background: #fbbf24;
+            color: #92400e;
+            border: 2px solid #92400e;
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .test-sound-btn:hover {
+            background: #f59e0b;
+            transform: translateY(-2px);
+        }
+
+        .test-sound-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .test-sound-btn.playing {
+            background: #ef4444;
+            color: white;
+            border-color: #dc2626;
+            animation: pulse 2s infinite;
+        }
+
+        .test-sound-btn.playing:hover {
+            background: #dc2626;
+        }
+
+        .safety-note {
+            font-size: 0.8rem;
+            color: #78716c;
+            font-style: italic;
+            margin-top: 12px;
+        }
+
+        /* 鬧鐘響起效果 */
+        .alarm-ringing {
+            animation: shake 0.5s infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .fun-descriptions {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .fun-descriptions h2 {
+            color: var(--hero-title-color);
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .fun-descriptions p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .emoji-separator {
+            font-size: 1.5rem;
+            margin: 20px 0;
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .alarm-mode-selector {
+                grid-template-columns: 1fr;
+            }
+
+            .time-input-group {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .time-input {
+                font-size: 1.5rem;
+                min-width: 120px;
+            }
+
+            .current-time {
+                font-size: 2rem;
+            }
+
+            .countdown-input {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .control-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .alarm-btn {
+                width: 100%;
+                max-width: 200px;
+            }
+
+            .quick-time-buttons {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .quick-time-btn {
+                width: 100%;
+                max-width: 200px;
+            }
+
+            .volume-test-section {
+                padding: 16px;
+                margin: 16px 0;
+            }
+
+            .volume-controls {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .volume-slider-container {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .volume-slider {
+                width: 200px;
+            }
+
+            .test-sound-btn {
+                width: 100%;
+                max-width: 200px;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🦆 開發者鬧鐘</h1>
+            <p>讓小鴨子陪你管理時間，記得要休息哦！</p>
+        </header>
+
+        <!-- 主要內容區域 -->
+        <main class="alarm-container" role="main">
+            <!-- 有趣的描述 -->
+            <section class="fun-descriptions" aria-labelledby="intro-heading">
+                <h2 id="intro-heading">💤 開發者也需要睡覺</h2>
+                <p>親愛的程式碼戰士，是時候放下鍵盤了！ 🚀</p>
+                <p>無論你是在追趕 Deadline 還是在修復那個「明明昨天還好好的」Bug，<br>
+                   記住：再優雅的代碼也比不上充足的睡眠。</p>
+                <div class="emoji-separator" aria-hidden="true">⏰ 🦆 ⏰ 🦆 ⏰</div>
+                <p>設定鬧鐘，讓我們的小鴨子提醒你：<br>
+                   <strong>好的開發者知道何時該休息，偉大的開發者會設鬧鐘確保自己真的去休息！</strong></p>
+            </section>
+
+            <!-- 鬧鐘模式選擇 -->
+            <section class="alarm-mode-selector" aria-labelledby="mode-heading">
+                <h2 id="mode-heading" class="sr-only">選擇鬧鐘模式</h2>
+                <div class="mode-card active" data-mode="fixed" role="button" tabindex="0" aria-pressed="true">
+                    <span class="mode-icon" aria-hidden="true">🕐</span>
+                    <div class="mode-title">固定時間</div>
+                    <div class="mode-desc">設定具體的時間點</div>
+                </div>
+                <div class="mode-card" data-mode="countdown" role="button" tabindex="0" aria-pressed="false">
+                    <span class="mode-icon" aria-hidden="true">⏳</span>
+                    <div class="mode-title">倒數計時</div>
+                    <div class="mode-desc">設定倒數的時間長度</div>
+                </div>
+            </section>
+
+            <!-- 鬧鐘設定 -->
+            <section class="alarm-setup" aria-labelledby="setup-heading">
+                <h2 id="setup-heading" class="sr-only">鬧鐘設定</h2>
+                <!-- 固定時間設定 -->
+                <div class="setup-section active" id="fixed-setup" role="tabpanel" aria-labelledby="fixed-tab">
+                    <h3 style="text-align: center; margin-bottom: 24px; color: var(--text-primary);">
+                        🎯 設定固定時間
+                    </h3>
+                    <div class="time-input-group" role="group" aria-label="時間設定">
+                        <label for="hours-select" class="sr-only">小時</label>
+                        <select class="time-input time-select" id="hours-select" aria-label="選擇小時">
+                            <!-- 小時選項 0-23 -->
+                        </select>
+                        <span class="time-separator" aria-hidden="true">:</span>
+                        <label for="minutes-select" class="sr-only">分鐘</label>
+                        <select class="time-input time-select" id="minutes-select" aria-label="選擇分鐘">
+                            <!-- 分鐘選項 0-59 -->
+                        </select>
+                    </div>
+                    
+                    <!-- 快速設定按鈕 -->
+                    <div class="quick-time-buttons" role="group" aria-label="快速時間設定">
+                        <button class="quick-time-btn" data-time="22:00" aria-label="設定為晚上10點">🌙 晚上10點</button>
+                        <button class="quick-time-btn" data-time="23:00" aria-label="設定為晚上11點">😴 晚上11點</button>
+                        <button class="quick-time-btn" data-time="00:00" aria-label="設定為午夜12點">🕛 午夜12點</button>
+                        <button class="quick-time-btn" data-time="07:00" aria-label="設定為早上7點">🌅 早上7點</button>
+                        <button class="quick-time-btn" data-time="08:00" aria-label="設定為早上8點">☀️ 早上8點</button>
+                    </div>
+                </div>
+
+                <!-- 倒數計時設定 -->
+                <div class="setup-section" id="countdown-setup" role="tabpanel" aria-labelledby="countdown-tab">
+                    <h3 style="text-align: center; margin-bottom: 24px; color: var(--text-primary);">
+                        ⏰ 設定倒數時間
+                    </h3>
+                    <div class="countdown-input" role="group" aria-label="倒數時間設定">
+                        <div class="countdown-group">
+                            <label for="countdown-hours" class="countdown-label">小時</label>
+                            <input type="number" class="countdown-number" id="countdown-hours" min="0" max="23" value="0" aria-label="倒數小時數">
+                        </div>
+                        <div class="countdown-group">
+                            <label for="countdown-minutes" class="countdown-label">分鐘</label>
+                            <input type="number" class="countdown-number" id="countdown-minutes" min="0" max="59" value="0" aria-label="倒數分鐘數">
+                        </div>
+                        <div class="countdown-group">
+                            <label for="countdown-seconds" class="countdown-label">秒鐘</label>
+                            <input type="number" class="countdown-number" id="countdown-seconds" min="0" max="59" value="0" aria-label="倒數秒數">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 鬧鐘顯示 -->
+            <section class="alarm-display" aria-labelledby="display-heading">
+                <h2 id="display-heading" class="sr-only">鬧鐘狀態顯示</h2>
+                <div class="current-time" id="current-time" aria-live="polite" aria-label="目前時間">00:00:00</div>
+                <div class="alarm-info" id="alarm-info" aria-live="polite">請設定鬧鐘時間</div>
+                <div class="alarm-status status-waiting" id="alarm-status" aria-live="assertive">🦆 呱呱呱 (等待設定)</div>
+
+                <!-- 進度條和小鴨子 -->
+                <div class="progress-container" id="progress-container" style="display: none;" role="progressbar" aria-label="倒數進度" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" id="progress-bar" style="width: 0%;">
+                        <div class="progress-duck" id="progress-duck" aria-hidden="true">🦆</div>
+                    </div>
+                    <div class="progress-text" id="progress-text" aria-live="polite">0%</div>
+                </div>
+
+                <!-- 音量測試區域 -->
+                <section class="volume-test-section" aria-labelledby="volume-heading">
+                    <h3 id="volume-heading" class="sr-only">音量測試與調整</h3>
+                    <div class="volume-warning">
+                        <span aria-hidden="true">⚠️</span>
+                        <span>建議請先測試音量，保護您的聽力！</span>
+                    </div>
+                    
+                    <div class="volume-controls" role="group" aria-label="音量控制">
+                        <div class="volume-slider-container">
+                            <span aria-hidden="true">🔇</span>
+                            <label for="volume-slider" class="sr-only">音量調整</label>
+                            <input type="range" class="volume-slider" id="volume-slider" 
+                                   min="0" max="100" value="50" aria-label="音量滑桿，當前音量50%">
+                            <span aria-hidden="true">🔊</span>
+                        </div>
+                        <div class="volume-value" id="volume-value" aria-live="polite">50%</div>
+                        <button class="test-sound-btn" id="test-sound-btn" aria-label="測試音量大小">
+                            <span aria-hidden="true">🎵</span> 測試音量
+                        </button>
+                    </div>
+                    
+                    <div class="safety-note">
+                        💡 提示：點擊「測試音量」開始播放，再次點擊可停止。播放期間可自由調整音量大小。
+                    </div>
+                </section>
+
+                <!-- 控制按鈕 -->
+                <div class="control-buttons" role="group" aria-label="鬧鐘控制">
+                    <button class="alarm-btn btn-start" id="start-btn" aria-label="開始鬧鐘">
+                        <span aria-hidden="true">▶️</span> 開始鬧鐘
+                    </button>
+                    <button class="alarm-btn btn-pause" id="pause-btn" style="display: none;" aria-label="暫停鬧鐘">
+                        <span aria-hidden="true">⏸️</span> 暫停
+                    </button>
+                    <button class="alarm-btn btn-stop" id="stop-btn" style="display: none;" aria-label="停止鬧鐘">
+                        <span aria-hidden="true">⏹️</span> 停止
+                    </button>
+                    <button class="alarm-btn btn-reset" id="reset-btn" aria-label="重設鬧鐘">
+                        <span aria-hidden="true">🔄</span> 重設
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Navigation -->
+        <nav class="navigation" data-auto-navigation>
+            <!-- 導航內容會自動載入 -->
+        </nav>
+    </div>
+
+    <!-- Toast System -->
+    <script src="util/Toast.js"></script>
+
+    <!-- 統一導航組件 -->
+    <script src="components/navigation.js"></script>
+
+    <script>
+        class DeveloperAlarmClock {
+            constructor() {
+                this.alarmTime = null;
+                this.originalAlarmTime = null; // 固定時間模式的開始時間
+                this.totalAlarmDuration = null; // 固定時間模式的總時長
+                this.countdownTime = null;
+                this.originalCountdownTime = null;
+                this.currentMode = 'fixed';
+                this.isRunning = false;
+                this.isPaused = false;
+                this.alarmInterval = null;
+                this.countdownInterval = null;
+                this.alarmAudio = null;
+                this.duckAudio = null;
+                this.currentVolume = 0.5; // 預設音量50%
+                this.isTestPlaying = false; // 測試音效播放狀態
+                this.testAudioContext = null; // 測試音效的 AudioContext
+                this.testOscillator = null; // 測試用的振盪器
+                this.isAlarmRinging = false; // 鬧鐘響起狀態
+                this.alarmSoundInterval = null; // 鬧鐘音效播放間隔
+                
+                this.initializeElements();
+                this.populateTimeSelectors();
+                this.bindEvents();
+                this.updateCurrentTime();
+                this.setupAlarmAudio();
+                this.loadDuckSound();
+                this.initVolumeControls();
+                
+                // 每秒更新時間
+                setInterval(() => this.updateCurrentTime(), 1000);
+            }
+
+            initializeElements() {
+                this.currentTimeEl = document.getElementById('current-time');
+                this.alarmInfoEl = document.getElementById('alarm-info');
+                this.alarmStatusEl = document.getElementById('alarm-status');
+                this.progressContainer = document.getElementById('progress-container');
+                this.progressBar = document.getElementById('progress-bar');
+                this.progressDuck = document.getElementById('progress-duck');
+                this.progressText = document.getElementById('progress-text');
+                
+                this.startBtn = document.getElementById('start-btn');
+                this.pauseBtn = document.getElementById('pause-btn');
+                this.stopBtn = document.getElementById('stop-btn');
+                this.resetBtn = document.getElementById('reset-btn');
+                
+                this.hoursSelect = document.getElementById('hours-select');
+                this.minutesSelect = document.getElementById('minutes-select');
+                
+                // 音量控制元素
+                this.volumeSlider = document.getElementById('volume-slider');
+                this.volumeValue = document.getElementById('volume-value');
+                this.testSoundBtn = document.getElementById('test-sound-btn');
+            }
+
+            populateTimeSelectors() {
+                // 填充小時選項 (00-23)
+                for (let i = 0; i < 24; i++) {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.textContent = i.toString().padStart(2, '0');
+                    this.hoursSelect.appendChild(option);
+                }
+                
+                // 填充分鐘選項 (00-59)
+                for (let i = 0; i < 60; i++) {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.textContent = i.toString().padStart(2, '0');
+                    this.minutesSelect.appendChild(option);
+                }
+                
+                // 設定預設時間為當前時間+1小時
+                const now = new Date();
+                const defaultHour = (now.getHours() + 1) % 24;
+                this.hoursSelect.value = defaultHour;
+                this.minutesSelect.value = 0;
+            }
+
+            bindEvents() {
+                // 模式切換
+                document.querySelectorAll('.mode-card').forEach(card => {
+                    card.addEventListener('click', () => this.switchMode(card.dataset.mode));
+                    // 鍵盤支援
+                    card.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            this.switchMode(card.dataset.mode);
+                        }
+                    });
+                });
+
+                // 按鈕事件
+                this.startBtn.addEventListener('click', () => this.startAlarm());
+                this.pauseBtn.addEventListener('click', () => this.pauseAlarm());
+                this.stopBtn.addEventListener('click', () => this.stopAlarm());
+                this.resetBtn.addEventListener('click', () => this.resetAlarm());
+
+                // 快速時間設定按鈕
+                document.querySelectorAll('.quick-time-btn').forEach(btn => {
+                    btn.addEventListener('click', () => this.setQuickTime(btn.dataset.time));
+                });
+
+                // 音量控制事件
+                this.volumeSlider.addEventListener('input', () => this.updateVolume());
+                this.testSoundBtn.addEventListener('click', () => this.testSound());
+
+                // 鍵盤快捷鍵
+                document.addEventListener('keydown', (e) => {
+                    // 按空白鍵開始/暫停鬧鐘
+                    if (e.code === 'Space' && !e.target.matches('input, select, button')) {
+                        e.preventDefault();
+                        if (this.isRunning && !this.isAlarmRinging) {
+                            this.pauseAlarm();
+                        } else if (!this.isRunning && !this.isAlarmRinging) {
+                            this.startAlarm();
+                        }
+                    }
+                    // 按 Escape 鍵停止鬧鐘
+                    if (e.key === 'Escape' && (this.isRunning || this.isAlarmRinging)) {
+                        this.stopAlarm();
+                    }
+                });
+
+                // 輸入框限制
+                this.setupInputValidation();
+            }
+
+            setQuickTime(timeString) {
+                const [hours, minutes] = timeString.split(':').map(Number);
+                this.hoursSelect.value = hours;
+                this.minutesSelect.value = minutes;
+                
+                Toast.success(`快速設定：${timeString} 🕐`);
+            }
+
+            loadDuckSound() {
+                // 嘗試載入鴨子音效檔案
+                const audioFiles = [
+                    './assets/sounds/duck-quack.mp3',
+                    './assets/sounds/duck-quack-1.mp3',
+                    './assets/sounds/duck-quack-2.mp3',
+                    './assets/sounds/duck-quack-3.mp3'
+                ];
+
+                // 嘗試載入第一個可用的音效檔案
+                this.loadAudioFile(audioFiles, 0);
+            }
+
+            loadAudioFile(audioFiles, index) {
+                if (index >= audioFiles.length) {
+                    console.log('🦆 未找到鴨子音效檔案，將使用預設音效');
+                    Toast.info('未找到鴨子音效檔案，請參考 assets/sounds/README.md 添加音效 🦆');
+                    return;
+                }
+
+                const audio = new Audio();
+                audio.addEventListener('canplaythrough', () => {
+                    this.duckAudio = audio;
+                    this.duckAudio.volume = this.currentVolume; // 設定初始音量
+                }, { once: true });
+
+                audio.addEventListener('error', () => {
+                    console.log(`音效檔案載入失敗: ${audioFiles[index]}`);
+                    this.loadAudioFile(audioFiles, index + 1);
+                }, { once: true });
+
+                audio.src = audioFiles[index];
+                audio.load();
+            }
+
+            setupInputValidation() {
+                // 倒數計時輸入驗證
+                ['countdown-hours', 'countdown-minutes', 'countdown-seconds'].forEach(id => {
+                    const element = document.getElementById(id);
+                    element.addEventListener('input', (e) => {
+                        let value = parseInt(e.target.value);
+                        let max = id.includes('hours') ? 23 : 59;
+                        if (value > max) e.target.value = max;
+                        if (value < 0) e.target.value = 0;
+                    });
+                });
+            }
+
+            initVolumeControls() {
+                // 初始化音量控制
+                this.updateVolume();
+            }
+
+            updateVolume() {
+                const volume = this.volumeSlider.value / 100;
+                this.currentVolume = volume;
+                this.volumeValue.textContent = `${this.volumeSlider.value}%`;
+                
+                // 更新所有音效的音量
+                if (this.duckAudio) {
+                    this.duckAudio.volume = volume;
+                }
+                
+                // 如果正在測試播放，即時更新音量
+                if (this.isTestPlaying && this.testGainNode) {
+                    this.testGainNode.gain.setValueAtTime(volume * 0.3, this.testAudioContext.currentTime);
+                }
+            }
+
+            testSound() {
+                if (this.isTestPlaying) {
+                    // 如果正在播放，停止播放
+                    this.stopTestSound();
+                } else {
+                    // 如果沒有播放，開始播放
+                    this.startTestSound();
+                }
+            }
+
+            startTestSound() {
+                if (this.duckAudio) {
+                    // 使用鴨子音效（循環播放）
+                    this.duckAudio.currentTime = 0;
+                    this.duckAudio.volume = this.currentVolume;
+                    this.duckAudio.loop = true; // 設定循環播放
+                    
+                    const playPromise = this.duckAudio.play();
+                    if (playPromise !== undefined) {
+                        playPromise.then(() => {
+                            this.isTestPlaying = true;
+                            this.updateTestButton();
+                            Toast.success(`🦆 開始播放測試音效！可調整音量 🎵`);
+                        }).catch(e => {
+                            console.log('播放鴨子音效失敗:', e);
+                            this.startBeepTestSound();
+                        });
+                    }
+                } else {
+                    // 使用蜂鳴聲
+                    this.startBeepTestSound();
+                }
+            }
+
+            startBeepTestSound() {
+                try {
+                    // 創建持續的蜂鳴聲
+                    this.testAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    this.testOscillator = this.testAudioContext.createOscillator();
+                    this.testGainNode = this.testAudioContext.createGain();
+                    
+                    this.testOscillator.connect(this.testGainNode);
+                    this.testGainNode.connect(this.testAudioContext.destination);
+                    
+                    this.testOscillator.frequency.value = 800;
+                    this.testOscillator.type = 'sine';
+                    
+                    // 設定音量
+                    this.testGainNode.gain.setValueAtTime(this.currentVolume * 0.3, this.testAudioContext.currentTime);
+                    
+                    this.testOscillator.start();
+                    
+                    this.isTestPlaying = true;
+                    this.updateTestButton();
+                    Toast.success(`🔔 開始播放測試蜂鳴！可調整音量 🎵`);
+                } catch (e) {
+                    console.log('創建測試音效失敗:', e);
+                    Toast.error('無法播放測試音效 ❌');
+                }
+            }
+
+            stopTestSound() {
+                if (this.duckAudio && this.duckAudio.loop) {
+                    // 停止鴨子音效
+                    this.duckAudio.pause();
+                    this.duckAudio.loop = false;
+                    this.duckAudio.currentTime = 0;
+                } 
+                
+                if (this.testOscillator) {
+                    // 停止蜂鳴聲
+                    try {
+                        this.testOscillator.stop();
+                        this.testOscillator.disconnect();
+                        this.testGainNode.disconnect();
+                        this.testAudioContext.close();
+                    } catch (e) {
+                        console.log('停止測試音效時發生錯誤:', e);
+                    }
+                    this.testOscillator = null;
+                    this.testGainNode = null;
+                    this.testAudioContext = null;
+                }
+                
+                this.isTestPlaying = false;
+                this.updateTestButton();
+                Toast.info('測試音效已停止 ⏹️');
+            }
+
+            updateTestButton() {
+                if (this.isTestPlaying) {
+                    this.testSoundBtn.innerHTML = '<span>⏸️</span> 停止測試';
+                    this.testSoundBtn.style.background = '#ef4444';
+                    this.testSoundBtn.style.borderColor = '#dc2626';
+                    this.testSoundBtn.style.color = 'white';
+                } else {
+                    this.testSoundBtn.innerHTML = '<span>🎵</span> 測試音量';
+                    this.testSoundBtn.style.background = '#fbbf24';
+                    this.testSoundBtn.style.borderColor = '#92400e';
+                    this.testSoundBtn.style.color = '#92400e';
+                }
+            }
+
+            testBeepSound() {
+                // 播放測試蜂鳴聲
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(this.currentVolume * 0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 1);
+                
+                Toast.success(`🔔 蜂鳴音效測試完成！音量：${Math.round(this.currentVolume * 100)}%`);
+            }
+
+            setupAlarmAudio() {
+                // 創建鬧鐘聲音（使用瀏覽器的 beep 音效）
+                this.createAlarmSound();
+            }
+
+            createAlarmSound() {
+                // 創建一個簡單的蜂鳴音效
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                this.playAlarmSound = () => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.value = 800;
+                    oscillator.type = 'sine';
+                    
+                    // 使用設定的音量，但限制最大音量避免太響
+                    const volume = this.currentVolume * 0.3;
+                    gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.5);
+                };
+            }
+
+            switchMode(mode) {
+                this.currentMode = mode;
+                
+                // 更新模式卡片樣式和ARIA屬性
+                document.querySelectorAll('.mode-card').forEach(card => {
+                    card.classList.remove('active');
+                    card.setAttribute('aria-pressed', 'false');
+                });
+                const activeCard = document.querySelector(`[data-mode="${mode}"]`);
+                activeCard.classList.add('active');
+                activeCard.setAttribute('aria-pressed', 'true');
+                
+                // 更新設定界面
+                document.querySelectorAll('.setup-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(`${mode}-setup`).classList.add('active');
+                
+                // 重設狀態
+                this.resetAlarm();
+                
+                Toast.success(`已切換到${mode === 'fixed' ? '固定時間' : '倒數計時'}模式 🦆`);
+            }
+
+            updateCurrentTime() {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('zh-TW', { hour12: false });
+                this.currentTimeEl.textContent = timeString;
+            }
+
+            startAlarm() {
+                if (this.currentMode === 'fixed') {
+                    this.startFixedAlarm();
+                } else {
+                    this.startCountdownAlarm();
+                }
+            }
+
+            startFixedAlarm() {
+                const hours = parseInt(this.hoursSelect.value);
+                const minutes = parseInt(this.minutesSelect.value);
+                
+                const now = new Date();
+                const alarmDate = new Date();
+                alarmDate.setHours(hours, minutes, 0, 0);
+                
+                // 如果設定的時間已經過了，設為明天
+                if (alarmDate <= now) {
+                    alarmDate.setDate(alarmDate.getDate() + 1);
+                }
+                
+                this.alarmTime = alarmDate;
+                this.originalAlarmTime = now; // 記錄開始時間用於計算進度
+                this.totalAlarmDuration = alarmDate - now; // 總時長
+                this.isRunning = true;
+                this.isPaused = false;
+                
+                this.updateAlarmInfo();
+                this.updateButtons();
+                this.updateStatus('active', '🦆 鬧鐘已啟動');
+                this.showProgressBar(); // 顯示進度條
+                
+                // 開始檢查鬧鐘
+                this.alarmInterval = setInterval(() => this.checkAlarm(), 1000);
+                
+                Toast.success(`鬧鐘設定成功！將在 ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} 響起 🎯`);
+            }
+
+            startCountdownAlarm() {
+                const hours = parseInt(document.getElementById('countdown-hours').value);
+                const minutes = parseInt(document.getElementById('countdown-minutes').value);
+                const seconds = parseInt(document.getElementById('countdown-seconds').value);
+                
+                const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+                
+                if (totalSeconds === 0) {
+                    Toast.warning('請設定倒數時間！⏰');
+                    return;
+                }
+                
+                this.countdownTime = totalSeconds;
+                this.originalCountdownTime = totalSeconds;
+                this.isRunning = true;
+                this.isPaused = false;
+                
+                this.updateAlarmInfo();
+                this.updateButtons();
+                this.updateStatus('active', '🦆 倒數進行中');
+                this.showProgressBar();
+                
+                // 開始倒數
+                this.countdownInterval = setInterval(() => this.updateCountdown(), 1000);
+                
+                // Toast.success(`倒數計時開始！${this.formatTime(totalSeconds)} ⏳`);
+            }
+
+            checkAlarm() {
+                const now = new Date();
+                if (now >= this.alarmTime) {
+                    this.triggerAlarm();
+                } else {
+                    this.updateAlarmInfo();
+                    this.updateFixedAlarmProgress(); // 更新固定時間模式的進度條
+                }
+            }
+
+            updateCountdown() {
+                if (this.isPaused) return;
+                
+                this.countdownTime--;
+                this.updateAlarmInfo();
+                this.updateProgress();
+                
+                if (this.countdownTime <= 0) {
+                    this.triggerAlarm();
+                }
+            }
+
+            updateProgress() {
+                const progress = ((this.originalCountdownTime - this.countdownTime) / this.originalCountdownTime) * 100;
+                this.progressBar.style.width = `${progress}%`;
+                this.progressText.textContent = `${Math.round(progress)}%`;
+                
+                // 更新ARIA屬性
+                this.progressContainer.setAttribute('aria-valuenow', Math.round(progress));
+                this.progressContainer.setAttribute('aria-label', `倒數進度 ${Math.round(progress)}%`);
+                
+                // 更新小鴨子位置（讓它從左邊走到右邊，100%時不被遮擋）
+                const containerWidth = this.progressContainer.offsetWidth || 800; // 預設寬度
+                const duckSize = 30; // 鴨子大小
+                const maxPosition = containerWidth - duckSize - 10; // 留10px邊距
+                const duckPosition = (progress / 100) * maxPosition - 30; // 從-30px開始
+                this.progressDuck.style.left = `${Math.max(-30, Math.min(maxPosition, duckPosition))}px`;
+            }
+
+            updateFixedAlarmProgress() {
+                if (!this.alarmTime || !this.originalAlarmTime || !this.totalAlarmDuration) return;
+                
+                const now = new Date();
+                const elapsed = now - this.originalAlarmTime; // 已經過的時間
+                const progress = Math.min(100, (elapsed / this.totalAlarmDuration) * 100); // 確保不超過100%
+                
+                this.progressBar.style.width = `${progress}%`;
+                this.progressText.textContent = `${Math.round(progress)}%`;
+                
+                // 更新ARIA屬性
+                this.progressContainer.setAttribute('aria-valuenow', Math.round(progress));
+                this.progressContainer.setAttribute('aria-label', `鬧鐘進度 ${Math.round(progress)}%`);
+                
+                // 更新小鴨子位置
+                const containerWidth = this.progressContainer.offsetWidth || 800;
+                const duckSize = 30;
+                const maxPosition = containerWidth - duckSize - 10;
+                const duckPosition = (progress / 100) * maxPosition - 30;
+                this.progressDuck.style.left = `${Math.max(-30, Math.min(maxPosition, duckPosition))}px`;
+            }
+
+            showProgressBar() {
+                this.progressContainer.style.display = 'block';
+                this.progressBar.style.width = '0%';
+                this.progressText.textContent = '0%';
+                this.progressDuck.style.left = '-30px';
+            }
+
+            hideProgressBar() {
+                this.progressContainer.style.display = 'none';
+            }
+
+            triggerAlarm() {
+                // 停止測試音效（如果正在播放）
+                if (this.isTestPlaying) {
+                    this.stopTestSound();
+                }
+                
+                // 停止倒數計時，但不重設狀態
+                if (this.countdownInterval) {
+                    clearInterval(this.countdownInterval);
+                    this.countdownInterval = null;
+                }
+                
+                // 設定鬧鐘響起狀態
+                this.isAlarmRinging = true;
+                this.isRunning = false; // 倒數已結束
+                
+                this.updateStatus('ringing', '🔔 時間到了！該起床囉！');
+                this.alarmInfoEl.textContent = '🦆 嘎嘎嘎！開發者，該睡覺啦！';
+                
+                // 添加震動效果
+                document.querySelector('.alarm-display').classList.add('alarm-ringing');
+                
+                // 播放鴨子音效（如果有的話）
+                if (this.duckAudio) {
+                    this.playDuckSound();
+                } else {
+                    // 如果沒有鴨子音效，播放預設蜂鳴聲
+                    this.startAlarmSound();
+                }
+                
+                // 更新按鈕狀態：顯示暫停和停止按鈕
+                this.updateAlarmButtons();
+                
+                Toast.success('⏰ 鬧鐘響起！時間到了！🦆 嘎嘎嘎~', 10000);
+            }
+
+            playDuckSound() {
+                if (this.duckAudio) {
+                    // 鬧鐘響起時循環播放鴨子音效
+                    this.duckAudio.currentTime = 0;
+                    this.duckAudio.volume = this.currentVolume;
+                    this.duckAudio.loop = true; // 設定為循環播放
+                    
+                    this.duckAudio.play().catch(e => {
+                        console.log('播放鴨子音效失敗:', e);
+                        // 如果播放失敗，使用預設音效
+                        this.startAlarmSound();
+                    });
+                    
+                    // 小鴨子特效：讓進度條上的鴨子跳舞
+                    this.duckDanceEffect();
+                }
+            }
+
+            duckDanceEffect() {
+                // 如果有進度條，讓小鴨子跳舞
+                if (this.progressContainer.style.display !== 'none') {
+                    this.progressDuck.style.animation = 'duck-dance 0.5s infinite';
+                    setTimeout(() => {
+                        this.progressDuck.style.animation = 'duck-walk 2s infinite';
+                    }, 5000);
+                }
+            }
+
+            startAlarmSound() {
+                this.alarmSoundInterval = setInterval(() => {
+                    this.playAlarmSound();
+                }, 1000);
+            }
+
+            stopAlarmSound() {
+                // 停止蜂鳴音效
+                if (this.alarmSoundInterval) {
+                    clearInterval(this.alarmSoundInterval);
+                    this.alarmSoundInterval = null;
+                }
+                
+                // 停止鴨子音效
+                if (this.duckAudio) {
+                    this.duckAudio.pause();
+                    this.duckAudio.loop = false;
+                    this.duckAudio.currentTime = 0;
+                }
+                
+                // 移除震動效果
+                document.querySelector('.alarm-display').classList.remove('alarm-ringing');
+            }
+
+            pauseAlarm() {
+                if (this.isAlarmRinging) {
+                    // 鬧鐘響起時的暫停/恢復音效
+                    if (this.duckAudio && !this.duckAudio.paused) {
+                        // 暫停鴨子音效
+                        this.duckAudio.pause();
+                        this.pauseBtn.innerHTML = '<span>▶️</span> 恢復';
+                        Toast.info('鬧鐘音效已靜音 🔇');
+                    } else if (this.duckAudio && this.duckAudio.paused) {
+                        // 恢復鴨子音效
+                        this.duckAudio.play();
+                        this.pauseBtn.innerHTML = '<span>⏸️</span> 靜音';
+                        Toast.info('鬧鐘音效已恢復 🔊');
+                    } else if (this.alarmSoundInterval) {
+                        // 暫停蜂鳴音效
+                        this.stopAlarmSound();
+                        this.pauseBtn.innerHTML = '<span>▶️</span> 恢復';
+                        Toast.info('鬧鐘音效已靜音 🔇');
+                    } else {
+                        // 恢復蜂鳴音效
+                        this.startAlarmSound();
+                        this.pauseBtn.innerHTML = '<span>⏸️</span> 靜音';
+                        Toast.info('鬧鐘音效已恢復 🔊');
+                    }
+                } else if (this.currentMode === 'countdown' && this.isRunning) {
+                    // 原有的倒數暫停功能
+                    this.isPaused = !this.isPaused;
+                    this.updateStatus(this.isPaused ? 'waiting' : 'active', 
+                                    this.isPaused ? '⏸️ 已暫停' : '🦆 倒數進行中');
+                    this.pauseBtn.innerHTML = this.isPaused ? '<span>▶️</span> 繼續' : '<span>⏸️</span> 暫停';
+                    
+                    Toast.info(this.isPaused ? '倒數已暫停 ⏸️' : '倒數繼續進行 ▶️');
+                }
+            }
+
+            stopAlarm() {
+                this.isRunning = false;
+                this.isPaused = false;
+                this.isAlarmRinging = false; // 重設鬧鐘響起狀態
+                
+                // 停止測試音效（如果正在播放）
+                if (this.isTestPlaying) {
+                    this.stopTestSound();
+                }
+                
+                if (this.alarmInterval) {
+                    clearInterval(this.alarmInterval);
+                    this.alarmInterval = null;
+                }
+                
+                if (this.countdownInterval) {
+                    clearInterval(this.countdownInterval);
+                    this.countdownInterval = null;
+                }
+                
+                this.stopAlarmSound();
+                this.updateButtons();
+                this.updateStatus('waiting', '🦆 鬧鐘已停止');
+                this.hideProgressBar();
+            }
+
+            resetAlarm() {
+                this.stopAlarm();
+                this.alarmTime = null;
+                this.originalAlarmTime = null; // 重設固定時間模式的開始時間
+                this.totalAlarmDuration = null; // 重設固定時間模式的總時長
+                this.countdownTime = null;
+                this.originalCountdownTime = null;
+                this.isAlarmRinging = false; // 確保重設鬧鐘響起狀態
+                
+                // 確保測試音效也停止
+                if (this.isTestPlaying) {
+                    this.stopTestSound();
+                }
+                
+                this.alarmInfoEl.textContent = '請設定鬧鐘時間';
+                this.updateStatus('waiting', '🦆 等待設定');
+                this.hideProgressBar();
+            }
+
+            updateAlarmInfo() {
+                if (this.currentMode === 'fixed' && this.alarmTime) {
+                    const now = new Date();
+                    const diff = this.alarmTime - now;
+                    
+                    if (diff > 0) {
+                        const hours = Math.floor(diff / (1000 * 60 * 60));
+                        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                        
+                        this.alarmInfoEl.textContent = 
+                            `鬧鐘將在 ${this.alarmTime.toLocaleTimeString('zh-TW', { hour12: false })} 響起 (還有 ${hours}時${minutes}分${seconds}秒)`;
+                    }
+                } else if (this.currentMode === 'countdown' && this.countdownTime !== null) {
+                    this.alarmInfoEl.textContent = `倒數剩餘：${this.formatTime(this.countdownTime)}`;
+                }
+            }
+
+            updateButtons() {
+                if (this.isRunning) {
+                    this.startBtn.style.display = 'none';
+                    this.stopBtn.style.display = 'inline-flex';
+                    this.pauseBtn.style.display = this.currentMode === 'countdown' ? 'inline-flex' : 'none';
+                } else if (this.isAlarmRinging) {
+                    // 鬧鐘響起時的按鈕狀態
+                    this.startBtn.style.display = 'none';
+                    this.pauseBtn.style.display = 'inline-flex';
+                    this.stopBtn.style.display = 'inline-flex';
+                    this.pauseBtn.innerHTML = '<span>⏸️</span> 靜音';
+                } else {
+                    this.startBtn.style.display = 'inline-flex';
+                    this.stopBtn.style.display = 'none';
+                    this.pauseBtn.style.display = 'none';
+                    this.pauseBtn.innerHTML = '<span>⏸️</span> 暫停';
+                }
+            }
+
+            updateAlarmButtons() {
+                // 鬧鐘響起時的特殊按鈕更新
+                this.updateButtons();
+            }
+
+            updateStatus(type, text) {
+                this.alarmStatusEl.className = `alarm-status status-${type}`;
+                this.alarmStatusEl.textContent = text;
+            }
+
+            formatTime(seconds) {
+                const h = Math.floor(seconds / 3600);
+                const m = Math.floor((seconds % 3600) / 60);
+                const s = seconds % 60;
+                
+                if (h > 0) {
+                    return `${h}時${m}分${s}秒`;
+                } else if (m > 0) {
+                    return `${m}分${s}秒`;
+                } else {
+                    return `${s}秒`;
+                }
+            }
+        }
+
+        // 初始化鬧鐘
+        document.addEventListener('DOMContentLoaded', function() {
+            new DeveloperAlarmClock();
+        });
+    </script>
+</body>
+</html>

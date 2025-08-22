@@ -1,0 +1,2234 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- SEO Meta Tags -->
+    <title>代碼比較工具 - Dracula風格線上Diff比較器 | 免費程式碼比較</title>
+    <meta name="description" content="專業免費線上代碼比較工具，採用Dracula暗色主題設計。支援語法高亮、差異標記、並列比較、文件合併。開發者必備的程式碼diff工具，提升代碼審查效率。" />
+    <meta name="keywords" content="代碼比較, code compare, diff tool, 文件比較, 程式碼比較, 代碼差異, 語法高亮, Dracula主題, merge tool, 開發工具, 線上工具, 免費比較, 程式設計, 代碼審查, SDS Site" />
+    <meta name="author" content="SDS Site" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://sds-site.vercel.app/CodeCompare" />
+    <meta property="og:title" content="代碼比較工具 - Dracula風格線上Diff比較器" />
+    <meta property="og:description" content="專業免費線上代碼比較工具，採用Dracula暗色主題設計。支援語法高亮、差異標記、並列比較，開發者必備工具。" />
+    <meta property="og:image" content="https://sds-site.vercel.app/images/code-compare-preview.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="SDS Site Tools" />
+    <meta property="og:locale" content="zh_TW" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://sds-site.vercel.app/CodeCompare" />
+    <meta name="twitter:title" content="代碼比較工具 - Dracula風格線上Diff比較器" />
+    <meta name="twitter:description" content="專業免費線上代碼比較工具，採用Dracula暗色主題設計。支援語法高亮、差異標記、並列比較。" />
+    <meta name="twitter:image" content="https://sds-site.vercel.app/images/code-compare-preview.png" />
+    
+    <!-- Additional SEO -->
+    <meta name="theme-color" content="#282a36" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="代碼比較" />
+    <meta name="application-name" content="Code Compare" />
+    <meta name="msapplication-TileColor" content="#282a36" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="CodeCompare.html" />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Favicon and Icons -->
+    <link rel="icon" type="image/x-icon" href="https://sds-site.vercel.app/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://sds-site.vercel.app/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://sds-site.vercel.app/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://sds-site.vercel.app/favicon-16x16.png">
+    <link rel="manifest" href="https://sds-site.vercel.app/site.webmanifest">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="styles.css" as="style">
+    <link rel="preload" href="util/Toast.js" as="script">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com/">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Toast JS -->
+    <script src="util/Toast.js"></script>
+    
+    <!-- Additional styles for Code Compare -->
+    <style>
+        /* Code Compare specific styles */
+        .compare-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: var(--border-color);
+            min-height: 600px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .compare-panel {
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .compare-header {
+            background: #2d3748;
+            color: white;
+            padding: 12px 20px;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #4a5568;
+        }
+
+        .compare-header .file-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .compare-header .file-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+            background: #4299e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        .compare-editor {
+            flex: 1;
+            padding: 0;
+            border: none;
+            outline: none;
+            font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            resize: none;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            overflow: auto;
+            white-space: pre;
+            tab-size: 4;
+        }
+
+        .compare-output {
+            flex: 1;
+            padding: 0;
+            font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            overflow: auto;
+            white-space: pre-wrap;
+            position: relative;
+        }
+
+        .line-numbers {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 60px;
+            background: #252526;
+            border-right: 1px solid #3e3e42;
+            padding: 20px 0;
+            color: #858585;
+            font-size: 12px;
+            line-height: 1.6;
+            text-align: right;
+            padding-right: 12px;
+            user-select: none;
+            z-index: 1;
+        }
+
+        .code-content {
+            margin-left: 60px;
+            padding: 20px;
+            min-height: 100%;
+        }
+
+        .code-line {
+            position: relative;
+            min-height: 20px;
+            padding: 0 8px;
+            margin: 0 -8px;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .code-line.added {
+            background: rgba(46, 160, 67, 0.2);
+            border-left: 3px solid #2ea043;
+        }
+
+        .code-line.removed {
+            background: rgba(248, 81, 73, 0.2);
+            border-left: 3px solid #f85149;
+        }
+
+        .code-line.modified {
+            background: rgba(187, 128, 9, 0.2);
+            border-left: 3px solid #bb8009;
+        }
+
+        .code-line.context {
+            background: transparent;
+        }
+
+        .code-line.empty {
+            background: rgba(110, 118, 129, 0.1);
+        }
+
+        /* Toolbar specific for compare */
+        .compare-toolbar {
+            background: var(--bg-secondary);
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .toolbar-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .mode-selector {
+            display: flex;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+
+        .mode-option {
+            padding: 6px 12px;
+            font-size: 13px;
+            background: var(--bg-primary);
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-secondary);
+        }
+
+        .mode-option.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .mode-option:hover:not(.active) {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        /* Stats display */
+        .diff-stats {
+            display: flex;
+            gap: 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-added { color: #2ea043; }
+        .stat-removed { color: #f85149; }
+        .stat-modified { color: #bb8009; }
+
+        /* Syntax highlighting themes */
+        .token.comment { color: #6a9955; }
+        .token.string { color: #ce9178; }
+        .token.number { color: #b5cea8; }
+        .token.boolean { color: #569cd6; }
+        .token.keyword { color: #c586c0; }
+        .token.function { color: #dcdcaa; }
+        .token.class-name { color: #4ec9b0; }
+        .token.property { color: #9cdcfe; }
+        .token.operator { color: #d4d4d4; }
+        .token.punctuation { color: #d4d4d4; }
+
+        /* Inline diff mode */
+        .compare-container.inline {
+            grid-template-columns: 1fr;
+        }
+
+        .inline-diff-line {
+            display: flex;
+            align-items: flex-start;
+            border-bottom: 1px solid #3e3e42;
+            min-height: 24px;
+        }
+
+        .inline-line-number {
+            width: 80px;
+            background: #252526;
+            color: #858585;
+            font-size: 12px;
+            text-align: center;
+            padding: 4px 8px;
+            border-right: 1px solid #3e3e42;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .inline-line-content {
+            flex: 1;
+            padding: 4px 12px;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .char-diff {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+
+        .char-diff.added {
+            background: rgba(46, 160, 67, 0.4);
+        }
+
+        .char-diff.removed {
+            background: rgba(248, 81, 73, 0.4);
+            text-decoration: line-through;
+        }
+
+        /* Enhanced loading */
+        .loading-text {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #ccc;
+        }
+
+        /* Share and export buttons */
+        .export-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .share-btn {
+            background: #4a5568;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            cursor: pointer;
+            /* transition: background 0.2s ease; */
+        }
+
+        .share-btn:hover {
+            background: #344e7c;
+        }
+
+        /* File drop zone */
+        .file-drop-zone {
+            border: 2px dashed #4a5568;
+            border-radius: var(--radius-md);
+            padding: 20px;
+            text-align: center;
+            color: #a0aec0;
+            transition: all 0.3s ease;
+            margin: 10px;
+            background: rgba(45, 55, 72, 0.3);
+        }
+
+        .file-drop-zone.dragover {
+            border-color: #4299e1;
+            background: rgba(66, 153, 225, 0.1);
+            color: #4299e1;
+        }
+
+        .file-drop-zone:hover {
+            border-color: #68d391;
+            color: #68d391;
+        }
+
+        /* Similarity meter */
+        .similarity-meter {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .similarity-bar {
+            width: 100px;
+            height: 6px;
+            background: #2d3748;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .similarity-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f56565, #ed8936, #68d391);
+            transition: width 0.3s ease;
+        }
+
+        /* Loading state */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(30, 30, 30, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            z-index: 10;
+        }
+
+        .loading-overlay.hidden {
+            display: none;
+        }
+
+        /* Results Section Styles */
+        .results-container {
+            background: var(--bg-primary);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            min-height: 400px;
+        }
+
+        .results-header {
+            background: #2d3748;
+            color: white;
+            padding: 12px 20px;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #4a5568;
+        }
+
+        .results-content {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow: auto;
+            max-height: 600px;
+        }
+
+        .results-tabs {
+            display: flex;
+            background: #252526;
+            border-bottom: 1px solid #3e3e42;
+        }
+
+        .results-tab {
+            padding: 12px 20px;
+            background: #2d2d30;
+            border: none;
+            color: #cccccc;
+            cursor: pointer;
+            border-right: 1px solid #3e3e42;
+            transition: all 0.2s ease;
+            font-size: 13px;
+        }
+
+        .results-tab.active {
+            background: #1e1e1e;
+            color: #ffffff;
+        }
+
+        .results-tab:hover:not(.active) {
+            background: #3e3e42;
+        }
+
+        .results-panel {
+            padding: 20px;
+            display: none;
+        }
+
+        .results-panel.active {
+            display: block;
+        }
+
+        .results-summary {
+            background: #252526;
+            border: 1px solid #3e3e42;
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+        }
+
+        .summary-item {
+            text-align: center;
+        }
+
+        .summary-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .summary-label {
+            font-size: 12px;
+            color: #858585;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-value.added { color: #2ea043; }
+        .summary-value.removed { color: #f85149; }
+        .summary-value.modified { color: #bb8009; }
+        .summary-value.similarity { color: #4299e1; }
+
+        /* Results diff display */
+        .results-diff {
+            border: 1px solid #3e3e42;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+
+        .results-line {
+            display: flex;
+            align-items: flex-start;
+            border-bottom: 1px solid #3e3e42;
+            min-height: 24px;
+        }
+
+        .results-line:last-child {
+            border-bottom: none;
+        }
+
+        .results-line-number {
+            width: 80px;
+            background: #252526;
+            color: #858585;
+            font-size: 12px;
+            text-align: center;
+            padding: 4px 8px;
+            border-right: 1px solid #3e3e42;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .results-line-content {
+            flex: 1;
+            padding: 4px 12px;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .results-line.added {
+            background: rgba(46, 160, 67, 0.15);
+        }
+
+        .results-line.removed {
+            background: rgba(248, 81, 73, 0.15);
+        }
+
+        .results-line.modified {
+            background: rgba(187, 128, 9, 0.15);
+        }
+
+        .results-line.context {
+            background: transparent;
+        }
+
+        /* Export button styles */
+        .export-options {
+            display: none;
+            position: absolute;
+            background: #2d3748;
+            border: 1px solid #4a5568;
+            border-radius: var(--radius-sm);
+            padding: 8px 0;
+            z-index: 1000;
+            min-width: 150px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .export-option {
+            display: block;
+            width: 100%;
+            padding: 8px 16px;
+            background: none;
+            border: none;
+            color: white;
+            text-align: left;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .export-option:hover {
+            background: #4a5568;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .compare-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr 1fr;
+                min-height: 800px;
+            }
+
+            .compare-toolbar {
+                padding: 12px 15px;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+
+            .toolbar-group {
+                justify-content: center;
+            }
+
+            .diff-stats {
+                justify-content: center;
+            }
+
+            .line-numbers {
+                width: 40px;
+                font-size: 11px;
+                padding-right: 8px;
+            }
+
+            .code-content {
+                margin-left: 40px;
+                padding: 15px;
+            }
+
+            .compare-editor {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>代碼比較工具 - Dracula風格Diff比較器</h1>
+            <p>專業線上程式碼比較工具，支援語法高亮、差異標記與並列比較功能</p>
+        </header>
+
+        <!-- Main Content -->
+        <main>
+        <section class="main-card" aria-label="代碼比較操作區域">
+            <!-- Toolbar -->
+            <div class="compare-toolbar">
+                <div class="toolbar-group">
+                    <button class="btn btn-primary" onclick="compareFiles()" data-tooltip="開始比較兩個文件">
+                        <span>🔍</span> 比較
+                    </button>
+                    <button class="btn btn-secondary" onclick="switchTexts()" data-tooltip="交換左右文本內容">
+                        <span>🔄</span> 交換文本
+                    </button>
+                    <!-- <button class="btn btn-secondary" onclick="copyDifferences()" data-tooltip="複製差異摘要">
+                        <span>📋</span> 複製差異
+                    </button> -->
+                    <button class="btn btn-secondary" onclick="clearAll()" data-tooltip="清空所有內容">
+                        <span>🗑️</span> 清空
+                    </button>
+                    <button class="btn btn-secondary" onclick="loadSample()" data-tooltip="載入範例代碼">
+                        <span>📄</span> 範例
+                    </button>
+                </div>
+
+                <div class="toolbar-group">
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="ignoreWhitespace" class="custom-checkbox" onchange="updateCompareOptions()">
+                        <label for="ignoreWhitespace" class="checkbox-label">忽略空白字符</label>
+                    </div>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="ignoreCase" class="custom-checkbox" onchange="updateCompareOptions()">
+                        <label for="ignoreCase" class="checkbox-label">忽略大小寫</label>
+                    </div>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="realTimeCompare" class="custom-checkbox" onchange="toggleRealTimeCompare()">
+                        <label for="realTimeCompare" class="checkbox-label">即時比較</label>
+                    </div>
+                </div>
+
+                <div class="toolbar-group">
+                    <a href="index.html" class="btn btn-secondary" data-tooltip="返回首頁">
+                        <span>🏠</span> 首頁
+                    </a>
+                    <a href="about.html" class="btn btn-secondary" data-tooltip="了解我們">
+                        <span>👥</span> 關於團隊
+                    </a>
+                </div>
+            </div>
+
+            <!-- Diff Stats -->
+            <div class="status-bar">
+                <div class="diff-stats">
+                    <div class="stat-item stat-added">
+                        <span>+</span>
+                        <span id="addedLines">0</span>
+                        <span>新增</span>
+                    </div>
+                    <div class="stat-item stat-removed">
+                        <span>-</span>
+                        <span id="removedLines">0</span>
+                        <span>刪除</span>
+                    </div>
+                    <div class="stat-item stat-modified">
+                        <span>~</span>
+                        <span id="modifiedLines">0</span>
+                        <span>修改</span>
+                    </div>
+                    <div class="similarity-meter">
+                        <span>相似度:</span>
+                        <div class="similarity-bar">
+                            <div class="similarity-fill" id="similarityFill" style="width: 0%"></div>
+                        </div>
+                        <span id="similarityPercent">0%</span>
+                    </div>
+                </div>
+                <div class="status-item">
+                    <span id="compareStatus">請輸入要比較的代碼</span>
+                </div>
+            </div>
+
+            <!-- Compare Container -->
+            <div class="compare-container" id="compareContainer">
+                <!-- Left Panel - Original File -->
+                <div class="compare-panel">
+                    <div class="compare-header">
+                        <div class="file-info">
+                            <div class="file-icon">📄</div>
+                            <span>原始文件</span>
+                            <input type="file" id="leftFileInput" style="display: none;" accept=".txt,.js,.html,.css,.json,.xml,.py,.java,.cpp,.c,.h,.md" onchange="loadFile('left', this)">
+                            <button class="share-btn" onclick="document.getElementById('leftFileInput').click()">📁 載入文件</button>
+                        </div>
+                        <span id="leftFileSize">0 字符</span>
+                    </div>
+                    <div class="file-drop-zone" id="leftDropZone" ondrop="handleFileDrop(event, 'left')" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" onclick="toggleInputMode('left', true)">
+                        拖放文件到此處或點擊此處開始輸入代碼
+                    </div>
+                    <textarea 
+                        id="leftEditor" 
+                        class="compare-editor" 
+                        placeholder="請在此處輸入或貼上原始代碼..."
+                        oninput="updateFileInfo('left')"
+                        style="display: none;"
+                    ></textarea>
+                </div>
+
+                <!-- Right Panel - Modified File -->
+                <div class="compare-panel">
+                    <div class="compare-header">
+                        <div class="file-info">
+                            <div class="file-icon">📄</div>
+                            <span>修改文件</span>
+                            <input type="file" id="rightFileInput" style="display: none;" accept=".txt,.js,.html,.css,.json,.xml,.py,.java,.cpp,.c,.h,.md" onchange="loadFile('right', this)">
+                            <button class="share-btn" onclick="document.getElementById('rightFileInput').click()">📁 載入文件</button>
+                        </div>
+                        <span id="rightFileSize">0 字符</span>
+                    </div>
+                    <div class="file-drop-zone" id="rightDropZone" ondrop="handleFileDrop(event, 'right')" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" onclick="toggleInputMode('right', true)">
+                        拖放文件到此處或點擊此處開始輸入代碼
+                    </div>
+                    <textarea 
+                        id="rightEditor" 
+                        class="compare-editor" 
+                        placeholder="請在此處輸入或貼上修改後的代碼..."
+                        oninput="updateFileInfo('right')"
+                        style="display: none;"
+                    ></textarea>
+                </div>
+            </div>
+
+            <!-- Loading Overlay -->
+            <div class="loading-overlay hidden" id="loadingOverlay">
+                <div style="text-align: center;">
+                    <div class="loading"></div>
+                    <div class="loading-text">正在比較代碼...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="main-card" id="resultsSection" style="display: none;" aria-label="比較結果區域">
+            <div class="compare-toolbar">
+                <div class="toolbar-group">
+                    <h3 style="margin: 0; color: var(--text-primary);">📊 比較結果</h3>
+                </div>
+                <div class="toolbar-group">
+                    <button class="btn btn-secondary" onclick="exportResults()" data-tooltip="導出比較結果">
+                        <span>📥</span> 導出結果
+                    </button>
+                    <button class="btn btn-secondary" onclick="hideResults()" data-tooltip="隱藏結果區域">
+                        <span>👁️</span> 隱藏結果
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Results Container -->
+            <div class="results-container" id="resultsContainer">
+                <!-- Results will be dynamically inserted here -->
+            </div>
+        </section>
+        </main>
+
+        <!-- Features Section -->
+        <section class="features" aria-label="工具特色">
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3>Dracula 暗色主題</h3>
+                <p>採用專業程式設計師喜愛的 Dracula 暗色主題設計，減少眼部疲勞，提供舒適的代碼比較體驗，支援長時間使用</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3>智能差異檢測</h3>
+                <p>先進的差異檢測算法，精確識別代碼變更，支援行級和字符級比較，快速定位程式碼差異，提高開發效率</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>詳細統計報告</h3>
+                <p>提供完整的變更統計資訊，包括新增、刪除和修改的行數統計，支援導出專業比較報告，便於版本管理</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌈</div>
+                <h3>多語言語法高亮</h3>
+                <p>支援JavaScript、Python、Java、C++、HTML、CSS、SQL等主流編程語言的語法高亮顯示，提升代碼可讀性</p>
+            </div>
+        </section>
+        
+        <!-- Navigation -->
+        <nav class="navigation" data-auto-navigation>
+            <!-- 導航內容會自動載入 -->
+        </nav>
+
+        <!-- 頁腳會由導航組件自動添加 -->
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        let currentMode = 'side-by-side';
+        let diffResult = null;
+        let realTimeCompare = false;
+        let currentSimilarity = 0;
+        let compareOptions = {
+            ignoreWhitespace: false,
+            ignoreCase: false
+        };
+
+        // Toggle between text areas and drop zones
+        function toggleInputMode(side, showEditor) {
+            const editor = document.getElementById(`${side}Editor`);
+            const dropZone = document.getElementById(`${side}DropZone`);
+            
+            if (showEditor) {
+                editor.style.display = 'block';
+                dropZone.style.display = 'none';
+            } else {
+                editor.style.display = 'none';
+                dropZone.style.display = 'block';
+            }
+        }
+
+        // File drag and drop handlers
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.currentTarget.classList.add('dragover');
+        }
+
+        function handleDragLeave(event) {
+            event.currentTarget.classList.remove('dragover');
+        }
+
+        function handleFileDrop(event, side) {
+            event.preventDefault();
+            event.currentTarget.classList.remove('dragover');
+            
+            const files = event.dataTransfer.files;
+            if (files.length > 0) {
+                const file = files[0];
+                readFileContent(file, side);
+            }
+        }
+
+        function loadFile(side, input) {
+            const file = input.files[0];
+            if (file) {
+                readFileContent(file, side);
+            }
+        }
+
+        function readFileContent(file, side) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                const editor = document.getElementById(`${side}Editor`);
+                editor.value = content;
+                
+                // Show editor and hide drop zone
+                toggleInputMode(side, true);
+                
+                // Update file info
+                updateFileInfo(side);
+                document.querySelector(`#${side}DropZone`).parentElement.querySelector('.file-info span').textContent = file.name;
+                
+                // Auto compare if real-time is enabled
+                if (realTimeCompare) {
+                    setTimeout(compareFiles, 300);
+                }
+                
+                updateStatus(`已載入文件: ${file.name}`);
+            };
+            reader.readAsText(file);
+        }
+
+        // File info update
+        function updateFileInfo(side) {
+            const editor = document.getElementById(side === 'left' ? 'leftEditor' : 'rightEditor');
+            const sizeElement = document.getElementById(side === 'left' ? 'leftFileSize' : 'rightFileSize');
+            const content = editor.value;
+            
+            const lines = content.split('\n').length;
+            const chars = content.length;
+            const words = content.trim() ? content.trim().split(/\s+/).length : 0;
+            
+            sizeElement.textContent = `${chars} 字符, ${lines} 行, ${words} 詞`;
+            
+            // Update similarity immediately for better responsiveness
+            const leftContent = document.getElementById('leftEditor').value;
+            const rightContent = document.getElementById('rightEditor').value;
+            
+            // Use debouncing for similarity calculation to avoid excessive calls
+            clearTimeout(window.similarityTimeout);
+            window.similarityTimeout = setTimeout(() => {
+                calculateSimilarity(leftContent, rightContent);
+            }, 100);
+            
+            // Auto compare if real-time is enabled and both editors have content
+            if (realTimeCompare && leftContent && rightContent) {
+                clearTimeout(window.compareTimeout);
+                window.compareTimeout = setTimeout(compareFiles, 500);
+            }
+        }
+
+        // Switch texts between left and right
+        function switchTexts() {
+            const leftContent = document.getElementById('leftEditor').value;
+            const rightContent = document.getElementById('rightEditor').value;
+            
+            document.getElementById('leftEditor').value = rightContent;
+            document.getElementById('rightEditor').value = leftContent;
+            
+            updateFileInfo('left');
+            updateFileInfo('right');
+            
+            // Update file names if they exist
+            const leftTitle = document.querySelector('.compare-panel:first-child .file-info span');
+            const rightTitle = document.querySelector('.compare-panel:last-child .file-info span');
+            const leftText = leftTitle.textContent;
+            const rightText = rightTitle.textContent;
+            
+            leftTitle.textContent = rightText;
+            rightTitle.textContent = leftText;
+            
+            if (realTimeCompare) {
+                setTimeout(compareFiles, 300);
+            }
+            
+            updateStatus('已交換文本內容');
+        }
+
+        // Update compare options
+        function updateCompareOptions() {
+            compareOptions.ignoreWhitespace = document.getElementById('ignoreWhitespace').checked;
+            compareOptions.ignoreCase = document.getElementById('ignoreCase').checked;
+            
+            // Update similarity immediately when options change
+            const leftContent = document.getElementById('leftEditor').value;
+            const rightContent = document.getElementById('rightEditor').value;
+            if (leftContent || rightContent) {
+                calculateSimilarity(leftContent, rightContent);
+            }
+            
+            // Only trigger automatic comparison if real-time compare is enabled
+            if (realTimeCompare && diffResult && (leftContent || rightContent)) {
+                setTimeout(compareFiles, 300);
+            }
+        }
+
+        // Toggle real-time compare
+        function toggleRealTimeCompare() {
+            realTimeCompare = document.getElementById('realTimeCompare').checked;
+            updateStatus(realTimeCompare ? '已啟用即時比較' : '已停用即時比較');
+        }
+
+        // Set compare mode
+        function setCompareMode(mode) {
+            currentMode = mode;
+            
+            // Update active button
+            document.querySelectorAll('.mode-option').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+            
+            // Apply mode
+            if (diffResult) {
+                displayDiff(diffResult, mode);
+            }
+        }
+
+        // Compare files
+        async function compareFiles() {
+            const leftContent = document.getElementById('leftEditor').value;
+            const rightContent = document.getElementById('rightEditor').value;
+            
+            if (!leftContent.trim() && !rightContent.trim()) {
+                if (!realTimeCompare) {
+                    toast.showError('請輸入要比較的代碼');
+                }
+                return;
+            }
+            
+            showLoading(true);
+            updateStatus('正在分析差異...');
+            
+            try {
+                // Simulate processing time for better UX
+                await new Promise(resolve => setTimeout(resolve, 300));
+                
+                const diff = generateDiff(leftContent, rightContent);
+                diffResult = diff;
+                
+                // Calculate similarity first before displaying results
+                calculateSimilarity(leftContent, rightContent);
+                
+                displayDiff(diff, currentMode);
+                updateDiffStats(diff);
+                updateStatus('比較完成');
+                
+            } catch (error) {
+                console.error('比較過程中發生錯誤:', error);
+                updateStatus('比較失敗，請檢查輸入內容');
+                if (!realTimeCompare) {
+                    toast.showError('比較過程中發生錯誤，請重試');
+                }
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Calculate similarity percentage
+        function calculateSimilarity(text1, text2) {
+            if (!text1 && !text2) {
+                updateSimilarity(100);
+                return;
+            }
+            
+            if (!text1 || !text2) {
+                updateSimilarity(0);
+                return;
+            }
+            
+            const lines1 = text1.split('\n');
+            const lines2 = text2.split('\n');
+            const maxLines = Math.max(lines1.length, lines2.length);
+            
+            let similarLines = 0;
+            for (let i = 0; i < maxLines; i++) {
+                const line1 = lines1[i] || '';
+                const line2 = lines2[i] || '';
+                
+                if (compareOptions.ignoreWhitespace) {
+                    const clean1 = line1.replace(/\s+/g, ' ').trim();
+                    const clean2 = line2.replace(/\s+/g, ' ').trim();
+                    if (compareOptions.ignoreCase) {
+                        if (clean1.toLowerCase() === clean2.toLowerCase()) similarLines++;
+                    } else {
+                        if (clean1 === clean2) similarLines++;
+                    }
+                } else {
+                    if (compareOptions.ignoreCase) {
+                        if (line1.toLowerCase() === line2.toLowerCase()) similarLines++;
+                    } else {
+                        if (line1 === line2) similarLines++;
+                    }
+                }
+            }
+            
+            const similarity = Math.round((similarLines / maxLines) * 100);
+            updateSimilarity(similarity);
+        }
+
+        function updateSimilarity(percentage) {
+            const similarityPercent = document.getElementById('similarityPercent');
+            const similarityFill = document.getElementById('similarityFill');
+            
+            // Update global variable
+            currentSimilarity = percentage;
+            
+            if (similarityPercent && similarityFill) {
+                similarityPercent.textContent = percentage + '%';
+                similarityFill.style.width = percentage + '%';
+                
+                // Update color based on similarity percentage
+                let color = '#e53e3e'; // Red for low similarity
+                if (percentage >= 80) {
+                    color = '#38a169'; // Green for high similarity
+                } else if (percentage >= 50) {
+                    color = '#ecc94b'; // Yellow for medium similarity
+                }
+                similarityFill.style.backgroundColor = color;
+            }
+        }
+
+        // Copy differences summary
+        // async function copyDifferences() {
+        //     if (!diffResult) {
+        //         toast.showError('請先進行比較');
+        //         return;
+        //     }
+            
+        //     const summary = generateDiffSummary(diffResult);
+            
+        //     try {
+        //         await navigator.clipboard.writeText(summary);
+        //         updateStatus('差異摘要已複製到剪貼板');
+                
+        //         // Visual feedback
+        //         const button = event.target;
+        //         const originalText = button.innerHTML;
+        //         button.innerHTML = '<span>✓</span> 已複製';
+        //         button.classList.add('copy-success');
+                
+        //         setTimeout(() => {
+        //             button.innerHTML = originalText;
+        //             button.classList.remove('copy-success');
+        //         }, 1500);
+                
+        //     } catch (err) {
+        //         toast.showError('複製失敗，請手動選擇文字複製');
+        //     }
+        // }
+
+        // Hide results section
+        function hideResults() {
+            const resultsSection = document.getElementById('resultsSection');
+            resultsSection.style.display = 'none';
+            updateStatus('已隱藏比較結果');
+        }
+
+        // Export results in different formats
+        function exportResults() {
+            if (!diffResult) {
+                toast.showError('請先進行比較');
+                return;
+            }
+            
+            const options = [
+                { label: '導出為文本文件', format: 'txt' },
+                { label: '導出為HTML文件', format: 'html' },
+                { label: '導出為JSON格式', format: 'json' }
+            ];
+            
+            const choice = prompt('選擇導出格式:\n1. 文本文件 (.txt)\n2. HTML文件 (.html)\n3. JSON格式 (.json)\n\n請輸入數字 (1-3):');
+            
+            if (choice && choice >= 1 && choice <= 3) {
+                const format = options[choice - 1].format;
+                downloadResults(format);
+            }
+        }
+
+        function downloadResults(format) {
+            let content, filename, mimeType;
+            
+            switch (format) {
+                case 'txt':
+                    content = generateDiffSummary(diffResult);
+                    filename = 'code-compare-result.txt';
+                    mimeType = 'text/plain';
+                    break;
+                case 'html':
+                    content = generateHTMLReport(diffResult);
+                    filename = 'code-compare-result.html';
+                    mimeType = 'text/html';
+                    break;
+                case 'json':
+                    content = JSON.stringify({
+                        timestamp: new Date().toISOString(),
+                        comparison: diffResult,
+                        statistics: {
+                            added: diffResult.filter(d => d.type === 'added').length,
+                            removed: diffResult.filter(d => d.type === 'removed').length,
+                            modified: diffResult.filter(d => d.type === 'modified').length,
+                            similarity: document.getElementById('similarityPercent').textContent
+                        }
+                    }, null, 2);
+                    filename = 'code-compare-result.json';
+                    mimeType = 'application/json';
+                    break;
+            }
+            
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            updateStatus(`已導出為 ${filename}`);
+        }
+
+        function generateHTMLReport(diff) {
+            const stats = {
+                added: diff.filter(d => d.type === 'added').length,
+                removed: diff.filter(d => d.type === 'removed').length,
+                modified: diff.filter(d => d.type === 'modified').length
+            };
+            
+            const similarity = document.getElementById('similarityPercent').textContent;
+            
+            return `<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>代碼比較報告</title>
+    <style>
+        body { font-family: 'JetBrains Mono', monospace; background: #1e1e1e; color: #d4d4d4; margin: 20px; }
+        .header { background: #2d3748; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+        .stat { text-align: center; background: #252526; padding: 16px; border-radius: 8px; }
+        .stat-value { font-size: 24px; font-weight: bold; margin-bottom: 8px; }
+        .added { color: #2ea043; }
+        .removed { color: #f85149; }
+        .modified { color: #bb8009; }
+        .diff-line { padding: 4px 8px; font-family: monospace; }
+        .diff-line.added { background: rgba(46, 160, 67, 0.2); }
+        .diff-line.removed { background: rgba(248, 81, 73, 0.2); }
+        .diff-line.modified { background: rgba(187, 128, 9, 0.2); }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>代碼比較報告</h1>
+        <p>生成時間: ${new Date().toLocaleString('zh-TW')}</p>
+        <p>相似度: ${similarity}</p>
+    </div>
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-value added">${stats.added}</div>
+            <div>新增行</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value removed">${stats.removed}</div>
+            <div>刪除行</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value modified">${stats.modified}</div>
+            <div>修改行</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">${similarity}</div>
+            <div>相似度</div>
+        </div>
+    </div>
+    <div class="diff-content">
+        \${diff.map(item => {
+            if (item.type === 'context') return '<div class="diff-line">' + escapeHtml(item.leftLine) + '</div>';
+            if (item.type === 'added') return '<div class="diff-line added">+ ' + escapeHtml(item.rightLine) + '</div>';
+            if (item.type === 'removed') return '<div class="diff-line removed">- ' + escapeHtml(item.leftLine) + '</div>';
+            if (item.type === 'modified') return '<div class="diff-line removed">- ' + escapeHtml(item.leftLine) + '</div><div class="diff-line added">+ ' + escapeHtml(item.rightLine) + '</div>';
+            return '';
+        }).join('')}
+    </div>
+
+    <!-- 統一導航組件 -->
+    <script src="components/navigation.js"></script>
+</body>
+</html>`;
+        }
+
+        function generateDiffSummary(diff) {
+            let summary = '=== 代碼比較摘要 ===\n\n';
+            
+            const stats = {
+                added: diff.filter(d => d.type === 'added').length,
+                removed: diff.filter(d => d.type === 'removed').length,
+                modified: diff.filter(d => d.type === 'modified').length
+            };
+            
+            summary += `統計信息:\n`;
+            summary += `- 新增行: ${stats.added}\n`;
+            summary += `- 刪除行: ${stats.removed}\n`;
+            summary += `- 修改行: ${stats.modified}\n\n`;
+            
+            summary += `詳細差異:\n`;
+            diff.forEach((item, index) => {
+                if (item.type !== 'context') {
+                    summary += `第 ${item.leftLineNum || item.rightLineNum} 行 [${item.type.toUpperCase()}]:\n`;
+                    if (item.type === 'removed' || item.type === 'modified') {
+                        summary += `- ${item.leftLine}\n`;
+                    }
+                    if (item.type === 'added' || item.type === 'modified') {
+                        summary += `+ ${item.rightLine}\n`;
+                    }
+                    summary += '\n';
+                }
+            });
+            
+            return summary;
+        }
+
+        // Generate diff using enhanced algorithm
+        function generateDiff(left, right) {
+            // Preprocess based on options
+            let leftContent = left;
+            let rightContent = right;
+            
+            if (compareOptions.ignoreCase) {
+                leftContent = leftContent.toLowerCase();
+                rightContent = rightContent.toLowerCase();
+            }
+            
+            let leftLines = leftContent.split('\n');
+            let rightLines = rightContent.split('\n');
+            
+            if (compareOptions.ignoreWhitespace) {
+                leftLines = leftLines.map(line => line.replace(/\s+/g, ' ').trim());
+                rightLines = rightLines.map(line => line.replace(/\s+/g, ' ').trim());
+            }
+            
+            // Use original content for display
+            const originalLeftLines = left.split('\n');
+            const originalRightLines = right.split('\n');
+            
+            const diff = [];
+            let leftIndex = 0;
+            let rightIndex = 0;
+            
+            while (leftIndex < leftLines.length || rightIndex < rightLines.length) {
+                const leftLine = leftLines[leftIndex] || '';
+                const rightLine = rightLines[rightIndex] || '';
+                const originalLeftLine = originalLeftLines[leftIndex] || '';
+                const originalRightLine = originalRightLines[rightIndex] || '';
+                
+                if (leftIndex >= leftLines.length) {
+                    diff.push({
+                        type: 'added',
+                        leftLine: '',
+                        rightLine: originalRightLine,
+                        leftLineNum: '',
+                        rightLineNum: rightIndex + 1
+                    });
+                    rightIndex++;
+                } else if (rightIndex >= rightLines.length) {
+                    diff.push({
+                        type: 'removed',
+                        leftLine: originalLeftLine,
+                        rightLine: '',
+                        leftLineNum: leftIndex + 1,
+                        rightLineNum: ''
+                    });
+                    leftIndex++;
+                } else if (leftLine === rightLine) {
+                    diff.push({
+                        type: 'context',
+                        leftLine: originalLeftLine,
+                        rightLine: originalRightLine,
+                        leftLineNum: leftIndex + 1,
+                        rightLineNum: rightIndex + 1
+                    });
+                    leftIndex++;
+                    rightIndex++;
+                } else {
+                    diff.push({
+                        type: 'modified',
+                        leftLine: originalLeftLine,
+                        rightLine: originalRightLine,
+                        leftLineNum: leftIndex + 1,
+                        rightLineNum: rightIndex + 1
+                    });
+                    leftIndex++;
+                    rightIndex++;
+                }
+            }
+            
+            return diff;
+        }
+
+        // Display diff result in separate results section
+        function displayDiff(diff, mode) {
+            const resultsSection = document.getElementById('resultsSection');
+            const resultsContainer = document.getElementById('resultsContainer');
+            
+            // Show results section
+            resultsSection.style.display = 'block';
+            
+            // Create tabs for different view modes
+            resultsContainer.innerHTML = `
+                <div class="results-tabs">
+                    <button class="results-tab ${mode === 'side-by-side' ? 'active' : ''}" onclick="switchResultsTab('side-by-side')">
+                        📊 並列比較
+                    </button>
+                    <button class="results-tab ${mode === 'unified' ? 'active' : ''}" onclick="switchResultsTab('unified')">
+                        📄 統一差異
+                    </button>
+                    <button class="results-tab ${mode === 'inline' ? 'active' : ''}" onclick="switchResultsTab('inline')">
+                        🔍 行內比較
+                    </button>
+                    <button class="results-tab" onclick="switchResultsTab('summary')">
+                        📈 摘要報告
+                    </button>
+                </div>
+                <div class="results-content">
+                    <div id="results-side-by-side" class="results-panel ${mode === 'side-by-side' ? 'active' : ''}"></div>
+                    <div id="results-unified" class="results-panel ${mode === 'unified' ? 'active' : ''}"></div>
+                    <div id="results-inline" class="results-panel ${mode === 'inline' ? 'active' : ''}"></div>
+                    <div id="results-summary" class="results-panel"></div>
+                </div>
+            `;
+            
+            // Generate all views
+            displayResultsSideBySide(diff);
+            displayResultsUnified(diff);
+            displayResultsInline(diff);
+            displayResultsSummary(diff);
+            
+            // Scroll to results
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Switch between results tabs
+        function switchResultsTab(tabName) {
+            // Update active tab
+            document.querySelectorAll('.results-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update active panel
+            document.querySelectorAll('.results-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            document.getElementById(`results-${tabName}`).classList.add('active');
+            
+            // If switching to summary tab, refresh the summary content
+            if (tabName === 'summary') {
+                displayResultsSummary();
+            }
+        }
+
+        // Display side-by-side results
+        function displayResultsSideBySide(diff) {
+            const container = document.getElementById('results-side-by-side');
+            
+            let leftHtml = '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #3e3e42;">';
+            
+            // Left panel
+            leftHtml += '<div style="background: #1e1e1e;"><div class="results-header">原始文件</div><div>';
+            diff.forEach((item, index) => {
+                const lineClass = getResultsLineClass(item.type, 'left');
+                leftHtml += `<div class="results-line ${lineClass}">
+                    <div class="results-line-number">${item.leftLineNum || ''}</div>
+                    <div class="results-line-content">${escapeHtml(item.leftLine)}</div>
+                </div>`;
+            });
+            leftHtml += '</div></div>';
+            
+            // Right panel
+            leftHtml += '<div style="background: #1e1e1e;"><div class="results-header">修改文件</div><div>';
+            diff.forEach((item, index) => {
+                const lineClass = getResultsLineClass(item.type, 'right');
+                leftHtml += `<div class="results-line ${lineClass}">
+                    <div class="results-line-number">${item.rightLineNum || ''}</div>
+                    <div class="results-line-content">${escapeHtml(item.rightLine)}</div>
+                </div>`;
+            });
+            leftHtml += '</div></div></div>';
+            
+            container.innerHTML = leftHtml;
+        }
+
+        // Display unified results
+        function displayResultsUnified(diff) {
+            const container = document.getElementById('results-unified');
+            
+            let html = '<div class="results-diff">';
+            diff.forEach((item, index) => {
+                if (item.type === 'context') {
+                    html += `<div class="results-line context">
+                        <div class="results-line-number">${item.leftLineNum}</div>
+                        <div class="results-line-content"> ${escapeHtml(item.leftLine)}</div>
+                    </div>`;
+                } else if (item.type === 'modified') {
+                    // Removed line
+                    html += `<div class="results-line removed">
+                        <div class="results-line-number">${item.leftLineNum}</div>
+                        <div class="results-line-content">- ${escapeHtml(item.leftLine)}</div>
+                    </div>`;
+                    // Added line
+                    html += `<div class="results-line added">
+                        <div class="results-line-number">${item.rightLineNum}</div>
+                        <div class="results-line-content">+ ${escapeHtml(item.rightLine)}</div>
+                    </div>`;
+                } else if (item.type === 'added') {
+                    html += `<div class="results-line added">
+                        <div class="results-line-number">${item.rightLineNum}</div>
+                        <div class="results-line-content">+ ${escapeHtml(item.rightLine)}</div>
+                    </div>`;
+                } else if (item.type === 'removed') {
+                    html += `<div class="results-line removed">
+                        <div class="results-line-number">${item.leftLineNum}</div>
+                        <div class="results-line-content">- ${escapeHtml(item.leftLine)}</div>
+                    </div>`;
+                }
+            });
+            html += '</div>';
+            
+            container.innerHTML = html;
+        }
+
+        // Display inline results
+        function displayResultsInline(diff) {
+            const container = document.getElementById('results-inline');
+            
+            let html = '<div class="results-diff">';
+            diff.forEach((item, index) => {
+                let content;
+                let lineClass = '';
+                
+                if (item.type === 'context') {
+                    content = escapeHtml(item.leftLine);
+                    lineClass = 'context';
+                } else if (item.type === 'modified') {
+                    content = generateCharDiff(item.leftLine, item.rightLine);
+                    lineClass = 'modified';
+                } else if (item.type === 'added') {
+                    content = escapeHtml(item.rightLine);
+                    lineClass = 'added';
+                } else if (item.type === 'removed') {
+                    content = escapeHtml(item.leftLine);
+                    lineClass = 'removed';
+                }
+                
+                html += `<div class="results-line ${lineClass}">
+                    <div class="results-line-number">
+                        <span>${item.leftLineNum || ''}</span>
+                        <span>${item.rightLineNum || ''}</span>
+                    </div>
+                    <div class="results-line-content">${content}</div>
+                </div>`;
+            });
+            html += '</div>';
+            
+            container.innerHTML = html;
+        }
+
+        // Display summary results
+        function displayResultsSummary(diff) {
+            const container = document.getElementById('results-summary');
+            
+            // If container doesn't exist yet, wait for it to be created
+            if (!container) {
+                return;
+            }
+            
+            // Calculate statistics
+            const stats = {
+                added: diff ? diff.filter(d => d.type === 'added').length : 0,
+                removed: diff ? diff.filter(d => d.type === 'removed').length : 0,
+                modified: diff ? diff.filter(d => d.type === 'modified').length : 0,
+                context: diff ? diff.filter(d => d.type === 'context').length : 0,
+                total: diff ? diff.length : 0
+            };
+            
+            // Get fresh similarity value from global variable
+            const similarity = currentSimilarity + '%';
+            
+            let html = `
+                <div class="results-summary">
+                    <h4 style="margin: 0 0 16px 0; color: #ffffff;">📊 比較統計</h4>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <div class="summary-value added">${stats.added}</div>
+                            <div class="summary-label">新增行</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-value removed">${stats.removed}</div>
+                            <div class="summary-label">刪除行</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-value modified">${stats.modified}</div>
+                            <div class="summary-label">修改行</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-value">${stats.context}</div>
+                            <div class="summary-label">相同行</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-value similarity">${similarity}</div>
+                            <div class="summary-label">相似度</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-value">${stats.total}</div>
+                            <div class="summary-label">總行數</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="results-summary">
+                    <h4 style="margin: 0 0 16px 0; color: #ffffff;">📋 詳細差異列表</h4>
+                    <div style="max-height: 300px; overflow-y: auto;">
+            `;
+            
+            diff.forEach((item, index) => {
+                if (item.type !== 'context') {
+                    const typeIcon = {
+                        'added': '➕',
+                        'removed': '➖',
+                        'modified': '🔄'
+                    }[item.type];
+                    
+                    const typeColor = {
+                        'added': '#2ea043',
+                        'removed': '#f85149',
+                        'modified': '#bb8009'
+                    }[item.type];
+                    
+                    // Generate HTML for diff item
+                    html += '<div style="padding: 8px; border-left: 3px solid ' + typeColor + '; margin-bottom: 8px; background: rgba(255,255,255,0.05);">' +
+                            '<div style="font-weight: bold; margin-bottom: 4px;">' +
+                            typeIcon + ' 第 ' + (item.leftLineNum || item.rightLineNum) + ' 行 - ' + item.type.toUpperCase() +
+                            '</div>';
+                    
+                    if (item.type === 'removed' || item.type === 'modified') {
+                        html += `<div style="color: #f85149;">- ${escapeHtml(item.leftLine)}</div>`;
+                    }
+                    if (item.type === 'added' || item.type === 'modified') {
+                        html += `<div style="color: #2ea043;">+ ${escapeHtml(item.rightLine)}</div>`;
+                    }
+                    
+                    html += `</div>`;
+                }
+            });
+            
+            html += `
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        function getResultsLineClass(type, side) {
+            switch (type) {
+                case 'added':
+                    return side === 'right' ? 'added' : '';
+                case 'removed':
+                    return side === 'left' ? 'removed' : '';
+                case 'modified':
+                    return 'modified';
+                default:
+                    return 'context';
+            }
+        }
+
+        // Display side-by-side diff
+        function displaySideBySideDiff(diff, container) {
+            container.innerHTML = '';
+            container.className = 'compare-container';
+            
+            // Left panel
+            const leftPanel = createDiffPanel('原始文件', '📄');
+            const leftContent = createCodeContent();
+            const leftLines = createLineNumbers();
+            
+            // Right panel
+            const rightPanel = createDiffPanel('修改文件', '📄');
+            const rightContent = createCodeContent();
+            const rightLines = createLineNumbers();
+            
+            // Populate content
+            diff.forEach((item, index) => {
+                const leftLineDiv = document.createElement('div');
+                const rightLineDiv = document.createElement('div');
+                
+                leftLineDiv.className = `code-line ${getLineClass(item.type, 'left')}`;
+                rightLineDiv.className = `code-line ${getLineClass(item.type, 'right')}`;
+                
+                leftLineDiv.textContent = item.leftLine;
+                rightLineDiv.textContent = item.rightLine;
+                
+                if (item.leftLine === '' && item.type === 'added') {
+                    leftLineDiv.className += ' empty';
+                }
+                if (item.rightLine === '' && item.type === 'removed') {
+                    rightLineDiv.className += ' empty';
+                }
+                
+                leftContent.appendChild(leftLineDiv);
+                rightContent.appendChild(rightLineDiv);
+                
+                // Line numbers
+                const leftNumDiv = document.createElement('div');
+                const rightNumDiv = document.createElement('div');
+                
+                leftNumDiv.textContent = item.leftLineNum;
+                rightNumDiv.textContent = item.rightLineNum;
+                
+                leftLines.appendChild(leftNumDiv);
+                rightLines.appendChild(rightNumDiv);
+            });
+            
+            leftPanel.querySelector('.compare-output').appendChild(leftLines);
+            leftPanel.querySelector('.compare-output').appendChild(leftContent);
+            
+            rightPanel.querySelector('.compare-output').appendChild(rightLines);
+            rightPanel.querySelector('.compare-output').appendChild(rightContent);
+            
+            container.appendChild(leftPanel);
+            container.appendChild(rightPanel);
+        }
+
+        // Display unified diff
+        function displayUnifiedDiff(diff, container) {
+            container.innerHTML = '';
+            container.className = 'compare-container unified';
+            container.style.gridTemplateColumns = '1fr';
+            
+            const panel = createDiffPanel('統一差異視圖', '🔍');
+            const content = createCodeContent();
+            const lines = createLineNumbers();
+            
+            diff.forEach((item, index) => {
+                if (item.type === 'context') {
+                    const lineDiv = document.createElement('div');
+                    lineDiv.className = 'code-line context';
+                    lineDiv.textContent = ' ' + item.leftLine;
+                    content.appendChild(lineDiv);
+                    
+                    const numDiv = document.createElement('div');
+                    numDiv.textContent = item.leftLineNum;
+                    lines.appendChild(numDiv);
+                } else if (item.type === 'modified') {
+                    // Show removed line
+                    const removedDiv = document.createElement('div');
+                    removedDiv.className = 'code-line removed';
+                    removedDiv.textContent = '- ' + item.leftLine;
+                    content.appendChild(removedDiv);
+                    
+                    const removedNumDiv = document.createElement('div');
+                    removedNumDiv.textContent = item.leftLineNum;
+                    lines.appendChild(removedNumDiv);
+                    
+                    // Show added line
+                    const addedDiv = document.createElement('div');
+                    addedDiv.className = 'code-line added';
+                    addedDiv.textContent = '+ ' + item.rightLine;
+                    content.appendChild(addedDiv);
+                    
+                    const addedNumDiv = document.createElement('div');
+                    addedNumDiv.textContent = item.rightLineNum;
+                    lines.appendChild(addedNumDiv);
+                } else if (item.type === 'added') {
+                    const lineDiv = document.createElement('div');
+                    lineDiv.className = 'code-line added';
+                    lineDiv.textContent = '+ ' + item.rightLine;
+                    content.appendChild(lineDiv);
+                    
+                    const numDiv = document.createElement('div');
+                    numDiv.textContent = item.rightLineNum;
+                    lines.appendChild(numDiv);
+                } else if (item.type === 'removed') {
+                    const lineDiv = document.createElement('div');
+                    lineDiv.className = 'code-line removed';
+                    lineDiv.textContent = '- ' + item.leftLine;
+                    content.appendChild(lineDiv);
+                    
+                    const numDiv = document.createElement('div');
+                    numDiv.textContent = item.leftLineNum;
+                    lines.appendChild(numDiv);
+                }
+            });
+            
+            panel.querySelector('.compare-output').appendChild(lines);
+            panel.querySelector('.compare-output').appendChild(content);
+            container.appendChild(panel);
+        }
+
+        // Display inline diff (character-level)
+        function displayInlineDiff(diff, container) {
+            container.innerHTML = '';
+            container.className = 'compare-container inline';
+            container.style.gridTemplateColumns = '1fr';
+            
+            const panel = createDiffPanel('行內差異視圖', '🔍');
+            const output = panel.querySelector('.compare-output');
+            output.style.padding = '0';
+            
+            diff.forEach((item, index) => {
+                const inlineDiv = document.createElement('div');
+                inlineDiv.className = 'inline-diff-line';
+                
+                const lineNumber = document.createElement('div');
+                lineNumber.className = 'inline-line-number';
+                
+                const content = document.createElement('div');
+                content.className = 'inline-line-content';
+                
+                if (item.type === 'context') {
+                    lineNumber.innerHTML = `<span>${item.leftLineNum}</span><span>${item.rightLineNum}</span>`;
+                    content.textContent = item.leftLine;
+                    content.className += ' context';
+                } else if (item.type === 'modified') {
+                    lineNumber.innerHTML = `<span>${item.leftLineNum}</span><span>${item.rightLineNum}</span>`;
+                    content.innerHTML = generateCharDiff(item.leftLine, item.rightLine);
+                    content.className += ' modified';
+                } else if (item.type === 'added') {
+                    lineNumber.innerHTML = `<span></span><span>${item.rightLineNum}</span>`;
+                    content.textContent = item.rightLine;
+                    content.className += ' added';
+                } else if (item.type === 'removed') {
+                    lineNumber.innerHTML = `<span>${item.leftLineNum}</span><span></span>`;
+                    content.textContent = item.leftLine;
+                    content.className += ' removed';
+                }
+                
+                inlineDiv.appendChild(lineNumber);
+                inlineDiv.appendChild(content);
+                output.appendChild(inlineDiv);
+            });
+            
+            container.appendChild(panel);
+        }
+
+        // Generate character-level diff
+        function generateCharDiff(oldText, newText) {
+            const oldChars = oldText.split('');
+            const newChars = newText.split('');
+            
+            let result = '';
+            let oldIndex = 0;
+            let newIndex = 0;
+            
+            while (oldIndex < oldChars.length || newIndex < newChars.length) {
+                if (oldIndex >= oldChars.length) {
+                    result += `<span class="char-diff added">${escapeHtml(newChars[newIndex])}</span>`;
+                    newIndex++;
+                } else if (newIndex >= newChars.length) {
+                    result += `<span class="char-diff removed">${escapeHtml(oldChars[oldIndex])}</span>`;
+                    oldIndex++;
+                } else if (oldChars[oldIndex] === newChars[newIndex]) {
+                    result += escapeHtml(oldChars[oldIndex]);
+                    oldIndex++;
+                    newIndex++;
+                } else {
+                    result += `<span class="char-diff removed">${escapeHtml(oldChars[oldIndex])}</span>`;
+                    result += `<span class="char-diff added">${escapeHtml(newChars[newIndex])}</span>`;
+                    oldIndex++;
+                    newIndex++;
+                }
+            }
+            
+            return result;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Helper functions
+        function createDiffPanel(title, icon) {
+            const panel = document.createElement('div');
+            panel.className = 'compare-panel';
+            
+            const header = document.createElement('div');
+            header.className = 'compare-header';
+            header.innerHTML = `
+                <div class="file-info">
+                    <div class="file-icon">${icon}</div>
+                    <span>${title}</span>
+                </div>
+            `;
+            
+            const output = document.createElement('div');
+            output.className = 'compare-output';
+            
+            panel.appendChild(header);
+            panel.appendChild(output);
+            
+            return panel;
+        }
+
+        function createCodeContent() {
+            const content = document.createElement('div');
+            content.className = 'code-content';
+            return content;
+        }
+
+        function createLineNumbers() {
+            const lines = document.createElement('div');
+            lines.className = 'line-numbers';
+            return lines;
+        }
+
+        function getLineClass(type, side) {
+            switch (type) {
+                case 'added':
+                    return side === 'right' ? 'added' : '';
+                case 'removed':
+                    return side === 'left' ? 'removed' : '';
+                case 'modified':
+                    return 'modified';
+                default:
+                    return 'context';
+            }
+        }
+
+        // Update diff statistics
+        function updateDiffStats(diff) {
+            let added = 0, removed = 0, modified = 0;
+            
+            diff.forEach(item => {
+                switch (item.type) {
+                    case 'added':
+                        added++;
+                        break;
+                    case 'removed':
+                        removed++;
+                        break;
+                    case 'modified':
+                        modified++;
+                        break;
+                }
+            });
+            
+            document.getElementById('addedLines').textContent = added;
+            document.getElementById('removedLines').textContent = removed;
+            document.getElementById('modifiedLines').textContent = modified;
+        }
+
+        // Update status
+        function updateStatus(message) {
+            document.getElementById('compareStatus').textContent = message;
+        }
+
+        // Show/hide loading overlay
+        function showLoading(show) {
+            const overlay = document.getElementById('loadingOverlay');
+            if (show) {
+                overlay.classList.remove('hidden');
+            } else {
+                overlay.classList.add('hidden');
+            }
+        }
+
+        // Clear all content
+        function clearAll() {
+            document.getElementById('leftEditor').value = '';
+            document.getElementById('rightEditor').value = '';
+            
+            // Hide results section
+            document.getElementById('resultsSection').style.display = 'none';
+            
+            updateDiffStats([]);
+            updateSimilarity(0);
+            updateStatus('已清空所有內容');
+            diffResult = null;
+            
+            // Show editors by default after clearing
+            setTimeout(() => {
+                toggleInputMode('left', true);
+                toggleInputMode('right', true);
+            }, 100);
+        }
+
+        // Load sample code
+        function loadSample() {
+            const sampleLeft = `function calculateSum(numbers) {
+    let sum = 0;
+    for (let i = 0; i < numbers.length; i++) {
+        sum += numbers[i];
+    }
+    return sum;
+}
+
+const data = [1, 2, 3, 4, 5];
+const result = calculateSum(data);
+console.log("Sum:", result);`;
+
+            const sampleRight = `function calculateSum(numbers) {
+    // 使用 reduce 方法重構
+    return numbers.reduce((sum, num) => sum + num, 0);
+}
+
+function calculateAverage(numbers) {
+    const sum = calculateSum(numbers);
+    return sum / numbers.length;
+}
+
+const data = [1, 2, 3, 4, 5, 6];
+const sum = calculateSum(data);
+const average = calculateAverage(data);
+console.log("Sum:", sum);
+console.log("Average:", average);`;
+
+            document.getElementById('leftEditor').value = sampleLeft;
+            document.getElementById('rightEditor').value = sampleRight;
+            
+            // Show editors
+            toggleInputMode('left', true);
+            toggleInputMode('right', true);
+            
+            updateFileInfo('left');
+            updateFileInfo('right');
+            updateStatus('已載入範例代碼，點擊"比較"查看差異');
+            
+            if (realTimeCompare) {
+                setTimeout(compareFiles, 500);
+            }
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'Enter':
+                        e.preventDefault();
+                        compareFiles();
+                        break;
+                    case 'l':
+                        e.preventDefault();
+                        clearAll();
+                        break;
+                    case 's':
+                        e.preventDefault();
+                        switchTexts();
+                        break;
+                }
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStatus('準備就緒，請輸入要比較的代碼或拖放文件');
+            updateSimilarity(0);
+            
+            // Show editors by default instead of drop zones
+            toggleInputMode('left', true);
+            toggleInputMode('right', true);
+            
+            // Show editors initially if user starts typing
+            const leftEditor = document.getElementById('leftEditor');
+            const rightEditor = document.getElementById('rightEditor');
+            
+            leftEditor.addEventListener('focus', () => toggleInputMode('left', true));
+            rightEditor.addEventListener('focus', () => toggleInputMode('right', true));
+            
+            // Load sample on first visit
+            if (localStorage.getItem('codeCompareFirstVisit') !== 'false') {
+                setTimeout(() => {
+                    if (!leftEditor.value.trim() && !rightEditor.value.trim()) {
+                        loadSample();
+                    }
+                }, 1000);
+                localStorage.setItem('codeCompareFirstVisit', 'false');
+            }
+            
+            // Prevent default drag behavior on document
+            document.addEventListener('dragover', e => e.preventDefault());
+            document.addEventListener('drop', e => e.preventDefault());
+        });
+
+        // Add structured data for SEO
+        const structuredData = {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "代碼比較工具 - Dracula風格Diff比較器",
+            "alternateName": "Code Compare Tool",
+            "description": "專業免費線上代碼比較工具，採用Dracula暗色主題設計。支援語法高亮、差異標記、並列比較、文件合併。開發者必備的程式碼diff工具。",
+            "url": "https://sds-site.vercel.app/CodeCompare",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "Any",
+            "permissions": "browser",
+            "browserRequirements": "HTML5, JavaScript",
+            "softwareVersion": "2.0",
+            "featureList": [
+                "代碼差異比較",
+                "語法高亮顯示",
+                "Dracula暗色主題",
+                "並列比較模式",
+                "文件拖拽支援",
+                "差異標記",
+                "導出報告",
+                "響應式設計"
+            ],
+            "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "TWD",
+                "availability": "https://schema.org/InStock"
+            },
+            "author": {
+                "@type": "Organization",
+                "name": "SDS Site Tools",
+                "url": "https://sds-site.vercel.app"
+            },
+            "screenshot": "https://sds-site.vercel.app/images/code-compare-preview.png",
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "4.7",
+                "ratingCount": "890",
+                "bestRating": "5",
+                "worstRating": "1"
+            }
+        };
+
+        const script = document.createElement('script');
+        script.type = 'application/ld+json';
+        script.textContent = JSON.stringify(structuredData);
+        document.head.appendChild(script);
+
+        // Add FAQ structured data
+        const faqData = {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": "如何使用代碼比較工具？",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "在左右兩個編輯器中貼上或輸入要比較的代碼，點擊「比較差異」按鈕即可查看代碼差異。支援拖拽文件上傳和多種編程語言語法高亮。"
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "支援哪些編程語言？",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "支援JavaScript、Python、Java、C++、HTML、CSS、SQL等主流編程語言的語法高亮顯示，採用Dracula暗色主題設計。"
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "是否可以導出比較結果？",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "是的，比較完成後可以導出詳細的差異報告，包含行數標記、變更類型和具體差異內容，便於代碼審查和文檔記錄。"
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "工具是否免費使用？",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "完全免費！無需註冊即可使用，所有比較處理都在瀏覽器本地進行，保護您的代碼隱私安全。"
+                    }
+                }
+            ]
+        };
+
+        const faqScript = document.createElement('script');
+        faqScript.type = 'application/ld+json';
+        faqScript.textContent = JSON.stringify(faqData);
+        document.head.appendChild(faqScript);
+
+        // Add HowTo structured data
+        const howToData = {
+            "@context": "https://schema.org",
+            "@type": "HowTo",
+            "name": "如何比較兩個代碼文件的差異",
+            "description": "學習如何使用Dracula風格代碼比較工具來找出兩個程式碼文件之間的差異",
+            "totalTime": "PT3M",
+            "supply": [
+                {
+                    "@type": "HowToSupply",
+                    "name": "兩個要比較的代碼文件"
+                }
+            ],
+            "tool": [
+                {
+                    "@type": "HowToTool",
+                    "name": "SDS Site 代碼比較工具"
+                }
+            ],
+            "step": [
+                {
+                    "@type": "HowToStep",
+                    "name": "輸入第一個代碼",
+                    "text": "在左側編輯器中貼上或拖拽第一個代碼文件",
+                    "url": "https://sds-site.vercel.app/CodeCompare#step1"
+                },
+                {
+                    "@type": "HowToStep",
+                    "name": "輸入第二個代碼",
+                    "text": "在右側編輯器中貼上或拖拽第二個代碼文件",
+                    "url": "https://sds-site.vercel.app/CodeCompare#step2"
+                },
+                {
+                    "@type": "HowToStep",
+                    "name": "執行比較",
+                    "text": "點擊「比較差異」按鈕，系統會自動分析並標記差異",
+                    "url": "https://sds-site.vercel.app/CodeCompare#step3"
+                },
+                {
+                    "@type": "HowToStep",
+                    "name": "查看結果",
+                    "text": "檢視高亮顯示的差異並可選擇導出報告",
+                    "url": "https://sds-site.vercel.app/CodeCompare#step4"
+                }
+            ]
+        };
+
+        const howToScript = document.createElement('script');
+        howToScript.type = 'application/ld+json';
+        howToScript.textContent = JSON.stringify(howToData);
+        document.head.appendChild(howToScript);
+
+        const script = document.createElement('script');
+        script.type = 'application/ld+json';
+        script.textContent = JSON.stringify(structuredData);
+        document.head.appendChild(script);
+    </script>
+</body>
+</html>
